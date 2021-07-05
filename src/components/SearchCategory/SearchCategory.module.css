@@ -1,0 +1,38 @@
+.SearchCategory {
+  border-radius: 3px;
+  background-color: rgba(var(--rgba-primary), 0.7);
+  color: var(--color-white);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  box-shadow: var(--box-shadow-1);
+  margin-bottom: 5rem;
+}
+
+.SearchCategory__mainCategory {
+  width: 25rem;
+  height: 5rem;
+  font-size: 2rem;
+  position: relative;
+}
+
+.SearchCategory__subCategory {
+  width: 20rem;
+  height: 4.5rem;
+  font-size: 1.6rem;
+  text-decoration: none;
+}
+.SearchCategory:hover {
+  filter: brightness(120%);
+}
+
+.SearchCategory:active {
+  transform: translateY(10%);
+  box-shadow: var(--box-shadow-2);
+}
+
+.Arrow {
+  position: absolute;
+  right: 1rem;
+}

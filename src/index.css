@@ -1,13 +1,107 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+*,
+*::after,
+*::before {
+  box-sizing: inherit;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+@import url("https://fonts.googleapis.com/css2?family=Lato:wght@100;300;400;700&display=swap");
+
+html {
+  font-size: 62.5%;
+  font-family: "Lato";
+
+  /* Variables */
+  --color-primary: #00bbff; /* DeepSkyBlue */
+  --color-primary-light: #ccf2ff;
+  --color-light-grey-1: #f2f2f2;
+  --color-secondary: #ffa600;
+  --color-secondary-light: #ffd280;
+  --color-white: #fff;
+  --color-black: #000;
+
+  --rgba-light-grey-1: 242, 242, 242;
+  --rgba-dark-grey: 217, 217, 217;
+  --rgba-black: 0, 0, 0;
+  --rgba-primary: 0, 191, 255;
+  --rgba-secondary: 255, 166, 0;
+
+  --box-shadow-1: 0 1px 1px 1px rgba(0, 0, 0, 0.1);
+  --box-shadow-2: 0 2px 2px 2px rgba(0, 0, 0, 0.1);
+  --box-shadow-primary: 0 2px 2px 2px rgba(0, 191, 255, 0.1);
+  --box-shadow-primary-2: 0 2px 2px 2px rgba(0, 191, 255, 0.3);
+}
+
+::selection {
+  background: var(--color-primary);
+}
+
+body {
+  box-sizing: border-box;
+  font-size: 1.6rem;
+  background-color: var(--color-light-grey-1);
+}
+
+.ArrowRight {
+  width: 0;
+  height: 0;
+  border-top: 0.7rem solid transparent;
+  border-bottom: 0.7rem solid transparent;
+  border-left: 0.7rem solid var(--color-black);
+}
+
+.ArrowDown {
+  width: 0;
+  height: 0;
+  border-left: 0.7rem solid transparent;
+  border-right: 0.7rem solid transparent;
+  border-top: 0.7rem solid var(--color-black);
+}
+
+.ArrowRightWhite {
+  width: 0;
+  height: 0;
+  border-top: 0.7rem solid transparent;
+  border-bottom: 0.7rem solid transparent;
+  border-left: 0.7rem solid var(--color-white);
+}
+
+.ArrowDownWhite {
+  width: 0;
+  height: 0;
+  border-left: 0.7rem solid transparent;
+  border-right: 0.7rem solid transparent;
+  border-top: 0.7rem solid var(--color-white);
+}
+
+.GlobalBtn-1 {
+  background-color: rgba(var(--rgba-primary), 0.7);
+  height: 3.5rem;
+  border-radius: 3px;
+  border: none;
+  box-shadow: var(--box-shadow-2);
+  color: var(--color-white);
+}
+
+.GlobalBtn-2 {
+  background-color: rgba(255, 255, 255, 1);
+  color: var(--color-primary);
+  height: 3.5rem;
+  border-radius: 3px;
+  border: none;
+  box-shadow: var(--box-shadow-2);
+}
+
+.GlobalBtn-1:active,
+.GlobalBtn-2:active {
+  transform: translateY(10%);
+  box-shadow: var(--box-shadow-1);
+}
+
+.GlobalBtn-1:hover {
+  filter: brightness(120%);
+  cursor: pointer;
+}
+
+.GlobalBtn-2:hover {
+  cursor: pointer;
 }
