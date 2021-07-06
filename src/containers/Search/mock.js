@@ -1,25 +1,29 @@
-import wgerData from "../../shared/wgerData";
+import wgerData from '../../shared/wgerData';
 
 const mock = {
   mockCategories: [
     {
       id: 10,
-      name: "Abs",
+      name: 'Abs',
     },
     {
       id: 8,
-      name: "Arms",
+      name: 'Arms',
     },
   ],
-  mockMuscles: [wgerData.muscles],
+  mockMuscles: [
+    [wgerData.muscles][0],
+    [wgerData.muscles][1],
+    [wgerData.muscles][2],
+  ],
   mockEquipment: [
     {
       id: 1,
-      name: "barbell",
+      name: 'barbell',
     },
     {
       id: 8,
-      name: "Bench",
+      name: 'Bench',
     },
   ],
 };
