@@ -1,4 +1,4 @@
-import { Router } from "react-router-dom";
+import { MemoryRouter } from "react-router-dom";
 import { render, screen } from "@testing-library/react";
 
 import SearchSubCategory from "./SearchSubCategory";
@@ -11,9 +11,9 @@ describe("<SearchSubCategory />", () => {
       subCategoryName: "Test SubCategory",
     };
     render(
-      <Router history={{ location: "" }}>
+      <MemoryRouter history={{ location: "" }}>
         <SearchSubCategory {...props} />
-      </Router>
+      </MemoryRouter>
     );
 
     const element = screen.getByTestId("SearchSubCategory-Test SubCategory");

@@ -12,13 +12,16 @@ export default function Search() {
   const [categoryOpen, setCategoryOpen] = useState(null);
 
   useEffect(() => {
-    if (!exerciseCategories.length && !muscles.length && !equipment.length) {
-      utils
-        .fetchCategories()
-        .then((categories) => setExerciseCategories(categories));
+    document.title = "Search For Exercises";
+  }, []);
 
-      utils.fetchMuscles().then((muscles) => setMuscles(muscles));
-      utils.fetchEquipment().then((equipment) => setEquipment(equipment));
+  useEffect(() => {
+    if (!exerciseCategories.length && !muscles.length && !equipment.length) {
+      const { fetchCategories, fetchMuscles, fetchEquipment } = utils;
+
+      fetchCategories().then((categories) => setExerciseCategories(categories));
+      fetchMuscles().then((muscles) => setMuscles(muscles));
+      fetchEquipment().then((equipment) => setEquipment(equipment));
     }
   }, [exerciseCategories, muscles, equipment]);
 

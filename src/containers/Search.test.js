@@ -5,21 +5,33 @@ import { searchUtils as utils } from "./Search/searchUtils";
 import mock from "./Search/mock";
 
 describe("<Search>", () => {
-  test("calls the wger api 3 times", async () => {
+  let fetchCategories, fetchMuscles, fetchEquipment;
+
+  beforeEach(() => {
     const { mockCategories, mockMuscles, mockEquipment } = mock;
 
-    const fetchCategories = jest
+    fetchCategories = jest
       .spyOn(utils, "fetchCategories")
       .mockImplementation(jest.fn(() => Promise.resolve(mockCategories)));
 
-    const fetchMuscles = jest
+    fetchMuscles = jest
       .spyOn(utils, "fetchMuscles")
       .mockImplementation(jest.fn(() => Promise.resolve(mockMuscles)));
 
-    const fetchEquipment = jest
+    fetchEquipment = jest
       .spyOn(utils, "fetchEquipment")
       .mockImplementation(jest.fn(() => Promise.resolve(mockEquipment)));
+  });
 
+  afterEach(() => {
+    jest.resetAllMocks();
+
+    fetchCategories = null;
+    fetchMuscles = null;
+    fetchEquipment = null;
+  });
+
+  test("calls the wger api 3 times", async () => {
     render(<Search />);
 
     await waitFor(() => {
@@ -30,24 +42,16 @@ describe("<Search>", () => {
   });
 
   test("renders Exercise Category Div", async () => {
-    const { mockCategories, mockMuscles, mockEquipment } = mock;
-
-    jest
-      .spyOn(utils, "fetchCategories")
-      .mockImplementation(jest.fn(() => Promise.resolve(mockCategories)));
-
-    jest
-      .spyOn(utils, "fetchMuscles")
-      .mockImplementation(jest.fn(() => Promise.resolve(mockMuscles)));
-
-    jest
-      .spyOn(utils, "fetchEquipment")
-      .mockImplementation(jest.fn(() => Promise.resolve(mockEquipment)));
-
     render(<Search />);
 
     const exerciseCategories = screen.getByTestId("Exercise Category");
 
     await waitFor(() => expect(exerciseCategories).toBeInTheDocument());
+  });
+
+  test("has the title Search For Exercises", async () => {
+    render(<Search />);
+    const title = document.title;
+    await waitFor(() => expect(title).toBe("Search For Exercises"));
   });
 });
