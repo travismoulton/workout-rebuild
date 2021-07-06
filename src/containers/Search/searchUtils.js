@@ -1,7 +1,7 @@
-import axios from "axios";
+import axios from 'axios';
 
 const reqTimout = 20000;
-const wgerBaseUrl = "https://wger.de/api/v2/";
+const wgerBaseUrl = 'https://wger.de/api/v2/';
 
 export const searchUtils = {
   fetchCategories: async function () {
@@ -25,3 +25,7 @@ export const searchUtils = {
     return res.data.results;
   },
 };
+
+export function testFunc() {
+  return 1;
+}

@@ -1,16 +1,15 @@
 import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 
-import Search from './Search/Search';
-import { searchUtils as utils } from './Search/searchUtils';
-import mock from './Search/mock';
+import Search from './Search';
+import { searchUtils as utils } from './searchUtils';
+import mock from './mock';
 
 describe('<Search>', () => {
   let fetchCategories, fetchMuscles, fetchEquipment;
+  const { mockCategories, mockMuscles, mockEquipment } = mock;
 
   beforeEach(() => {
-    const { mockCategories, mockMuscles, mockEquipment } = mock;
-
     fetchCategories = jest
       .spyOn(utils, 'fetchCategories')
       .mockImplementation(jest.fn(() => Promise.resolve(mockCategories)));
@@ -63,9 +62,14 @@ describe('<Search>', () => {
       </MemoryRouter>
     );
 
-    const div = screen.getByTestId('Exercise Category');
+    await waitFor(() => {
+      expect(fetchCategories).toBeCalledTimes(1);
+      expect(fetchMuscles).toBeCalledTimes(1);
+      expect(fetchEquipment).toBeCalledTimes(1);
+    });
 
     await waitFor(() => {
+      const div = screen.getByTestId('Exercise Category');
       fireEvent.click(div);
     });
 

@@ -48,8 +48,6 @@ export default function Search() {
   };
 
   const controlSubCategories = (category) => {
-    console.log(category);
-    console.log('************************************************8');
     categoryOpen === category
       ? closeSubCategories()
       : openSubCategory(category);
