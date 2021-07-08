@@ -5,7 +5,29 @@ import Search from './Search';
 import { searchUtils as utils } from './searchUtils';
 import mock from './mock';
 
-describe('<Search>', () => {
+describe('<Search /> before data fetched', () => {
+  test('loads the spinner', () => {
+    jest
+      .spyOn(utils, 'fetchCategories')
+      .mockImplementation(jest.fn(() => Promise.resolve(null)));
+
+    jest
+      .spyOn(utils, 'fetchMuscles')
+      .mockImplementation(jest.fn(() => Promise.resolve(null)));
+
+    jest
+      .spyOn(utils, 'fetchEquipment')
+      .mockImplementation(jest.fn(() => Promise.resolve(null)));
+
+    render(<Search />);
+
+    const spinner = screen.getByTestId('Spinner');
+
+    expect(spinner).toBeInTheDocument();
+  });
+});
+
+describe('<Search /> after data fetched', () => {
   let fetchCategories, fetchMuscles, fetchEquipment;
   const { mockCategories, mockMuscles, mockEquipment } = mock;
 
@@ -31,6 +53,14 @@ describe('<Search>', () => {
     fetchEquipment = null;
   });
 
+  const simulateFetch = async () => {
+    await waitFor(() => {
+      expect(fetchCategories).toBeCalledTimes(1);
+      expect(fetchMuscles).toBeCalledTimes(1);
+      expect(fetchEquipment).toBeCalledTimes(1);
+    });
+  };
+
   test('calls the wger api 3 times', async () => {
     render(<Search />);
 
@@ -43,6 +73,8 @@ describe('<Search>', () => {
 
   test('renders Exercise Category Div', async () => {
     render(<Search />);
+
+    await simulateFetch();
 
     const exerciseCategories = screen.getByTestId('Exercise Category');
 
@@ -62,11 +94,7 @@ describe('<Search>', () => {
       </MemoryRouter>
     );
 
-    await waitFor(() => {
-      expect(fetchCategories).toBeCalledTimes(1);
-      expect(fetchMuscles).toBeCalledTimes(1);
-      expect(fetchEquipment).toBeCalledTimes(1);
-    });
+    await simulateFetch();
 
     const exerciseCategoryDiv = screen.getByTestId('Exercise Category');
     const muscleDiv = screen.getByTestId('Muscle');
@@ -79,8 +107,6 @@ describe('<Search>', () => {
 
     const subCategories = screen.getByTestId('Search-SubCategoryList');
 
-    // After clicking on the Category div, the subcategories should be displayed, and have a length of 3
-    // based on the mock
     expect(subCategories).toBeInTheDocument();
     expect(subCategories.childNodes).toHaveLength(3);
 

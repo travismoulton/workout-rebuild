@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 
 import SearchCategory from '../../components/SearchCategory/SearchCategory';
 import SearchSubCategoryList from '../../components/SearchSubCategoryList/SearchSubCategoryList';
+import Spinner from '../../components/UI/Spinner/Spinner';
 import { searchUtils as utils } from './searchUtils';
 import classes from './Search.module.css';
 
@@ -10,7 +11,7 @@ export default function Search() {
   const [exerciseCategories, setExerciseCategories] = useState(null);
   const [muscles, setMuscles] = useState(null);
   const [equipment, setEquipment] = useState(null);
-  // const [loaded, setLoaded] = useState(false);
+  const [loaded, setLoaded] = useState(false);
   const [categoryOpen, setCategoryOpen] = useState(null);
 
   useEffect(() => {
@@ -26,6 +27,10 @@ export default function Search() {
       fetchEquipment().then((equipment) => setEquipment(equipment));
     }
   }, [exerciseCategories, muscles, equipment]);
+
+  useEffect(() => {
+    if (exerciseCategories && muscles && equipment && !loaded) setLoaded(true);
+  }, [loaded, exerciseCategories, muscles, equipment]);
 
   const closeSubCategories = () => {
     setCategoryOpen(null);
@@ -60,7 +65,9 @@ export default function Search() {
     />
   );
 
-  return (
+  return !loaded ? (
+    <Spinner />
+  ) : (
     <>
       <h1 className={classes.Header}>Select a category to search</h1>
       <div className={classes.Search}>
