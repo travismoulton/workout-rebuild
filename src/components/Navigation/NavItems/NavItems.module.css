@@ -4,6 +4,9 @@
   list-style: none;
   display: flex;
 
+  /* Will need to be removed further into production */
+  justify-content: space-between;
+
   align-items: center;
   height: 100%;
   width: 100%;

@@ -1,0 +1,15 @@
+.Main {
+  padding: 15rem 0 10rem 0;
+}
+
+@media only screen and (max-width: 800px) {
+  .Main {
+    width: 100%;
+  }
+}
+
+@media only screen and (max-width: 600px) {
+  .Main {
+    padding-top: 10rem;
+  }
+}
