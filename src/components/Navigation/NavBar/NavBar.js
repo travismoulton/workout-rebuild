@@ -4,7 +4,10 @@ import NavItems from '../NavItems/NavItems';
 export default function NavBar({ isAuthenticated, toggleSideBar }) {
   return (
     <header className={classes.Nav}>
-      <nav className={`${classes.NavBar} ${classes.Desktop}`}>
+      <nav
+        data-testid="NavBar"
+        className={`${classes.NavBar} ${classes.Desktop}`}
+      >
         <NavItems isAuthenticated={isAuthenticated} />
       </nav>
     </header>

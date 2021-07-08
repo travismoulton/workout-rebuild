@@ -3,7 +3,7 @@ import classes from './NavItems.module.css';
 
 export default function NavItems({ isAuthenticated }) {
   return (
-    <ul className={classes.NavItems}>
+    <ul data-testid="NavItems" className={classes.NavItems}>
       <NavItem link="/search">Search</NavItem>
       {isAuthenticated ? (
         <>
