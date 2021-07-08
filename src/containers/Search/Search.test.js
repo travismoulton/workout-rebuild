@@ -5,8 +5,8 @@ import Search from './Search';
 import { searchUtils as utils } from './searchUtils';
 import mock from './mock';
 
-describe('<Search /> before data fetched', () => {
-  test('loads the spinner', () => {
+describe('<Search /> without data fetch', () => {
+  test('loads the spinner before data is fetched', async () => {
     jest
       .spyOn(utils, 'fetchCategories')
       .mockImplementation(jest.fn(() => Promise.resolve(null)));
@@ -27,7 +27,7 @@ describe('<Search /> before data fetched', () => {
   });
 });
 
-describe('<Search /> after data fetched', () => {
+describe('<Search /> with data fetch', () => {
   let fetchCategories, fetchMuscles, fetchEquipment;
   const { mockCategories, mockMuscles, mockEquipment } = mock;
 

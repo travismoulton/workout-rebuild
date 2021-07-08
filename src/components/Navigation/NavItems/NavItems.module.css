@@ -1,0 +1,34 @@
+.NavItems {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+
+  align-items: center;
+  height: 100%;
+  width: 100%;
+  color: var(--color-secondary);
+}
+
+.IsAuthenticated,
+.NotAuthenticated {
+  justify-content: space-between;
+}
+
+@media only screen and (max-width: 800px) {
+  .NavItems {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .DrawerToggle {
+    display: none;
+  }
+
+  .NotAuthenticated {
+    justify-content: start;
+  }
+
+  .NotAuthenticated li {
+    margin-bottom: 5rem;
+  }
+}

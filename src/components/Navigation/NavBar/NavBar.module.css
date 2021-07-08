@@ -1,0 +1,36 @@
+.Nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 5.6rem;
+  width: 100%;
+  background-color: #eee;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 10rem;
+  background-color: var(--color-primary);
+  box-shadow: var(--box-shadow-1);
+  z-index: 10000;
+}
+
+@media only screen and (max-width: 1200px) {
+  .Nav {
+    padding: 0 3rem;
+  }
+}
+
+@media only screen and (max-width: 950px) {
+  .Nav {
+    padding: 0 2rem;
+  }
+}
+
+@media only screen and (max-width: 800px) {
+  .Desktop {
+    display: none;
+  }
+}
+
+.NavBar {
+  width: 100%;
+}

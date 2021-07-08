@@ -1,0 +1,18 @@
+.NavItem {
+  list-style: none;
+}
+
+.NavItem a {
+  color: rgba(var(--rgba-light-grey-1), 0.9);
+  text-decoration: none;
+  width: 100%;
+  font-size: 1.7rem;
+}
+
+.NavItem a:hover,
+.NavItem a:active,
+.NavItem a.active {
+  color: var(--color-white);
+  border-bottom: 1px solid;
+  padding-bottom: 0.1rem;
+}
