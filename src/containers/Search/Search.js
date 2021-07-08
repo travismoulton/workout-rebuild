@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 
 import SearchCategory from '../../components/SearchCategory/SearchCategory';
-import SearchSubCategory from '../../components/SearchSubCategory/SearchSubCategory';
+import SearchSubCategoryList from '../../components/SearchSubCategoryList/SearchSubCategoryList';
 import { searchUtils as utils } from './searchUtils';
 import classes from './Search.module.css';
 
@@ -53,14 +53,12 @@ export default function Search() {
       : openSubCategory(category);
   };
 
-  const displaySubCategoires = subCategories.map((subCat) => (
-    <SearchSubCategory
-      subCategoryName={subCat['name']}
-      key={subCat['id']}
-      id={subCat['id']}
+  const subCategoryList = (
+    <SearchSubCategoryList
       category={categoryOpen}
+      subCategories={subCategories}
     />
-  ));
+  );
 
   return (
     <>
@@ -71,42 +69,21 @@ export default function Search() {
           clicked={() => controlSubCategories('exercisecategory')}
           categoryOpen={categoryOpen === 'exercisecategory'}
         />
-        {categoryOpen === 'exercisecategory' && (
-          <ul
-            className={classes.SubCategoryList}
-            data-testid="Search-SubCategoryList"
-          >
-            {displaySubCategoires}
-          </ul>
-        )}
+        {categoryOpen === 'exercisecategory' && subCategoryList}
 
         <SearchCategory
           categoryName={'Muscle'}
           clicked={() => controlSubCategories('muscle')}
           categoryOpen={categoryOpen === 'muscle'}
         />
-        {categoryOpen === 'muscle' && (
-          <ul
-            className={classes.SubCategoryList}
-            data-testid="Search-SubCategoryList"
-          >
-            {displaySubCategoires}
-          </ul>
-        )}
+        {categoryOpen === 'muscle' && subCategoryList}
 
         <SearchCategory
           categoryName={'Equipment'}
           clicked={() => controlSubCategories('equipment')}
           categoryOpen={categoryOpen === 'equipment'}
         />
-        {categoryOpen === 'equipment' && (
-          <ul
-            className={classes.SubCategoryList}
-            data-testid="Search-SubCategoryList"
-          >
-            {displaySubCategoires}
-          </ul>
-        )}
+        {categoryOpen === 'equipment' && subCategoryList}
       </div>
     </>
   );

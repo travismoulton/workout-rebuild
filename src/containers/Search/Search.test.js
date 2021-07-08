@@ -68,13 +68,33 @@ describe('<Search>', () => {
       expect(fetchEquipment).toBeCalledTimes(1);
     });
 
-    await waitFor(() => {
-      const div = screen.getByTestId('Exercise Category');
-      fireEvent.click(div);
-    });
+    const exerciseCategoryDiv = screen.getByTestId('Exercise Category');
+    const muscleDiv = screen.getByTestId('Muscle');
 
-    await waitFor(() => {
-      expect(screen.getByTestId('Search-SubCategoryList')).toBeInTheDocument();
-    });
+    fireEvent.click(exerciseCategoryDiv);
+
+    const exampleCategory = screen.getByTestId(
+      'SearchSubCategory-Example Category 1'
+    );
+
+    const subCategories = screen.getByTestId('Search-SubCategoryList');
+
+    // After clicking on the Category div, the subcategories should be displayed, and have a length of 3
+    // based on the mock
+    expect(subCategories).toBeInTheDocument();
+    expect(subCategories.childNodes).toHaveLength(3);
+
+    fireEvent.click(muscleDiv);
+
+    const exampleMuscle = screen.getByTestId(
+      'SearchSubCategory-Example Muscle 1'
+    );
+
+    const muscleSubCategories = screen.getByTestId('Search-SubCategoryList');
+
+    expect(muscleSubCategories.childNodes).toHaveLength(2);
+    expect(exampleMuscle).toBeInTheDocument();
+    expect(exampleCategory).not.toBeInTheDocument();
+    expect(subCategories).not.toBeInTheDocument();
   });
 });

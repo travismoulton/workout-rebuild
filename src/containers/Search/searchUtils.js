@@ -25,7 +25,3 @@ export const searchUtils = {
     return res.data.results;
   },
 };
-
-export function testFunc() {
-  return 1;
-}
