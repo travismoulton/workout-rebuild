@@ -1,0 +1,280 @@
+.WorkoutListItem {
+  width: 15rem;
+  height: 1rem;
+  margin-left: 0.5rem;
+}
+
+.TextInput {
+  border-radius: 2px;
+  padding: 0.2rem;
+  border: 2px solid #eee;
+  width: 21rem;
+  height: 3.4rem;
+}
+
+.Invalid {
+  border-radius: 2px;
+  padding: 0.2rem;
+  width: 21rem;
+  height: 3.4rem;
+  border: 2px solid red;
+  background-color: #fda49a;
+}
+
+.Checkbox {
+  width: 1rem;
+  height: 1rem;
+}
+
+.WorkoutName,
+.RoutineName,
+.ExerciseName,
+.UpdatePasswordInput,
+.LoginInput,
+.RegisterInput,
+.ResetPasswordInput {
+  background-color: hsl(0, 0%, 100%);
+  border-color: hsl(0, 0%, 80%);
+  border-style: solid;
+  border-width: 1px;
+  border-radius: 4px;
+  height: 3.7rem;
+  padding: 0.2rem 0.8rem;
+  position: relative;
+}
+
+.WorkoutName,
+.RoutineName,
+.ExerciseName {
+  margin-bottom: 1.5rem;
+}
+
+.WorkoutName,
+.ExerciseName,
+.UpdatePasswordInput,
+.LoginInput,
+.RegisterInput,
+.ResetPasswordInput {
+  width: 30rem;
+}
+
+.RoutineName {
+  width: 20rem;
+}
+
+@media only screen and (max-width: 325px) {
+  .WorkoutName,
+  .ExerciseName,
+  .UpdatePasswordInput,
+  .LoginInput,
+  .RegisterInput,
+  .ResetPasswordInput {
+    width: 100%;
+  }
+}
+
+@media only screen and (max-width: 225px) {
+  .RoutineName {
+    width: 100%;
+  }
+}
+
+.WorkoutName::placeholder,
+.RoutineName::placeholder,
+.ExerciseName::placeholder,
+.UpdatePasswordInput::placeholder,
+.CreateExerciseDescription::placeholder,
+.LoginInput::placeholder,
+.RegisterInput::placeholder,
+.ResetPasswordInput::placeholder {
+  color: #4d4d4d;
+  font-size: 1.6rem;
+}
+
+.WorkoutName:hover,
+.RoutineName:hover,
+.ExerciseName:hover,
+.CreateExerciseDescription:hover,
+.UpdatePasswordInput:hover,
+.LoginInput:hover,
+.RegisterInput:hover,
+.ResetPasswordInput:hover {
+  border-color: var(--color-primary);
+}
+
+.WorkoutName:focus,
+.RoutineName:focus,
+.ExerciseName:focus,
+.CreateExerciseDescription:focus,
+.UpdatePasswordInput:focus,
+.LoginInput:focus,
+.RegisterInput:focus,
+.ResetPasswordInput:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: var(--box-shadow-primary-2);
+  caret-color: var(--color-primary);
+}
+
+.SelectMenuGroup {
+  display: flex;
+  justify-content: space-between;
+  width: 60rem;
+  margin-bottom: 1.5rem;
+  margin-left: 5rem;
+}
+
+.WorkoutDetailsSelectWrapper {
+  display: flex;
+  justify-content: space-between;
+  width: auto;
+  margin-bottom: 1.5rem;
+  flex-direction: column;
+  margin-left: 0;
+}
+
+.WorkoutDetailsSelectWrapper label {
+  margin-bottom: 1rem;
+}
+
+.RecordWorkoutModalSelectWrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 50rem;
+}
+
+@media only screen and (max-width: 750px) {
+  .RecordWorkoutModalSelectWrapper {
+    flex-direction: column;
+  }
+
+  .RecordWorkoutModalSelectWrapper label {
+    margin-bottom: 0.6rem;
+  }
+}
+
+.ExerciseFocusSelectWrapper {
+  display: flex;
+  justify-content: space-between;
+  width: 80%;
+  align-items: center;
+}
+
+@media only screen and (max-width: 600px) {
+  .ExerciseFocusSelectWrapper {
+    width: 100%;
+  }
+}
+
+@media only screen and (max-width: 400px) {
+  .ExerciseFocusSelectWrapper {
+    flex-direction: column;
+  }
+
+  .ExerciseFocusSelectWrapper label {
+    margin-bottom: 0.6rem;
+  }
+}
+
+.SetDetailsSelectWrapper {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  width: 40%;
+  position: relative;
+}
+
+.SetDetailsSelectWrapper label {
+  margin-right: 1rem;
+  text-transform: capitalize;
+}
+
+@media only screen and (max-width: 800px) {
+  .SetDetailsSelectWrapper {
+    width: 100%;
+    justify-content: center;
+    margin-top: 1rem;
+  }
+
+  .SetDetailsSelectWrapper label {
+    margin-left: 3rem;
+    width: 5rem;
+    text-align: left;
+  }
+
+  .SetDetailsSelectWrapper span {
+    margin: 0 auto;
+  }
+}
+
+@media only screen and (max-width: 400px) {
+  .SetDetailsSelectWrapper {
+    flex-direction: column;
+  }
+
+  .SetDetailsSelectWrapper label {
+    margin-left: 0;
+    margin-bottom: 0.6rem;
+  }
+}
+
+.CreateExerciseDescription {
+  width: 30rem;
+  height: 10rem;
+  position: relative;
+  background-color: hsl(0, 0%, 100%);
+  border-color: hsl(0, 0%, 80%);
+  border-style: solid;
+  border-width: 1px;
+  border-radius: 4px;
+  padding: 0.2rem 0.8rem;
+  margin-left: -0.5rem;
+  margin-bottom: 1.5rem;
+  position: relative;
+}
+
+.CreateExerciseSelectWrapper {
+  margin-right: -1.2rem;
+}
+
+.SelectAsteric {
+  margin-left: 0.4rem;
+  margin-bottom: 1.9rem;
+  font-size: 2rem;
+}
+
+.InputAsteric {
+  position: absolute;
+  margin-left: 0.3rem;
+  top: -0.3rem;
+  font-size: 2rem;
+}
+
+.UpdatePasswordInputWrapper,
+.LoginInputWrapper,
+.RegisterInputWrapper,
+.ResetPasswordInputWrapper {
+  width: 50rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0 auto 1.5rem auto;
+}
+
+@media only screen and (max-width: 600px) {
+  .UpdatePasswordInputWrapper,
+  .LoginInputWrapper,
+  .RegisterInputWrapper,
+  .ResetPasswordInputWrapper {
+    flex-direction: column;
+    width: auto;
+  }
+
+  .UpdatePasswordInputWrapper label,
+  .LoginInputWrapper label,
+  .RegisterInputWrapper label,
+  .ResetPasswordInputWrapper label {
+    margin-bottom: 1rem;
+  }
+}

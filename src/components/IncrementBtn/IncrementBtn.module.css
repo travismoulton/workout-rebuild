@@ -1,0 +1,24 @@
+.IncrementBtn {
+  background-color: rgba(102, 255, 102, 0.7);
+  border-radius: 3px;
+  border: none;
+  color: #fff;
+  width: 3.4rem;
+  height: 3.4rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 2.5rem;
+  margin-left: 0.5rem;
+  box-shadow: var(--box-shadow-2);
+}
+
+.IncrementBtn:active {
+  box-shadow: var(--box-shadow-1);
+  transform: translateY(10%);
+}
+
+.IncrementBtn:hover {
+  filter: brightness(120%);
+  cursor: pointer;
+}

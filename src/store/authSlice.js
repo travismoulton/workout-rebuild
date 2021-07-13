@@ -18,8 +18,9 @@ const authSlice = createSlice({
       state.loading = true;
       state.inAuth = true;
     },
-    authSucess: (state, action) => {
-      const { user } = action.payload;
+    authSuccess: (state, action) => {
+      console.log(action);
+      const user = action.payload;
       state.user = user;
       state.uid = user.authUser.uid;
       state.accessToken = user.authUser.za;
@@ -46,7 +47,7 @@ const authSlice = createSlice({
   },
 });
 
-export default authSlice;
+export default authSlice.reducer;
 
-export const { authStart, authSucess, authFail, authLogout, authReset } =
+export const { authStart, authSuccess, authFail, authLogout, authReset } =
   authSlice.actions;

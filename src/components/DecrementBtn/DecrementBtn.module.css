@@ -1,0 +1,26 @@
+.DecrementBtn {
+  background-color: rgba(255, 77, 77, 0.7);
+  border-radius: 3px;
+  border: none;
+  color: #fff;
+  width: 3.4rem;
+  height: 3.4rem;
+  display: flex;
+  justify-content: center;
+  font-size: 2.5rem;
+  margin-right: 0.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: var(--box-shadow-2);
+}
+
+.DecrementBtn:active {
+  box-shadow: var(--box-shadow-1);
+  transform: translateY(10%);
+}
+
+.DecrementBtn:hover {
+  filter: brightness(120%);
+  cursor: pointer;
+}
