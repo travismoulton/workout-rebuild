@@ -1,11 +1,11 @@
-import { render } from '@testing-library/react';
+import {  customRender } from '../../../shared/testUtils';
 import { MemoryRouter } from 'react-router-dom';
 
 import NavItems from './NavItems';
 
 describe('<NavItems />', () => {
   test('renders', () => {
-    const { getByTestId } = render(
+    const { getByTestId } = customRender(
       <MemoryRouter>
         <NavItems />
       </MemoryRouter>
@@ -16,7 +16,7 @@ describe('<NavItems />', () => {
 
   test('renders 2 children if not authenticated', () => {
     const props = { isAuthenticated: false };
-    const { getByTestId } = render(
+    const { getByTestId } = customRender(
       <MemoryRouter>
         <NavItems {...props} />
       </MemoryRouter>
@@ -29,7 +29,7 @@ describe('<NavItems />', () => {
 
   test('renders 7 children if  authenticated', () => {
     const props = { isAuthenticated: true };
-    const { getByTestId } = render(
+    const { getByTestId } = customRender(
       <MemoryRouter>
         <NavItems {...props} />
       </MemoryRouter>

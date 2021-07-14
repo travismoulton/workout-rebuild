@@ -1,6 +1,6 @@
-import { render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 
+import { customRender, screen } from '../../shared/testUtils';
 import SearchSubCategoryList from './SearchSubCategoryList';
 
 describe('<SearchSubCategoryList />', () => {
@@ -25,7 +25,7 @@ describe('<SearchSubCategoryList />', () => {
   const props = { subCategories: mockCategories, category: 'Mock' };
 
   test('renders the correct amount of categories given a list', () => {
-    render(
+    customRender(
       <MemoryRouter>
         <SearchSubCategoryList {...props} />
       </MemoryRouter>
@@ -38,7 +38,7 @@ describe('<SearchSubCategoryList />', () => {
   });
 
   test('renders the correct subcategories', () => {
-    render(
+    customRender(
       <MemoryRouter>
         <SearchSubCategoryList {...props} />
       </MemoryRouter>

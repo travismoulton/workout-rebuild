@@ -1,6 +1,6 @@
 import { MemoryRouter } from "react-router-dom";
-import { render, screen } from "@testing-library/react";
 
+import { customRender, screen } from "../../shared/testUtils";
 import SearchSubCategory from "./SearchSubCategory";
 
 describe("<SearchSubCategory />", () => {
@@ -10,7 +10,7 @@ describe("<SearchSubCategory />", () => {
       category: "Test Category",
       subCategoryName: "Test SubCategory",
     };
-    render(
+    customRender(
       <MemoryRouter history={{ location: "" }}>
         <SearchSubCategory {...props} />
       </MemoryRouter>

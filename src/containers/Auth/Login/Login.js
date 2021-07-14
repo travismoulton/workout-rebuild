@@ -22,6 +22,7 @@ export default function Login({ firebase }) {
     validation: {
       required: true,
     },
+    testid: 'Login__emailInput',
     label: 'Email address',
     valid: false,
     touched: false,
@@ -38,13 +39,14 @@ export default function Login({ firebase }) {
     validation: {
       required: true,
     },
+    testid: 'Login__passwordInput',
     label: 'Password',
     valid: false,
     touched: false,
     id: 2,
   });
 
-  const [errorMessage, setErrorMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState(null);
 
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
@@ -69,9 +71,8 @@ export default function Login({ firebase }) {
     firebase
       .doSignInWithEmailAndPassword(emailInput.value, passwordInput.value)
       .then((userCredential) => {
-        console.log(userCredential.user)
         dispatch(authSuccess(userCredential.user));
-        setErrorMessage('');
+        setErrorMessage(null);
       })
       .catch((err) => {
         dispatch(authFail(err));
@@ -98,6 +99,7 @@ export default function Login({ firebase }) {
       label={el.label}
       classname="LoginInput"
       wrapperClass="LoginInputWrapper"
+      testid={el.testid}
     />
   ));
 
@@ -105,7 +107,7 @@ export default function Login({ firebase }) {
     <>
       {redirect}
       <div>
-        {errorMessage ? <p>{errorMessage}</p> : null}
+        {errorMessage && <p>{errorMessage}</p>}
         {form}
         <button className={`GlobalBtn-1 ${classes.Btn}`} onClick={submitLogin}>
           Login

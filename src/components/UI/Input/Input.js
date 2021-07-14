@@ -29,6 +29,7 @@ export default function Input(props) {
             onChange={props.changed}
             autoComplete="false"
             className={inputClasses.join(' ')}
+            data-testid={props.testid}
           />
           {props.required && <span className={classes.InputAsteric}>*</span>}
         </div>

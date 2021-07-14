@@ -1,11 +1,11 @@
-import { render } from '@testing-library/react';
+import { customRender } from '../../../shared/testUtils';
 import { MemoryRouter } from 'react-router-dom';
 
 import NavBar from './NavBar';
 
 describe('<NavBar>', () => {
   test('renders', () => {
-    const { getByTestId } = render(
+    const { getByTestId } = customRender(
       <MemoryRouter>
         <NavBar />
       </MemoryRouter>

@@ -1,7 +1,7 @@
-import { render, fireEvent, act } from '@testing-library/react';
 import { MemoryRouter, Router } from 'react-router-dom';
 import { createMemoryHistory } from 'history';
 
+import { render, fireEvent, act } from '@testing-library/react';
 import NavItem from './NavItem';
 
 describe('<NavItem>', () => {

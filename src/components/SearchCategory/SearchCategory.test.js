@@ -1,4 +1,5 @@
-import { render, screen } from "@testing-library/react";
+import { customRender, screen } from '../../shared/testUtils'
+
 
 import SearchCategory from "./SearchCategory";
 
@@ -10,7 +11,7 @@ describe("<SearchCategory />", () => {
       categoryOpen: true,
     };
 
-    render(<SearchCategory {...props} />);
+    customRender(<SearchCategory {...props} />);
 
     const exampleTitle = screen.getByTestId("Test Category");
 

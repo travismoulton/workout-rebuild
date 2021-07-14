@@ -1,4 +1,5 @@
-import { render, screen, waitFor, fireEvent } from '@testing-library/react';
+import {customRender, screen, waitFor, fireEvent} from '../../shared/testUtils'
+// import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 
 import Search from './Search';
@@ -19,7 +20,7 @@ describe('<Search /> without data fetch', () => {
       .spyOn(utils, 'fetchEquipment')
       .mockImplementation(jest.fn(() => Promise.resolve(null)));
 
-    render(<Search />);
+    customRender(<Search />);
 
     const spinner = screen.getByTestId('Spinner');
 
@@ -62,7 +63,7 @@ describe('<Search /> with data fetch', () => {
   };
 
   test('calls the wger api 3 times', async () => {
-    render(<Search />);
+    customRender(<Search />);
 
     await waitFor(() => {
       expect(fetchCategories).toBeCalledTimes(1);
@@ -72,7 +73,7 @@ describe('<Search /> with data fetch', () => {
   });
 
   test('renders Exercise Category Div', async () => {
-    render(<Search />);
+    customRender(<Search />);
 
     await simulateFetch();
 
@@ -82,13 +83,13 @@ describe('<Search /> with data fetch', () => {
   });
 
   test('has the title Search For Exercises', async () => {
-    render(<Search />);
+    customRender(<Search />);
     const title = document.title;
     await waitFor(() => expect(title).toBe('Search For Exercises'));
   });
 
   test('has the correct subcategories after a category is selected', async () => {
-    render(
+    customRender(
       <MemoryRouter>
         <Search />
       </MemoryRouter>

@@ -1,11 +1,11 @@
-import { render } from '@testing-library/react';
+import { customRender } from '../../shared/testUtils';
 import { MemoryRouter } from 'react-router-dom';
 
 import Layout from './Layout';
 
 describe('<Layout>', () => {
   test('renders', () => {
-    const { getByTestId } = render(
+    const { getByTestId } = customRender(
       <MemoryRouter>
         <Layout />
       </MemoryRouter>
@@ -20,7 +20,7 @@ describe('<Layout>', () => {
     const child = <h1 data-testid="Mock Child">Child</h1>;
     const props = { isAuthenticated: false, children: child };
 
-    const { getByTestId } = render(
+    const { getByTestId } = customRender(
       <MemoryRouter>
         <Layout {...props} />
       </MemoryRouter>
