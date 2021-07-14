@@ -11,7 +11,7 @@ import Firebase from '../../../components/Firebase/firebase';
 import { FirebaseContext } from '../../../components/Firebase';
 import Login from './Login';
 
-const mockLogin = jest.fn();
+const mockLogin = jest.fn().mockReturnValue(Promise.resolve('user obj'));
 
 jest.mock('../../../components/Firebase/firebase', () =>
   jest
@@ -60,17 +60,17 @@ describe('<Login />', () => {
 
   test('calls doSignInWithEmailAndPassword', async () => {
     const { getByTestId, getByRole } = customRender(
-      <MemoryRouter>
-        <FirebaseContext.Provider value={new Firebase()}>
-          <FirebaseContext.Consumer>
-            {(firebase) => <Login firebase={firebase} />}
-          </FirebaseContext.Consumer>
-        </FirebaseContext.Provider>
-      </MemoryRouter>
-
       // <MemoryRouter>
-      //   <Login />
+      //   <FirebaseContext.Provider value={new Firebase()}>
+      //     <FirebaseContext.Consumer>
+      //       {(firebase) => <Login firebase={firebase} />}
+      //     </FirebaseContext.Consumer>
+      //   </FirebaseContext.Provider>
       // </MemoryRouter>
+
+      <MemoryRouter>
+        <Login firebase={{ doSignInWithEmailAndPassword: mockLogin }} />
+      </MemoryRouter>
     );
 
     const emailInput = getByTestId('Login__emailInput');
@@ -82,6 +82,6 @@ describe('<Login />', () => {
 
     await waitFor(() => fireEvent.click(btn));
 
-    expect(mockLogin).toHaveBeenCalledTimes(1);
+    await waitFor(() => expect(mockLogin).toHaveBeenCalledTimes(1));
   });
 });

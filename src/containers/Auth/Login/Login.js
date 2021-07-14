@@ -103,6 +103,8 @@ export default function Login({ firebase }) {
     />
   ));
 
+  console.log(firebase);
+
   return (
     <>
       {redirect}
