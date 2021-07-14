@@ -19,11 +19,11 @@ const authSlice = createSlice({
       state.inAuth = true;
     },
     authSuccess: (state, action) => {
-      console.log(action);
       const user = action.payload;
+      
       state.user = user;
-      state.uid = user.authUser.uid;
-      state.accessToken = user.authUser.za;
+      state.uid = user.uid;
+      state.accessToken = user.za;
       state.error = null;
       state.loading = false;
       state.inAuth = false;

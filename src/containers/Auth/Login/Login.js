@@ -69,6 +69,7 @@ export default function Login({ firebase }) {
     firebase
       .doSignInWithEmailAndPassword(emailInput.value, passwordInput.value)
       .then((userCredential) => {
+        console.log(userCredential.user)
         dispatch(authSuccess(userCredential.user));
         setErrorMessage('');
       })

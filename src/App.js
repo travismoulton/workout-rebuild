@@ -7,7 +7,7 @@ import Login from './containers/Auth/Login/Login';
 import Register from './containers/Auth/Register/Register';
 import './App.css';
 
-function App(props) {
+function App({firebase}) {
   const history = useHistory();
   const routes = (
     <Switch>
