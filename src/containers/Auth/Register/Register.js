@@ -52,6 +52,7 @@ export default function Register({ firebase, history }) {
     label: 'Password',
     valid: false,
     touched: false,
+    testid: 'Register__passwordInput',
     id: 3,
   });
 
@@ -68,6 +69,7 @@ export default function Register({ firebase, history }) {
     label: 'Confirm Password',
     valid: false,
     touched: false,
+    testid: 'Register__confirmPWInput',
     id: 4,
   });
 
@@ -133,6 +135,7 @@ export default function Register({ firebase, history }) {
       value={el.value}
       changed={updateFunctions[i]}
       label={el.label}
+      testid={el.testid}
       classname="RegisterInput"
       wrapperClass="RegisterInputWrapper"
     />
