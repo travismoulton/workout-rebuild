@@ -1,14 +1,9 @@
 import { Router, MemoryRouter } from 'react-router-dom';
 import { createMemoryHistory } from 'history';
 
-import {
-  createEvent,
-  customRender,
-  fireEvent,
-  waitFor,
-} from '../../../shared/testUtils';
-import Firebase from '../../../components/Firebase/firebase';
-import { FirebaseContext } from '../../../components/Firebase';
+import { customRender, fireEvent, waitFor } from '../../../shared/testUtils';
+// import Firebase from '../../../components/Firebase/firebase';
+// import { FirebaseContext } from '../../../components/Firebase';
 import Login from './Login';
 
 const mockLogin = jest.fn().mockReturnValue(Promise.resolve('user obj'));
@@ -73,8 +68,8 @@ describe('<Login />', () => {
       </MemoryRouter>
     );
 
-    const emailInput = getByTestId('Login__emailInput');
-    const passwordInput = getByTestId('Login__passwordInput');
+    // const emailInput = getByTestId('Login__emailInput');
+    // const passwordInput = getByTestId('Login__passwordInput');
     const btn = getByRole('button');
 
     // fireEvent(emailInput, createEvent('input', 'test@test.com'));
