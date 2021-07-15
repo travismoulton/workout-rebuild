@@ -6,7 +6,7 @@ import { authFail, authStart, authReset } from '../../../store/authSlice';
 import Input from '../../../components/UI/Input/Input';
 import classes from './Register.module.css';
 
-export default function Register(props) {
+export default function Register({ firebase, history }) {
   const [emailInput, setEmailInput] = useState({
     elementType: 'input',
     elementConfig: {
@@ -107,12 +107,12 @@ export default function Register(props) {
       setErrorMessage('');
       dispatch(authStart());
 
-      props.firebase
+      firebase
         .doCreateUserWithEmailAndPassword(emailInput.value, passwordInput.value)
         .then((userCredential) => {
-          props.firebase.updateUserProfile(userNameInput.value).then(() => {
+          firebase.updateUserProfile(userNameInput.value).then(() => {
             dispatch(authReset());
-            props.history.push('/');
+            history.push('/');
           });
         })
         .catch((err) => {
