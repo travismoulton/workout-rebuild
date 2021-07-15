@@ -2,6 +2,7 @@ import { Router, MemoryRouter } from 'react-router-dom';
 import { createMemoryHistory } from 'history';
 
 import { customRender, fireEvent } from '../../../shared/testUtils';
+import { mockUser } from '../../../shared/mockUser';
 import Login from './Login';
 
 describe('<Login />', () => {
@@ -44,15 +45,6 @@ describe('<Login />', () => {
   });
 
   test('calls doSignInWithEmailAndPassword', async () => {
-    const mockUser = {
-      user: {
-        authUser: {
-          uid: 'uid',
-          za: 'za',
-        },
-      },
-    };
-
     const mockLogin = jest.fn().mockReturnValue(Promise.resolve(mockUser));
 
     const { getByRole } = customRender(

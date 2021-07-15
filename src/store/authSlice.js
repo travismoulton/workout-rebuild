@@ -41,7 +41,11 @@ const authSlice = createSlice({
         state.inAuth = false;
       },
       prepare(action) {
+        console.log(action.authUser);
         const { authUser: user } = action;
+        // console.log(user.displayName);
+        // console.log(user.metadata);
+        // console.log(user);
         return {
           payload: {
             user: {
