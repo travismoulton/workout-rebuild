@@ -1,7 +1,7 @@
 import { Router, MemoryRouter } from 'react-router-dom';
 import { createMemoryHistory } from 'history';
 
-import { customRender, fireEvent, waitFor } from '../../../shared/testUtils';
+import { customRender, fireEvent } from '../../../shared/testUtils';
 import Login from './Login';
 
 describe('<Login />', () => {
