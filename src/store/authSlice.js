@@ -4,7 +4,6 @@ const initialState = {
   error: null,
   loading: false,
   user: null,
-  userEmail: null,
   inAuth: false,
   uid: null,
   accessToken: null,
@@ -32,10 +31,9 @@ const authSlice = createSlice({
     // },
     authSuccess: {
       reducer(state, action) {
-        const { user, email, uid, accessToken } = action.payload;
+        const { user, uid, accessToken } = action.payload;
 
-        state.user = { authUser: user };
-        state.userEmail = email;
+        state.user = user;
         state.uid = uid;
         state.accessToken = accessToken;
         state.error = null;
@@ -43,12 +41,32 @@ const authSlice = createSlice({
         state.inAuth = false;
       },
       prepare(action) {
+        const { authUser: user } = action;
         return {
           payload: {
-            user: action.authUser.displayName,
-            email: action.authUser.email,
-            uid: action.authUser.uid,
-            accessToken: action.authUser.za,
+            user: {
+              displayName: user.displayName,
+              email: user.email,
+              photoURL: user.photoURL,
+              emailVerified: user.emailVerified,
+              phoneNumber: user.phoneNumber,
+              metaData: {
+                lastLoginAt: user.metadata.b,
+                createdAt: user.metadata.a,
+              },
+              providerData: user.providerData,
+              tenantId: user.tenantId,
+              apiKey: user.l,
+              authDomain: user.s,
+              stsTokenManager: {
+                apiKey: user.l,
+                refreshToken: user.S.a.h.a,
+                accessToken: user.S.a.h.b.h,
+                expirationTime: user.S.a.h.c,
+              },
+            },
+            uid: user.uid,
+            accessToken: user.za,
           },
         };
       },

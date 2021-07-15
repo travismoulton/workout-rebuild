@@ -70,25 +70,17 @@ export default function Login({ firebase }) {
     dispatch(authStart());
     firebase
       .doSignInWithEmailAndPassword(emailInput.value, passwordInput.value)
-      // .then((userCredential) => {
-      //   const user = { authUser: userCredential.user };
-      //   dispatch(authSuccess(user));
-      //   setErrorMessage(null);
-      // })
+      .then((userCredential) => {
+        const user = { authUser: userCredential.user };
+        dispatch(authSuccess(user));
+        setErrorMessage(null);
+      })
       .catch((err) => {
         dispatch(authFail(err));
         dispatch(authReset());
         setErrorMessage(err.message);
       });
   };
-
-  // Redirect by checking for authUser. If there is a user, check for authUser property.
-  // If authUser property, redirect to my-profile
-  const redirect = user ? (
-    user.authUser ? (
-      <Redirect to="/my-profile" />
-    ) : null
-  ) : null;
 
   const form = formFields.map((el, i) => (
     <Input
@@ -106,7 +98,9 @@ export default function Login({ firebase }) {
 
   return (
     <>
-      {redirect}
+      {/* If the user is already logged in, redirect them to their profile */}
+      {user && <Redirect to="/my-profile" />}
+
       <div>
         {errorMessage && <p>{errorMessage}</p>}
         {form}
