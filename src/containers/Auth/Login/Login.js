@@ -70,10 +70,11 @@ export default function Login({ firebase }) {
     dispatch(authStart());
     firebase
       .doSignInWithEmailAndPassword(emailInput.value, passwordInput.value)
-      .then((userCredential) => {
-        dispatch(authSuccess(userCredential.user));
-        setErrorMessage(null);
-      })
+      // .then((userCredential) => {
+      //   const user = { authUser: userCredential.user };
+      //   dispatch(authSuccess(user));
+      //   setErrorMessage(null);
+      // })
       .catch((err) => {
         dispatch(authFail(err));
         dispatch(authReset());
@@ -102,8 +103,6 @@ export default function Login({ firebase }) {
       testid={el.testid}
     />
   ));
-
-  console.log(firebase);
 
   return (
     <>

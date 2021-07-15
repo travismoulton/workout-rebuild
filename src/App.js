@@ -26,8 +26,10 @@ function App({ firebase }) {
   }, [firebase.auth, loaded]);
 
   useEffect(() => {
-    if (authUser && !isAuthenticated && !inAuth)
+    if (authUser && !isAuthenticated && !inAuth) {
+      console.log('app', isAuthenticated);
       dispatch(authSuccess(authUser));
+    }
 
     if (!authUser) dispatch(authLogout());
   }, [authUser, isAuthenticated, dispatch, inAuth]);

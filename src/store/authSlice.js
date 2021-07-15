@@ -4,6 +4,7 @@ const initialState = {
   error: null,
   loading: false,
   user: null,
+  userEmail: null,
   inAuth: false,
   uid: null,
   accessToken: null,
@@ -18,15 +19,39 @@ const authSlice = createSlice({
       state.loading = true;
       state.inAuth = true;
     },
-    authSuccess: (state, action) => {
-      const user = action.payload;
+    // authSuccess: (state, action) => {
+    //   console.log(action.payload);
+    //   const user = action.payload;
 
-      state.user = user;
-      state.uid = user.authUser.uid;
-      state.accessToken = user.authUser.za;
-      state.error = null;
-      state.loading = false;
-      state.inAuth = false;
+    //   state.user = user;
+    //   state.uid = user.uid;
+    //   state.accessToken = user.za;
+    //   state.error = null;
+    //   state.loading = false;
+    //   state.inAuth = false;
+    // },
+    authSuccess: {
+      reducer(state, action) {
+        const { user, email, uid, accessToken } = action.payload;
+
+        state.user = { authUser: user };
+        state.userEmail = email;
+        state.uid = uid;
+        state.accessToken = accessToken;
+        state.error = null;
+        state.loading = false;
+        state.inAuth = false;
+      },
+      prepare(action) {
+        return {
+          payload: {
+            user: action.authUser.displayName,
+            email: action.authUser.email,
+            uid: action.authUser.uid,
+            accessToken: action.authUser.za,
+          },
+        };
+      },
     },
     authFail: (state, action) => {
       state.error = action.error;
