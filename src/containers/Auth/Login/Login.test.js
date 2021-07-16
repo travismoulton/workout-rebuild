@@ -25,9 +25,7 @@ describe('<Login />', () => {
       auth: {
         error: null,
         loading: false,
-        user: {
-          authUser: {},
-        },
+        user: {},
         inAuth: false,
         uid: null,
         accessToken: null,

@@ -123,7 +123,7 @@ export default function Register({ firebase, history }) {
           setErrorMessage(err.message);
         });
     } else if (passwordInput.value !== confirmPWInput.value) {
-      setErrorMessage('Passwords do not match');
+      setErrorMessage('Passwords do not match!');
     }
   };
 
