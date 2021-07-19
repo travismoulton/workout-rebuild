@@ -6,6 +6,7 @@ import { authSuccess, authLogout } from './store/authSlice';
 import { FirebaseContext } from './components/Firebase/index';
 import Layout from './components/Layout/Layout';
 import Search from './containers/Search/Search';
+import Results from './containers/Results/Results';
 import Login from './containers/Auth/Login/Login';
 import Logout from './components/Logout/Logout';
 import Register from './containers/Auth/Register/Register';
@@ -48,6 +49,7 @@ function App({ firebase }) {
           {(firebase) => <Login firebase={firebase} history={history} />}
         </FirebaseContext.Consumer>
       </Route>
+      <Route path="/results/:category/:query" component={Results} />
       <Route path="/" component={Search} />
     </Switch>
   ) : (
@@ -62,6 +64,7 @@ function App({ firebase }) {
           {(firebase) => <Login firebase={firebase} history={history} />}
         </FirebaseContext.Consumer>
       </Route>
+      <Route path="/results/:category/:query" component={Results} />
       <Route path="/" component={Search} />
     </Switch>
   );
