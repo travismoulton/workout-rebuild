@@ -36,23 +36,11 @@ describe('<ExerciseResult />', () => {
     },
   };
 
-  const mockState = {
-    favorites: {
-      ids: [1, 2, 3],
-      entities: {
-        1: { id: 1, exerciseId: 'id1', firebaseId: 1 },
-        2: { id: 2, exerciseId: 'id2', firebaseId: 2 },
-        3: { id: 3, exerciseId: 'id3', firebaseId: 3 },
-      },
-    },
-  };
-
   test('renders with correct doucment title and list size', async () => {
     const { getByTestId } = customRender(
       <MemoryRouter>
         <Results {...props} />
-      </MemoryRouter>,
-      { preloadedState: mockState }
+      </MemoryRouter>
     );
 
     await simulateFetch();
