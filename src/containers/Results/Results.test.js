@@ -36,22 +36,19 @@ describe('<ExerciseResult />', () => {
     },
   };
 
-  test('renders', async () => {
-    const { category, subCategory, id, custom, wger, random } =
-      props.location.state;
-
-    const mockState = {
-      favorites: {
-        ids: [1, 2, 3],
-        entities: {
-          1: { id: 1, exerciseId: 'id1', firebaseId: 1 },
-          2: { id: 2, exerciseId: 'id2', firebaseId: 2 },
-          3: { id: 3, exerciseId: 'id3', firebaseId: 3 },
-        },
+  const mockState = {
+    favorites: {
+      ids: [1, 2, 3],
+      entities: {
+        1: { id: 1, exerciseId: 'id1', firebaseId: 1 },
+        2: { id: 2, exerciseId: 'id2', firebaseId: 2 },
+        3: { id: 3, exerciseId: 'id3', firebaseId: 3 },
       },
-    };
+    },
+  };
 
-    customRender(
+  test('renders with correct doucment title and list size', async () => {
+    const { getByTestId } = customRender(
       <MemoryRouter>
         <Results {...props} />
       </MemoryRouter>,
@@ -59,5 +56,12 @@ describe('<ExerciseResult />', () => {
     );
 
     await simulateFetch();
+
+    const results = getByTestId('ResultsUL');
+    expect(results.childNodes).toHaveLength(4);
+    expect(document.title).toBe('My Custom Exercises');
+
+    const exerciseResult = getByTestId('ExerciseResult__mock4');
+    expect(exerciseResult).toBeInTheDocument();
   });
 });

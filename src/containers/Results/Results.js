@@ -43,8 +43,6 @@ export default function Results(props) {
     }
   }, [exerciseResults, category, id, error]);
 
-  console.log(exerciseResults);
-
   const displayResults = exerciseResults.map((exercise) => (
     <ExerciseResult
       key={exercise.name}
@@ -64,7 +62,9 @@ export default function Results(props) {
       {error.isError && error.message}
       <h3>{wger ? subCategory : 'My custom exercises'}</h3>
       {exerciseResults.length ? (
-        <ul style={{ padding: '0' }}>{displayResults}</ul>
+        <ul style={{ padding: '0' }} data-testid="ResultsUL">
+          {displayResults}
+        </ul>
       ) : (
         <Spinner />
       )}
