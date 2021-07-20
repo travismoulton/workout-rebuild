@@ -2,7 +2,6 @@ import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import slugify from 'slugify';
 
-import { selectFavoriteFirebaseId } from '../../store/favoritesSlice';
 import FavoriteBtn from '../FavoriteBtn/FavoriteBtn';
 import classes from './ExerciseResult.module.css';
 
@@ -11,12 +10,6 @@ export default function ExerciseResult(props) {
     props;
 
   const { user } = useSelector((state) => state.auth);
-
-  const firebaseId = useSelector((state) =>
-    selectFavoriteFirebaseId(state, exerciseId)
-  );
-
-  const isFavorite = firebaseId ? true : false;
 
   return (
     <li
@@ -37,13 +30,7 @@ export default function ExerciseResult(props) {
           <span style={{ marginRight: '.5rem' }}>Name:</span> {name}
         </Link>
         <div className={classes.BtnPairContainer}>
-          {user && (
-            <FavoriteBtn
-              isFavorite={isFavorite}
-              firebaseId={firebaseId}
-              exerciseId={exerciseId}
-            />
-          )}
+          {user && <FavoriteBtn exerciseId={exerciseId} />}
         </div>
       </div>
 
