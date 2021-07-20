@@ -1,12 +1,23 @@
 import { Link } from 'react-router-dom';
-// import { useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import slugify from 'slugify';
 
+import FavoriteBtn from '../FavoriteBtn/FavoriteBtn';
 import classes from './ExerciseResult.module.css';
 
 export default function ExerciseResult(props) {
-  const { exerciseId, firebaseSearchId, custom, name, category, equipment } =
-    props;
+  const {
+    exerciseId,
+    firebaseSearchId,
+    custom,
+    name,
+    category,
+    equipment,
+    isFavorite,
+    firebaseId,
+  } = props;
+
+  const { user } = useSelector((state) => state.auth);
 
   return (
     <li
@@ -26,7 +37,17 @@ export default function ExerciseResult(props) {
         >
           <span style={{ marginRight: '.5rem' }}>Name:</span> {name}
         </Link>
+        <div className={classes.BtnPairContainer}>
+          {user && (
+            <FavoriteBtn
+              isFavorite={isFavorite}
+              firebaseId={firebaseId}
+              exerciseId={exerciseId}
+            />
+          )}
+        </div>
       </div>
+
       <div>
         <span>{category && `Category: ${category}`}</span>
         <span>{equipment && `Equipment: ${equipment}`}</span>

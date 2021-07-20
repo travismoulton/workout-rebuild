@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-// import { useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 
 import { resultsUtils as utils } from './resultsUtils';
 import ExerciseResult from '../../components/ExerciseResult/ExerciseResult';
@@ -8,7 +8,7 @@ import wgerData from '../../shared/wgerData';
 
 export default function Results(props) {
   const [exerciseResults, setExerciseResults] = useState([]);
-  // const [favoriteExerciseIds, setFavoriteExerciseIds] = useState([]);
+  const [favoriteExerciseIds, setFavoriteExerciseIds] = useState([]);
   const [error, setError] = useState({
     isError: false,
     message: (
@@ -19,16 +19,17 @@ export default function Results(props) {
     ),
   });
 
-  // const { user, uid, accessToken } = useSelector((state) => state.auth);
+  const { user, uid, accessToken } = useSelector((state) => state.auth);
 
   useEffect(() => {
+    const { category, subCategory } = props.location.state;
     document.title =
-      props.location.state.category === 'exercisecategory'
-        ? `Category: ${props.location.state.subCategory}`
-        : props.location.state.category === 'muscle'
-        ? `Muscle: ${props.location.state.subCategory}`
-        : props.location.state.category === 'equipment'
-        ? `Equipment: ${props.location.state.subCategory}`
+      category === 'exercisecategory'
+        ? `Category: ${subCategory}`
+        : category === 'muscle'
+        ? `Muscle: ${subCategory}`
+        : category === 'equipment'
+        ? `Equipment: ${subCategory}`
         : 'My Custom Exercises';
   }, [props.location.state]);
 
@@ -56,6 +57,7 @@ export default function Results(props) {
       firebaseId={null}
       custom={props.location.state.custom}
       firebaseSearchId={exercise.firebaseId}
+      exerciseId={exercise.id}
     />
   ));
 

@@ -1,0 +1,26 @@
+.Btn {
+  width: 11rem;
+  height: 3.5rem;
+  border-radius: 6px;
+  box-shadow: var(--box-shadow-2);
+  background-color: rgba(0, 255, 153, 0.7);
+  border: 2px solid rgba(0, 255, 153, 0.7);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+}
+
+.Btn:active {
+  transform: translateY(10%);
+  box-shadow: var(--box-shadow-1);
+}
+
+.Btn:hover {
+  filter: brightness(120%);
+  cursor: pointer;
+}
+
+.Icon {
+  margin-bottom: 0.3rem;
+}

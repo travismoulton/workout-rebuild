@@ -1,1 +1,2 @@
 //1: Display a proper error message on the results page.
+//2: Checkout the error being thrown when logging in through the Login component
