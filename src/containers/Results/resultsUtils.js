@@ -1,6 +1,13 @@
 import wgerInstance from '../../shared/axiosInstances/wger';
 
 export const resultsUtils = {
+  getParam: function (category, id) {
+    return category === 'exercisecategory'
+      ? `category=${id}`
+      : category === 'muscle'
+      ? `muscles=${id}`
+      : `equipment=${id}`;
+  },
   fetchWgerExercises: async function (param) {
     let next = `exercise/?language=2&${param}`;
     const arr = [];

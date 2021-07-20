@@ -34,12 +34,8 @@ export default function Results(props) {
 
   useEffect(() => {
     if (!exerciseResults.length && !error.isError) {
-      const param =
-        props.location.state.category === 'exercisecategory'
-          ? `category=${props.location.state.id}`
-          : props.location.state.category === 'muscle'
-          ? `muscles=${props.location.state.id}`
-          : `equipment=${props.location.state.id}`;
+      const { category, id } = props.location.state;
+      const param = utils.getParam(category, id);
 
       utils
         .fetchWgerExercises(param)
