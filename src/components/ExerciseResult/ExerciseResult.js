@@ -12,8 +12,6 @@ export default function ExerciseResult(props) {
 
   const { user } = useSelector((state) => state.auth);
 
-  console.log(exerciseId);
-
   const firebaseId = useSelector((state) =>
     selectFavoriteFirebaseId(state, exerciseId)
   );

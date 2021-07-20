@@ -37,26 +37,25 @@ describe('<ExerciseResult />', () => {
   };
 
   test('renders', async () => {
-    const { category, subCategory, id, custom, wger } = props.location.state;
+    const { category, subCategory, id, custom, wger, random } =
+      props.location.state;
 
     const mockState = {
       favorites: {
-        ids: [1, 2, 3, 4],
-      },
-      entities: {
-        1: { id: 1, exerciseId: 'id1', firebaseId: 1 },
-        2: { id: 2, exerciseId: 'id2', firebaseId: 2 },
-        3: { id: 3, exerciseId: 'id3', firebaseId: 3 },
+        ids: [1, 2, 3],
+        entities: {
+          1: { id: 1, exerciseId: 'id1', firebaseId: 1 },
+          2: { id: 2, exerciseId: 'id2', firebaseId: 2 },
+          3: { id: 3, exerciseId: 'id3', firebaseId: 3 },
+        },
       },
     };
 
-    const { getByText } = customRender(
+    customRender(
       <MemoryRouter>
         <Results {...props} />
       </MemoryRouter>,
-      {
-        preloadedState: mockState,
-      }
+      { preloadedState: mockState }
     );
 
     await simulateFetch();
