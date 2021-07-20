@@ -3,6 +3,7 @@ import { configureStore } from '@reduxjs/toolkit';
 import { Provider } from 'react-redux';
 
 import authReducer from '../store/authSlice';
+import favoritesReducer from '../store/favoritesSlice';
 
 function customRender(
   ui,
@@ -11,6 +12,7 @@ function customRender(
     store = configureStore({
       reducer: {
         auth: authReducer,
+        favorites: favoritesReducer,
       },
       preloadedState,
     }),

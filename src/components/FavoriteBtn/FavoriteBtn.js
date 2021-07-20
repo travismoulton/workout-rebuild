@@ -2,19 +2,16 @@ import { useSelector, useDispatch } from 'react-redux';
 import { GoThumbsup, GoThumbsdown } from 'react-icons/go';
 
 import classes from './FavoriteBtn.module.css';
-import { addFavorite } from '../../store/favoritesSlice';
+import { addFavorite, removeFavorite } from '../../store/favoritesSlice';
 
 const FavoriteBtn = ({ isFavorite, firebaseId, exerciseId }) => {
   const { uid, accessToken } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
 
-  // const toggleFavoritesHandler = () =>
-  //   props.isFavorite
-  //     ? dispatch(removeFromFavorites(uid, props.firebaseId, accessToken))
-  //     : dispatch(addFavorite(uid, props.exerciseId, accessToken));
-
   const toggleFavoritesHandler = () =>
-    dispatch(addFavorite({ uid, exerciseId }));
+    isFavorite
+      ? dispatch(removeFavorite({ uid, firebaseId, accessToken }))
+      : dispatch(addFavorite({ uid, exerciseId, accessToken }));
 
   const btnClasses = [
     classes.Btn,

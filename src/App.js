@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Switch, Route, withRouter, useHistory } from 'react-router-dom';
 
 import { authSuccess, authLogout } from './store/authSlice';
+import { fetchFavorites } from './store/favoritesSlice';
 import { FirebaseContext } from './components/Firebase/index';
 import Layout from './components/Layout/Layout';
 import Search from './containers/Search/Search';
@@ -27,14 +28,15 @@ function App({ firebase }) {
   }, [firebase.auth, loaded]);
 
   useEffect(() => {
-    if (authUser && !isAuthenticated && !inAuth) {
-      console.log('app', isAuthenticated);
-      console.log(authUser);
+    if (authUser && !isAuthenticated && !inAuth)
       dispatch(authSuccess(authUser));
-    }
 
     if (!authUser) dispatch(authLogout());
   }, [authUser, isAuthenticated, dispatch, inAuth]);
+
+  useEffect(() => {
+    if (authUser) dispatch(fetchFavorites(authUser.authUser.uid));
+  });
 
   const history = useHistory();
   const routes = !isAuthenticated ? (

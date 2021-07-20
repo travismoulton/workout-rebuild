@@ -2,22 +2,23 @@ import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import slugify from 'slugify';
 
+import { selectFavoriteFirebaseId } from '../../store/favoritesSlice';
 import FavoriteBtn from '../FavoriteBtn/FavoriteBtn';
 import classes from './ExerciseResult.module.css';
 
 export default function ExerciseResult(props) {
-  const {
-    exerciseId,
-    firebaseSearchId,
-    custom,
-    name,
-    category,
-    equipment,
-    isFavorite,
-    firebaseId,
-  } = props;
+  const { exerciseId, firebaseSearchId, custom, name, category, equipment } =
+    props;
 
   const { user } = useSelector((state) => state.auth);
+
+  console.log(exerciseId);
+
+  const firebaseId = useSelector((state) =>
+    selectFavoriteFirebaseId(state, exerciseId)
+  );
+
+  const isFavorite = firebaseId ? true : false;
 
   return (
     <li

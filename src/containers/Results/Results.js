@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
 
 import { resultsUtils as utils } from './resultsUtils';
 import ExerciseResult from '../../components/ExerciseResult/ExerciseResult';
@@ -8,7 +7,6 @@ import wgerData from '../../shared/wgerData';
 
 export default function Results(props) {
   const [exerciseResults, setExerciseResults] = useState([]);
-  const [favoriteExerciseIds, setFavoriteExerciseIds] = useState([]);
   const [error, setError] = useState({
     isError: false,
     message: (
@@ -19,10 +17,11 @@ export default function Results(props) {
     ),
   });
 
-  const { user, uid, accessToken } = useSelector((state) => state.auth);
+  // const { user, uid, accessToken } = useSelector((state) => state.auth);
+
+  const { category, subCategory, id, custom, wger } = props.location.state;
 
   useEffect(() => {
-    const { category, subCategory } = props.location.state;
     document.title =
       category === 'exercisecategory'
         ? `Category: ${subCategory}`
@@ -31,11 +30,10 @@ export default function Results(props) {
         : category === 'equipment'
         ? `Equipment: ${subCategory}`
         : 'My Custom Exercises';
-  }, [props.location.state]);
+  }, [subCategory, category]);
 
   useEffect(() => {
     if (!exerciseResults.length && !error.isError) {
-      const { category, id } = props.location.state;
       const param = utils.getParam(category, id);
 
       utils
@@ -43,7 +41,9 @@ export default function Results(props) {
         .then((res) => setExerciseResults(res))
         .catch((err) => setError({ ...error, isError: true }));
     }
-  }, [exerciseResults, props.location.state, error]);
+  }, [exerciseResults, category, id, error]);
+
+  console.log(exerciseResults);
 
   const displayResults = exerciseResults.map((exercise) => (
     <ExerciseResult
@@ -53,9 +53,7 @@ export default function Results(props) {
       equipment={
         exercise.equipment && wgerData.equipment[exercise.equipment[0]]
       }
-      isFavorite={false}
-      firebaseId={null}
-      custom={props.location.state.custom}
+      custom={custom}
       firebaseSearchId={exercise.firebaseId}
       exerciseId={exercise.id}
     />
@@ -64,11 +62,7 @@ export default function Results(props) {
   return (
     <>
       {error.isError && error.message}
-      <h3>
-        {props.location.state.wger
-          ? props.location.state.subCategory
-          : 'My custom exercises'}
-      </h3>
+      <h3>{wger ? subCategory : 'My custom exercises'}</h3>
       {exerciseResults.length ? (
         <ul style={{ padding: '0' }}>{displayResults}</ul>
       ) : (
