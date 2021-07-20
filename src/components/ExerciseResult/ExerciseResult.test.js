@@ -36,4 +36,23 @@ describe('<ExerciseResult />', () => {
 
     expect(history.location.pathname).toBe('/exercise/mock-exercise');
   });
+
+  test('if given a category and equipment, displays them', () => {
+    const newProps = {
+      ...props,
+      category: 'mock category',
+      equipment: 'mock equipment',
+    };
+    const { getByText } = customRender(
+      <MemoryRouter>
+        <ExerciseResult {...newProps} />
+      </MemoryRouter>
+    );
+
+    const category = getByText('Category: mock category');
+    const equipment = getByText('Equipment: mock equipment');
+
+    expect(category).toBeInTheDocument();
+    expect(equipment).toBeInTheDocument();
+  });
 });

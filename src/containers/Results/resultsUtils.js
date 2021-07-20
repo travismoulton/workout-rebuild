@@ -1,13 +1,13 @@
-import axios from 'axios';
+import wgerInstance from '../../shared/axiosInstances/wger';
 
 export const resultsUtils = {
   fetchWgerExercises: async function (param) {
-    let next = `https://wger.de/api/v2/exercise/?language=2&${param}`;
+    let next = `exercise/?language=2&${param}`;
     const arr = [];
 
     while (next) {
-      await axios
-        .get(next, { timeout: 10000 })
+      await wgerInstance
+        .get(next)
         // eslint-disable-next-line no-loop-func
         .then((res) => {
           res.data.results.forEach((result) => arr.push(result));
