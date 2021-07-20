@@ -1,0 +1,66 @@
+.ExerciseResult {
+  list-style: none;
+  box-shadow: var(--box-shadow-1);
+  border-radius: 3px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  background-color: var(--color-primary);
+  color: var(--color-white);
+  display: flex;
+  flex-direction: column;
+  min-width: 50rem;
+}
+
+.ExerciseResult div {
+  display: flex;
+  justify-content: space-between;
+}
+
+.ExerciseResult a {
+  text-decoration: none;
+  color: var(--color-white);
+}
+
+.ExerciseResult button.favorite {
+  background-color: #fff;
+}
+
+.BtnPairContainer {
+  margin-left: 1rem;
+}
+
+@media only screen and (max-width: 800px) {
+  .ExerciseResult {
+    width: 75%;
+    margin: 0.5rem auto;
+  }
+}
+
+@media only screen and (max-width: 650px) {
+  .ExerciseResult {
+    min-width: 0rem;
+    width: 85%;
+  }
+}
+
+@media only screen and (max-width: 500px) {
+  .ExerciseResult {
+    width: 75%;
+  }
+
+  .ExerciseResult div {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .ExerciseResult *:not(:last-child) {
+    margin-bottom: 0.5rem;
+  }
+}
+
+@media only screen and (max-width: 400px) {
+  .ExerciseResult {
+    width: 90%;
+  }
+}

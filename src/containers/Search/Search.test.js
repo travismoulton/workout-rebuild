@@ -1,5 +1,10 @@
-import {customRender, screen, waitFor, fireEvent} from '../../shared/testUtils'
-// import { render, screen, waitFor, fireEvent } from '@testing-library/react';
+import {
+  customRender,
+  screen,
+  waitFor,
+  fireEvent,
+} from '../../shared/testUtils';
+
 import { MemoryRouter } from 'react-router-dom';
 
 import Search from './Search';
