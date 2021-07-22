@@ -1,4 +1,7 @@
-import { customRender } from '../../shared/testUtils';
+import * as reactRedux from 'react-redux';
+import * as mockActions from '../../store/favoritesSlice';
+
+import { customRender, fireEvent } from '../../shared/testUtils';
 import FavoriteBtn from './FavoriteBtn';
 
 const mockState = {
@@ -13,6 +16,30 @@ const mockState = {
 };
 
 describe('<FavoriteBtn />', () => {
+  let mockUseDispatch, dummyDispatch, mockAddFavorite, mockRemoveFavorite;
+
+  beforeEach(() => {
+    dummyDispatch = jest.fn();
+    mockUseDispatch = jest.spyOn(reactRedux, 'useDispatch');
+    mockUseDispatch.mockReturnValue(dummyDispatch);
+
+    mockAddFavorite = jest
+      .spyOn(mockActions, 'addFavorite')
+      .mockImplementation(jest.fn(() => {}));
+
+    mockRemoveFavorite = jest
+      .spyOn(mockActions, 'removeFavorite')
+      .mockImplementation(jest.fn(() => {}));
+  });
+
+  afterEach(() => {
+    jest.resetAllMocks();
+    mockUseDispatch = null;
+    dummyDispatch = null;
+    mockAddFavorite = null;
+    mockRemoveFavorite = null;
+  });
+
   test('renders when passed an exercise in favorites', () => {
     const { getByText } = customRender(<FavoriteBtn exerciseId={'id1'} />, {
       preloadedState: mockState,
@@ -27,5 +54,35 @@ describe('<FavoriteBtn />', () => {
     });
 
     expect(getByText('Favorite')).toBeInTheDocument();
+  });
+
+  test('calls dispatch on button click', () => {
+    const { getByRole } = customRender(<FavoriteBtn exerciseId={'id1'} />, {
+      preloadedState: mockState,
+    });
+
+    fireEvent.click(getByRole('button'));
+
+    expect(dummyDispatch).toBeCalled();
+  });
+
+  test('calls addFavorite if the exercise is not a favorite', () => {
+    const { getByRole } = customRender(<FavoriteBtn exerciseId={'id4'} />, {
+      preloadedState: mockState,
+    });
+
+    fireEvent.click(getByRole('button'));
+
+    expect(mockAddFavorite).toBeCalled();
+  });
+
+  test('calls removeFavorite if the exercise is a favorite', () => {
+    const { getByRole } = customRender(<FavoriteBtn exerciseId={'id1'} />, {
+      preloadedState: mockState,
+    });
+
+    fireEvent.click(getByRole('button'));
+
+    expect(mockRemoveFavorite).toBeCalled();
   });
 });
