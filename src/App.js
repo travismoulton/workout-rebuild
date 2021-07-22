@@ -11,6 +11,8 @@ import Results from './containers/Results/Results';
 import Login from './containers/Auth/Login/Login';
 import Logout from './components/Logout/Logout';
 import Register from './containers/Auth/Register/Register';
+import ExerciseDetail from './containers/ExerciseDetail/ExerciseDetail';
+import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary';
 import './App.css';
 
 function App({ firebase }) {
@@ -53,6 +55,14 @@ function App({ firebase }) {
         </FirebaseContext.Consumer>
       </Route>
       <Route path="/results/:category/:query" component={Results} />
+      <Route
+        path="/exercise/:name"
+        render={(routeProps) => (
+          <ErrorBoundary>
+            <ExerciseDetail {...routeProps} />
+          </ErrorBoundary>
+        )}
+      />
       <Route path="/" component={Search} />
     </Switch>
   ) : (
@@ -67,6 +77,14 @@ function App({ firebase }) {
           {(firebase) => <Login firebase={firebase} history={history} />}
         </FirebaseContext.Consumer>
       </Route>
+      <Route
+        path="/exercise/:name"
+        render={(routeProps) => (
+          <ErrorBoundary>
+            <ExerciseDetail {...routeProps} />
+          </ErrorBoundary>
+        )}
+      />
       <Route path="/results/:category/:query" component={Results} />
       <Route path="/" component={Search} />
     </Switch>
