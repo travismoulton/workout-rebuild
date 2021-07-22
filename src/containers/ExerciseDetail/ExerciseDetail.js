@@ -11,8 +11,9 @@ import AddToWorkoutBtn from '../../components/AddToWorkoutBtn/AddToWorkoutBtn';
 import Modal from '../../components/UI/Modal/Modal';
 import FavoriteBtn from '../../components/FavoriteBtn/FavoriteBtn';
 import classes from './ExerciseDetail.module.css';
-import { removeFromFavorites } from '../../store/actions';
-import wgerDict from '../../shared/wgerDict';
+import { removeFavorite } from '../../store/favoritesSlice';
+import { exerciseDetailUtils as utils } from './exerciseDetailUtils';
+import wgerData from '../../shared/wgerData';
 
 const ExerciseDetail = (props) => {
   const [exercise, setExercise] = useState();
@@ -31,12 +32,35 @@ const ExerciseDetail = (props) => {
   });
   const { user, uid, accessToken } = useSelector((state) => state.auth);
   const favorites = useSelector((state) => state.favorites.favorites);
-  const buildingWorkout = useSelector((state) => state.workout.buildingWorkout);
+  // const buildingWorkout = useSelector((state) => state.workout.buildingWorkout);
   const dispatch = useDispatch();
 
   useEffect(() => {
     if (exercise) document.title = exercise.name;
   }, [exercise]);
+
+  useEffect(() => {
+    if (!exercise) {
+      const { firebaseSearchId, id } = props.location.state;
+      const shouldLoadCustomExercises = props.location.state.custom && user;
+
+      if (shouldLoadCustomExercises) {
+        utils
+          .fetchCustomExercise(uid, firebaseSearchId)
+          .then((exercise) => setExercise(exercise))
+          .catch((err) => {
+            setError({ ...error, isError: true, code: 'noExercise' });
+          });
+      } else if (!shouldLoadCustomExercises) {
+        utils
+          .fetchWgerExercise(id)
+          .then((exercise) => setExercise(exercise))
+          .catch((err) => {
+            setError({ ...error, isError: true, code: 'noExercise' });
+          });
+      }
+    }
+  }, [exercise, props.location.state, error, uid, user]);
 
   useEffect(() => {
     setIsFavorite(false);
@@ -53,7 +77,7 @@ const ExerciseDetail = (props) => {
 
   const deleteCustomExercise = async () => {
     if (isFavorite)
-      dispatch(removeFromFavorites(user.authUser.uid, props.firebaseId));
+      dispatch(removeFavorite(user.authUser.uid, props.firebaseId));
 
     const { firebaseSearchId } = props.location.state;
 
@@ -105,12 +129,12 @@ const ExerciseDetail = (props) => {
 
       <h1 className={classes.ExerciseName}>{exercise.name}</h1>
       <ExerciseDetailCategory
-        category={wgerDict.exerciseCategoryList[exercise.category]}
+        category={wgerData.exerciseCategoryList[exercise.category]}
       />
       <ExerciseDetailEquipment
         equipment={
           exercise.equipment
-            ? exercise.equipment.map((el) => wgerDict.equipment[el])
+            ? exercise.equipment.map((el) => wgerData.equipment[el])
             : []
         }
       />
@@ -121,13 +145,13 @@ const ExerciseDetail = (props) => {
       <ExerciseDetailMuscles
         muscles={
           exercise.muscles
-            ? exercise.muscles.map((muscle) => wgerDict.muscles[muscle])
+            ? exercise.muscles.map((muscle) => wgerData.muscles[muscle])
             : []
         }
         secondary={
           exercise.muscles_secondary
             ? exercise.muscles_secondary.map(
-                (muscle) => wgerDict.muscles[muscle]
+                (muscle) => wgerData.muscles[muscle]
               )
             : []
         }
@@ -146,7 +170,7 @@ const ExerciseDetail = (props) => {
           />
         </div>
       )}
-      {buildingWorkout && (
+      {/* {buildingWorkout && (
         <div className={classes.AddToWorkoutBtnContainer}>
           <AddToWorkoutBtn
             history={props.history}
@@ -154,7 +178,7 @@ const ExerciseDetail = (props) => {
             name={exercise.name}
           />
         </div>
-      )}
+      )} */}
       {props.location.state.custom ? deleteCustomExerciseBtn : null}
 
       {props.location.state.custom ? modal : null}
@@ -171,21 +195,3 @@ const ExerciseDetail = (props) => {
 };
 
 export default ExerciseDetail;
-
-// For custom exercises
-
-// useEffect(() => {
-//   const { firebaseSearchId, id } = props.location.state;
-
-//   const shouldLoadCustomExercises = props.location.state.custom && user;
-//   const url = shouldLoadCustomExercises
-//     ? `https://workout-81691-default-rtdb.firebaseio.com/customExercises/${uid}/${firebaseSearchId}.json?auth=${accessToken}`
-//     : `https://wger.de/api/v2/exercise/${id}`;
-
-//   axios
-//     .get(url, { timeout: 10000 })
-//     .then((res) => setExercise(res.data))
-//     .catch((err) => {
-//       setError({ ...error, isError: true, code: 'noExercise' });
-//     });
-// }, [props.location.state, uid, error, user, accessToken]);
