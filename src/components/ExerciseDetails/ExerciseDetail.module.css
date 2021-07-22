@@ -1,0 +1,69 @@
+.Detail h3 {
+  font-size: 3rem;
+  font-weight: 400;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 2rem auto;
+  width: 30rem;
+}
+
+.Detail h3 svg {
+  fill: var(--color-primary);
+  margin-left: 0.7rem;
+}
+
+.Category div {
+  width: 50%;
+  display: flex;
+  justify-content: center;
+  margin: 0 auto;
+}
+
+.Category p {
+  width: 20rem;
+  font-size: 2rem;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+}
+
+.Description p {
+  margin: 0 auto;
+  font-size: 1.8rem;
+  line-height: 140%;
+}
+
+.Description div {
+  width: 60%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.Description div p {
+  margin-bottom: 1rem;
+}
+
+.Detail ul {
+  width: 50%;
+  margin: 0 auto;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0;
+}
+
+.Detail li {
+  font-size: 2rem;
+  display: flex;
+  justify-content: center;
+}
+
+.Equipment li {
+  width: 20rem;
+}
+
+.Muscle li {
+  width: 20rem;
+}

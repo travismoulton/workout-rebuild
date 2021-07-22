@@ -1,0 +1,64 @@
+.ExerciseName {
+  font-size: 3.5rem;
+  font-weight: 400;
+}
+
+.BtnContainer {
+  margin-top: 2rem;
+  display: flex;
+  justify-content: center;
+}
+
+.DeleteBtn {
+  width: 11rem;
+  margin-top: 1rem;
+}
+
+.AddToWorkoutBtnContainer {
+  margin-top: 1rem;
+  margin-left: -1rem;
+  display: flex;
+  justify-content: center;
+}
+
+.AddToWorkoutBtnContainer button {
+  background-color: rgba(var(--rgba-primary), 0.7);
+  height: 3.5rem;
+  border-radius: 3px;
+  border: none;
+  box-shadow: var(--box-shadow-2);
+  color: var(--color-white);
+}
+
+.ModalBtnWrapper {
+  display: flex;
+  width: 60%;
+  justify-content: space-between;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.CancelBtn,
+.ConfirmBtn {
+  width: 15rem;
+}
+
+.MuscleImg {
+  background-image: url('https://wger.de/static/images/muscles/secondary/muscle-13.svg');
+  background-repeat: no-repeat;
+  width: 20rem;
+  height: 40rem;
+
+  margin: 1rem auto;
+}
+
+@media only screen and (max-width: 800px) {
+  .ModalBtnWrapper {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .ConfirmBtn {
+    margin-bottom: 1rem;
+  }
+}

@@ -1,0 +1,57 @@
+.Img {
+  width: 20rem;
+  height: 40rem;
+  background-repeat: no-repeat;
+}
+
+.Wrapper {
+  display: flex;
+  justify-content: space-around;
+  width: 50%;
+  margin: 1rem auto;
+}
+
+.ColorKey {
+  display: flex;
+  justify-content: center;
+}
+
+.ColorKey p:first-child {
+  margin-right: 10rem;
+}
+
+.ColorKey p {
+  display: flex;
+  align-items: center;
+  font-size: 2rem;
+}
+
+.MainKey,
+.SecondaryKey {
+  width: 1.6rem;
+  height: 1.6rem;
+  display: inline-block;
+  margin-right: 0.7rem;
+}
+
+.MainKey {
+  background-color: #cc0000;
+}
+
+.SecondaryKey {
+  background-color: #f57900;
+}
+
+@media only screen and (max-width: 1000px) {
+  .Wrapper {
+    width: 70%;
+  }
+}
+
+@media only screen and (max-width: 650px) {
+  .Wrapper {
+    flex-direction: column;
+    width: 100%;
+    align-items: center;
+  }
+}
