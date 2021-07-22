@@ -17,7 +17,7 @@ function App({ firebase }) {
   const [authUser, setAuthUser] = useState(null);
   const [loaded, setLoaded] = useState(false);
   const isAuthenticated = useSelector((state) => state.auth.user !== null);
-  const { inAuth } = useSelector((state) => state.auth);
+  const { inAuth, user } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -28,11 +28,11 @@ function App({ firebase }) {
   }, [firebase.auth, loaded]);
 
   useEffect(() => {
-    if (authUser && !isAuthenticated && !inAuth)
+    if (authUser && !isAuthenticated && !inAuth && !user)
       dispatch(authSuccess(authUser));
 
-    if (!authUser) dispatch(authLogout());
-  }, [authUser, isAuthenticated, dispatch, inAuth]);
+    if (!authUser & user) dispatch(authLogout());
+  }, [authUser, isAuthenticated, dispatch, inAuth, user]);
 
   useEffect(() => {
     if (authUser) dispatch(fetchFavorites(authUser.uid));
