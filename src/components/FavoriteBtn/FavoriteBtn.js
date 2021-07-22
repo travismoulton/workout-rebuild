@@ -23,16 +23,6 @@ export default function FavoriteBtn({ exerciseId }) {
       ? dispatch(removeFavorite({ uid, firebaseId, accessToken }))
       : dispatch(addFavorite({ uid, exerciseId, accessToken }));
 
-  // const toggleFavoritesHandler = () => {
-  //   if (isFavorite) {
-  //     console.log('removeFavorite');
-  //     dispatch(removeFavorite({ uid, firebaseId, accessToken }));
-  //   } else {
-  //     console.log('addFavorite');
-  //     dispatch(addFavorite({ uid, exerciseId, accessToken }));
-  //   }
-  // };
-
   const btnClasses = [
     classes.Btn,
     isFavorite ? classes.Favorite : classes.NotFavorite,
