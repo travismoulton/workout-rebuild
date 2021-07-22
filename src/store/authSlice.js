@@ -41,7 +41,7 @@ const authSlice = createSlice({
         state.inAuth = false;
       },
       prepare(action) {
-        const { authUser: user } = action;
+        const user = action;
 
         return {
           payload: {

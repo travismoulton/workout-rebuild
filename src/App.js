@@ -22,7 +22,7 @@ function App({ firebase }) {
 
   useEffect(() => {
     firebase.auth.onAuthStateChanged((authUser) => {
-      authUser ? setAuthUser({ authUser }) : setAuthUser(null);
+      authUser ? setAuthUser(authUser) : setAuthUser(null);
       if (!loaded) setLoaded(true);
     });
   }, [firebase.auth, loaded]);
@@ -35,7 +35,7 @@ function App({ firebase }) {
   }, [authUser, isAuthenticated, dispatch, inAuth]);
 
   useEffect(() => {
-    if (authUser) dispatch(fetchFavorites(authUser.authUser.uid));
+    if (authUser) dispatch(fetchFavorites(authUser.uid));
   });
 
   const history = useHistory();
