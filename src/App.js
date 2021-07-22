@@ -39,6 +39,7 @@ function App({ firebase }) {
   });
 
   const history = useHistory();
+
   const routes = !isAuthenticated ? (
     <Switch>
       <Route path="/register">
