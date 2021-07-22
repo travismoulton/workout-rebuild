@@ -21,7 +21,7 @@ export default function ExerciseResult(props) {
           to={{
             pathname: `/exercise/${slugify(name)}`,
             state: {
-              id: exerciseId,
+              exerciseId: exerciseId,
               firebaseSearchId: firebaseSearchId,
               isCustom: isCustom,
             },

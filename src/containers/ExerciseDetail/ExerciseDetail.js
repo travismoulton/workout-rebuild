@@ -11,14 +11,17 @@ import AddToWorkoutBtn from '../../components/AddToWorkoutBtn/AddToWorkoutBtn';
 import Modal from '../../components/UI/Modal/Modal';
 import FavoriteBtn from '../../components/FavoriteBtn/FavoriteBtn';
 import classes from './ExerciseDetail.module.css';
-import { removeFavorite } from '../../store/favoritesSlice';
+import {
+  removeFavorite,
+  selectFavoriteFirebaseId,
+} from '../../store/favoritesSlice';
 import { exerciseDetailUtils as utils } from './exerciseDetailUtils';
 import wgerData from '../../shared/wgerData';
 
-const ExerciseDetail = (props) => {
+const ExerciseDetail = ({ location, history }) => {
+  const { firebaseSearchId, exerciseId, isCustom } = location.state;
+
   const [exercise, setExercise] = useState();
-  const [isFavorite, setIsFavorite] = useState(false);
-  const [firebaseId, setFirebaseId] = useState('');
   const [showModal, setShowModal] = useState(false);
   const [error, setError] = useState({
     isError: false,
@@ -31,54 +34,39 @@ const ExerciseDetail = (props) => {
     code: '',
   });
   const { user, uid, accessToken } = useSelector((state) => state.auth);
-  const favorites = useSelector((state) => state.favorites.favorites);
+
+  const firebaseId = useSelector((state) =>
+    selectFavoriteFirebaseId(state, exerciseId)
+  );
+  const isFavorite = firebaseId ? true : false;
+
   // const buildingWorkout = useSelector((state) => state.workout.buildingWorkout);
   const dispatch = useDispatch();
-
-  const { firebaseSearchId, id, isCustom } = props.location.state;
 
   useEffect(() => {
     if (exercise) document.title = exercise.name;
   }, [exercise]);
 
   useEffect(() => {
-    if (!exercise) {
-      const shouldLoadCustomExercise = isCustom && user;
-
-      if (shouldLoadCustomExercise) {
-        utils
-          .fetchCustomExercise(uid, firebaseSearchId)
-          .then((exercise) => setExercise(exercise))
-          .catch((err) => {
-            setError({ ...error, isError: true, code: 'noExercise' });
-          });
-      } else if (!shouldLoadCustomExercise) {
-        utils
-          .fetchWgerExercise(id)
-          .then((exercise) => setExercise(exercise))
-          .catch((err) => {
-            setError({ ...error, isError: true, code: 'noExercise' });
-          });
-      }
+    if (!exercise && isCustom) {
+      utils
+        .fetchCustomExercise(uid, firebaseSearchId)
+        .then((exercise) => setExercise(exercise))
+        .catch((err) => {
+          setError({ ...error, isError: true, code: 'noExercise' });
+        });
+    } else if (!exercise && !isCustom) {
+      utils
+        .fetchWgerExercise(exerciseId)
+        .then((exercise) => setExercise(exercise))
+        .catch((err) => {
+          setError({ ...error, isError: true, code: 'noExercise' });
+        });
     }
-  }, [exercise, isCustom, id, firebaseSearchId, error, uid, user]);
-
-  useEffect(() => {
-    setIsFavorite(false);
-    setFirebaseId('');
-
-    if (exercise && favorites)
-      favorites.forEach((favorite) => {
-        if (favorite.exercise === exercise.id) {
-          setIsFavorite(true);
-          setFirebaseId(favorite.firebaseId);
-        }
-      });
-  }, [favorites, exercise]);
+  }, [exercise, isCustom, exerciseId, firebaseSearchId, error, uid, user]);
 
   const deleteCustomExercise = async () => {
-    if (isFavorite)
-      dispatch(removeFavorite(user.authUser.uid, props.firebaseId));
+    if (isFavorite) dispatch(removeFavorite(uid, firebaseId));
 
     await axios({
       method: 'delete',
@@ -90,7 +78,7 @@ const ExerciseDetail = (props) => {
 
     setShowModal(false);
 
-    props.history.push('/search');
+    history.push('/search');
   };
 
   const deleteCustomExerciseBtn = (
@@ -162,18 +150,14 @@ const ExerciseDetail = (props) => {
 
       {user && (
         <div className={classes.BtnContainer}>
-          <FavoriteBtn
-            isFavorite={isFavorite}
-            firebaseId={firebaseId}
-            exerciseId={exercise.id}
-          />
+          <FavoriteBtn exerciseId={exerciseId} />
         </div>
       )}
       {/* {buildingWorkout && (
         <div className={classes.AddToWorkoutBtnContainer}>
           <AddToWorkoutBtn
             history={props.history}
-            id={exercise.id}
+            id={exerciseId}
             name={exercise.name}
           />
         </div>
