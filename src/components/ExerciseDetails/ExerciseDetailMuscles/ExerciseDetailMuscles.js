@@ -10,14 +10,16 @@ export default function ExerciseDetailMuscles({ muscles, secondary }) {
     muscle ? <li key={muscle.name}>{muscle.name}</li> : null
   );
 
-  return (
+  const displayMuscles = primaryMuscles.length || secondaryMuscles.length;
+
+  return displayMuscles ? (
     <div className={`${classes.Detail} ${classes.Muscle}`}>
       {primaryMuscles.length ? (
         <>
           <h3>
             Primary Muscles <GiMuscleUp />
           </h3>
-          <ul>{primaryMuscles}</ul>
+          <ul data-testid="primaryMuscleList">{primaryMuscles}</ul>
         </>
       ) : null}
       {secondaryMuscles.length ? (
@@ -25,9 +27,11 @@ export default function ExerciseDetailMuscles({ muscles, secondary }) {
           <h3>
             Secondary Muscles <GiMuscleUp />
           </h3>
-          <ul>{secondaryMuscles}</ul>
+          <ul data-testid="secondaryMuscleList">{secondaryMuscles}</ul>
         </>
       ) : null}
     </div>
+  ) : (
+    <></>
   );
 }

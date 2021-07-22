@@ -6,13 +6,12 @@ export default function ExerciseDetailImg({
   secondaryMuscles,
 }) {
   const muscularSystemFront = `URL('https://wger.de/static/images/muscles/muscular_system_front.svg')`;
-
   const muscularSystemBack = `URL('https://wger.de/static/images/muscles/muscular_system_back.svg')`;
 
   /*
     Each of the 4 variables below works as follows:
       1: Maps through the array of either primary or secondary muscles, and if they belong to the appropriate musclular system
-        (either front or back) it will return an array containg a str that can be used to include it in the background image
+        (either front or back) it will return an array containg a string that can be used to include it in the background image
       2: If it was not in the appropriate muscular system, it adds an empty string to the array. The filter statement removes the empty strings
       3: Finally it joins the array with the desired strings into one string that can be used in a css background image property.
   */
@@ -72,10 +71,15 @@ export default function ExerciseDetailImg({
         {displayMuscularSystemFront && (
           <div
             className={classes.Img}
+            data-testid={`${
+              primaryFrontMusclesStr ? primaryFrontMusclesStr + ',' : ''
+            }${
+              secondaryMusclesFrontStr ? secondaryMusclesFrontStr + ',' : ''
+            } ${muscularSystemFront}`}
             style={{
               backgroundImage: `${
                 primaryFrontMusclesStr ? primaryFrontMusclesStr + ',' : ''
-              } ${
+              }${
                 secondaryMusclesFrontStr ? secondaryMusclesFrontStr + ',' : ''
               } ${muscularSystemFront}`,
             }}
@@ -84,10 +88,15 @@ export default function ExerciseDetailImg({
         {displayMuscularSystemBack && (
           <div
             className={classes.Img}
+            data-testid={`${
+              primaryBackMusclesStr ? primaryBackMusclesStr + ',' : ''
+            }${
+              secondaryMusclesBackStr ? secondaryMusclesBackStr + ',' : ''
+            } ${muscularSystemBack}`}
             style={{
               backgroundImage: `${
                 primaryBackMusclesStr ? primaryBackMusclesStr + ',' : ''
-              } ${
+              }${
                 secondaryMusclesBackStr ? secondaryMusclesBackStr + ',' : ''
               } ${muscularSystemBack}`,
             }}

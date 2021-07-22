@@ -10,7 +10,7 @@ const ExerciseDetailEquipment = ({ equipment }) => {
       <h3>
         Equipment <GiWeightLiftingUp />
       </h3>
-      <ul>{equipment}</ul>
+      <ul data-testid="equipmentList">{equipment}</ul>
     </div>
   ) : (
     <></>
