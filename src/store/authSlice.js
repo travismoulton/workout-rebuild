@@ -42,6 +42,7 @@ const authSlice = createSlice({
       },
       prepare(action) {
         const user = action;
+        const { providerData } = user;
 
         return {
           payload: {
@@ -55,7 +56,14 @@ const authSlice = createSlice({
                 lastLoginAt: user.metadata.b,
                 createdAt: user.metadata.a,
               },
-              providerData: user.providerData,
+              providerData: {
+                displayName: providerData.displayName,
+                email: providerData.email,
+                phoneNumber: providerData.phoneNumber,
+                photoURL: providerData.photoURL,
+                providerId: providerData.providerId,
+                uid: providerData.uid,
+              },
               tenantId: user.tenantId,
               apiKey: user.l,
               authDomain: user.s,
