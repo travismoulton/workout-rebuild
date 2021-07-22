@@ -35,23 +35,24 @@ const ExerciseDetail = (props) => {
   // const buildingWorkout = useSelector((state) => state.workout.buildingWorkout);
   const dispatch = useDispatch();
 
+  const { firebaseSearchId, id, isCustom } = props.location.state;
+
   useEffect(() => {
     if (exercise) document.title = exercise.name;
   }, [exercise]);
 
   useEffect(() => {
     if (!exercise) {
-      const { firebaseSearchId, id } = props.location.state;
-      const shouldLoadCustomExercises = props.location.state.custom && user;
+      const shouldLoadCustomExercise = isCustom && user;
 
-      if (shouldLoadCustomExercises) {
+      if (shouldLoadCustomExercise) {
         utils
           .fetchCustomExercise(uid, firebaseSearchId)
           .then((exercise) => setExercise(exercise))
           .catch((err) => {
             setError({ ...error, isError: true, code: 'noExercise' });
           });
-      } else if (!shouldLoadCustomExercises) {
+      } else if (!shouldLoadCustomExercise) {
         utils
           .fetchWgerExercise(id)
           .then((exercise) => setExercise(exercise))
@@ -60,7 +61,7 @@ const ExerciseDetail = (props) => {
           });
       }
     }
-  }, [exercise, props.location.state, error, uid, user]);
+  }, [exercise, isCustom, id, firebaseSearchId, error, uid, user]);
 
   useEffect(() => {
     setIsFavorite(false);
@@ -78,8 +79,6 @@ const ExerciseDetail = (props) => {
   const deleteCustomExercise = async () => {
     if (isFavorite)
       dispatch(removeFavorite(user.authUser.uid, props.firebaseId));
-
-    const { firebaseSearchId } = props.location.state;
 
     await axios({
       method: 'delete',
@@ -179,9 +178,9 @@ const ExerciseDetail = (props) => {
           />
         </div>
       )} */}
-      {props.location.state.custom ? deleteCustomExerciseBtn : null}
+      {isCustom ? deleteCustomExerciseBtn : null}
 
-      {props.location.state.custom ? modal : null}
+      {isCustom ? modal : null}
     </>
   );
 

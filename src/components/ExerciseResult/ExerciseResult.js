@@ -6,7 +6,7 @@ import FavoriteBtn from '../FavoriteBtn/FavoriteBtn';
 import classes from './ExerciseResult.module.css';
 
 export default function ExerciseResult(props) {
-  const { exerciseId, firebaseSearchId, custom, name, category, equipment } =
+  const { exerciseId, firebaseSearchId, isCustom, name, category, equipment } =
     props;
 
   const { user } = useSelector((state) => state.auth);
@@ -23,7 +23,7 @@ export default function ExerciseResult(props) {
             state: {
               id: exerciseId,
               firebaseSearchId: firebaseSearchId,
-              custom: custom,
+              isCustom: isCustom,
             },
           }}
         >

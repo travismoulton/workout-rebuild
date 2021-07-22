@@ -4,7 +4,6 @@ import wgerInstance from '../../shared/axiosInstances/wger';
 export const exerciseDetailUtils = {
   fetchWgerExercise: async function (id) {
     const exercise = await wgerInstance.get(`exercise/${id}`);
-    console.log(exercise);
     return exercise.data;
   },
   fetchCustomExercise: async function (uid, firebaseSearchId) {

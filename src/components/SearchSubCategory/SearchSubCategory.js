@@ -13,7 +13,13 @@ export default function SearchSubCategory({ category, subCategoryName, id }) {
       <Link
         to={{
           pathname: `results/${category}/${slugiy(subCategoryName)}`,
-          state: { subCategory: subCategoryName, id, category, wger: true },
+          state: {
+            subCategory: subCategoryName,
+            id,
+            category,
+            wger: true,
+            isCustom: false,
+          },
         }}
         className={styles.join(' ')}
       >

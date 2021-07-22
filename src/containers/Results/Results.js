@@ -19,7 +19,7 @@ export default function Results(props) {
 
   // const { user, uid, accessToken } = useSelector((state) => state.auth);
 
-  const { category, subCategory, id, custom, wger } = props.location.state;
+  const { category, subCategory, id, isCustom, wger } = props.location.state;
 
   useEffect(() => {
     document.title =
@@ -51,7 +51,7 @@ export default function Results(props) {
       equipment={
         exercise.equipment && wgerData.equipment[exercise.equipment[0]]
       }
-      custom={custom}
+      isCustom={isCustom}
       firebaseSearchId={exercise.firebaseId}
       exerciseId={exercise.id}
     />
