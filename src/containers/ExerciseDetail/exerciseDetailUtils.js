@@ -6,15 +6,15 @@ export const exerciseDetailUtils = {
     const exercise = await wgerInstance.get(`exercise/${id}`);
     return exercise.data;
   },
-  fetchCustomExercise: async function (uid, firebaseSearchId) {
+  fetchCustomExercise: async function (uid, accessToken, firebaseSearchId) {
     const exercise = await firebaseIntance.get(
-      `customExercises/${uid}/${firebaseSearchId}.json`
+      `customExercises/${uid}/${firebaseSearchId}.json?auth=${accessToken}`
     );
     return exercise.data;
   },
-  deleteCustomExercise: async function (uid, firebaseSearchId) {
+  deleteCustomExercise: async function (uid, accessToken, firebaseSearchId) {
     await firebaseIntance.delete(
-      `customExercises/${uid}/${firebaseSearchId}.json`
+      `customExercises/${uid}/${firebaseSearchId}.json?auth=${accessToken}`
     );
   },
 };

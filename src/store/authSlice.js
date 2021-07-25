@@ -75,7 +75,7 @@ const authSlice = createSlice({
               },
             },
             uid: user.uid,
-            accessToken: user.za,
+            accessToken: user.S.a.h.b.h,
           },
         };
       },

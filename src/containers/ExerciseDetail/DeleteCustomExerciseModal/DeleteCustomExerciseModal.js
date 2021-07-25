@@ -9,19 +9,19 @@ import {
 } from '../../../store/favoritesSlice';
 
 export default function DeleteCustomExerciseModal(props) {
-  const { exerciseId, history, show, closeModal, uid, firebaseSearchId } =
-    props;
+  const { exerciseId, history, show, closeModal, firebaseSearchId } = props;
 
   const firebaseId = useSelector((state) =>
     selectFavoriteFirebaseId(state, exerciseId)
   );
   const isFavorite = firebaseId ? true : false;
+  const { uid, accessToken } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
 
   function deleteExerciseHandler() {
     if (isFavorite) dispatch(removeFavorite(uid, firebaseId));
 
-    utils.deleteCustomExercise(uid, firebaseSearchId);
+    utils.deleteCustomExercise(uid, accessToken, firebaseSearchId);
 
     closeModal();
     history.push('/search');

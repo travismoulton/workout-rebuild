@@ -41,7 +41,7 @@ export default function ExerciseDetail({ location, history }) {
   useEffect(() => {
     if (!exercise && isCustom) {
       utils
-        .fetchCustomExercise(uid, firebaseSearchId)
+        .fetchCustomExercise(uid, accessToken, firebaseSearchId)
         .then((exercise) => setExercise(exercise))
         .catch((err) => {
           setError({ ...error, isError: true, code: 'noExercise' });
@@ -54,7 +54,16 @@ export default function ExerciseDetail({ location, history }) {
           setError({ ...error, isError: true, code: 'noExercise' });
         });
     }
-  }, [exercise, isCustom, exerciseId, firebaseSearchId, error, uid, user]);
+  }, [
+    exercise,
+    isCustom,
+    exerciseId,
+    firebaseSearchId,
+    error,
+    uid,
+    user,
+    accessToken,
+  ]);
 
   const showDeleteExerciseModalBtn = (
     <button
@@ -71,7 +80,6 @@ export default function ExerciseDetail({ location, history }) {
       history={history}
       show={showModal}
       closeModal={() => setShowModal(false)}
-      uid={uid}
       firebaseSearchId={firebaseSearchId}
     />
   );

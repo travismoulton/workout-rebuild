@@ -11,8 +11,8 @@ const favoritesAdapter = createEntityAdapter();
 
 export const fetchFavorites = createAsyncThunk(
   'favorites/setFavorites',
-  async (userId) => {
-    const res = await axios.get(`favorites/${userId}.json`);
+  async ({ uid, accessToken }) => {
+    const res = await axios.get(`favorites/${uid}.json?auth=${accessToken}`);
 
     const favorites = [];
 
@@ -30,8 +30,10 @@ export const fetchFavorites = createAsyncThunk(
 
 export const addFavorite = createAsyncThunk(
   'favorites/addFavorites',
-  async ({ uid, exerciseId }) => {
-    const res = await axios.post(`favorites/${uid}.json`, { exerciseId });
+  async ({ uid, accessToken, exerciseId }) => {
+    const res = await axios.post(`favorites/${uid}.json/?auth=${accessToken}`, {
+      exerciseId,
+    });
 
     const firebaseId = res.data.name;
 
@@ -47,8 +49,10 @@ export const addFavorite = createAsyncThunk(
 
 export const removeFavorite = createAsyncThunk(
   'favorites/removeFavorite',
-  async ({ uid, firebaseId }) => {
-    await axios.delete(`favorites/${uid}/${firebaseId}.json`);
+  async ({ uid, accessToken, firebaseId }) => {
+    await axios.delete(
+      `favorites/${uid}/${firebaseId}.json?auth=${accessToken}`
+    );
 
     return firebaseId;
   }
