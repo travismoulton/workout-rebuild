@@ -74,16 +74,6 @@ export default function ExerciseDetail({ location, history }) {
     </button>
   );
 
-  const modal = (
-    <DeleteCustomExerciseModal
-      exerciseId={exerciseId}
-      history={history}
-      show={showModal}
-      closeModal={() => setShowModal(false)}
-      firebaseSearchId={firebaseSearchId}
-    />
-  );
-
   const display = exercise && (
     <>
       {error.code === 'delete' && error.message}
@@ -137,7 +127,14 @@ export default function ExerciseDetail({ location, history }) {
         </div>
       )} */}
       {isCustom && showDeleteExerciseModalBtn}
-      {isCustom && modal}
+      {isCustom && (
+        <DeleteCustomExerciseModal
+          exerciseId={exerciseId}
+          show={showModal}
+          closeModal={() => setShowModal(false)}
+          firebaseSearchId={firebaseSearchId}
+        />
+      )}
     </>
   );
 

@@ -5,21 +5,25 @@ import './modal.css';
 import classes from './Modal.module.css';
 import Backdrop from '../Backdrop/Backdrop';
 
-const Modal = (props) => {
+const Modal = ({ show, modalClosed, children, testId }) => {
   const nodeRef = useRef(null);
   return (
     <>
-      <Backdrop show={props.show} clicked={props.modalClosed} />
+      <Backdrop show={show} clicked={modalClosed} />
       <CSSTransition
         nodeRef={nodeRef}
-        in={props.show}
+        in={show}
         timeout={100}
         mountOnEnter
         unmountOnExit
         classNames="modal"
       >
-        <div ref={nodeRef} className={classes.Modal}>
-          {props.children}
+        <div
+          ref={nodeRef}
+          className={classes.Modal}
+          data-testid={testId || 'Modal'}
+        >
+          {children}
         </div>
       </CSSTransition>
     </>

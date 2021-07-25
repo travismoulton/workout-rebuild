@@ -1,4 +1,5 @@
 import { useSelector, useDispatch } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 
 import Modal from '../../../components/UI/Modal/Modal';
 import classes from '../ExerciseDetail.module.css';
@@ -9,7 +10,7 @@ import {
 } from '../../../store/favoritesSlice';
 
 export default function DeleteCustomExerciseModal(props) {
-  const { exerciseId, history, show, closeModal, firebaseSearchId } = props;
+  const { exerciseId, show, closeModal, firebaseSearchId } = props;
 
   const firebaseId = useSelector((state) =>
     selectFavoriteFirebaseId(state, exerciseId)
@@ -17,9 +18,11 @@ export default function DeleteCustomExerciseModal(props) {
   const isFavorite = firebaseId ? true : false;
   const { uid, accessToken } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
+  const history = useHistory();
 
   function deleteExerciseHandler() {
     if (isFavorite) dispatch(removeFavorite(uid, firebaseId));
+    console.log(isFavorite);
 
     utils.deleteCustomExercise(uid, accessToken, firebaseSearchId);
 
@@ -28,16 +31,18 @@ export default function DeleteCustomExerciseModal(props) {
   }
 
   return (
-    <Modal show={show} modalClosed={closeModal}>
+    <Modal show={show} modalClosed={closeModal} testId="deleteExerciseModal">
       <p>Are you sure you want to delete this exercise?</p>
       <div className={classes.ModalBtnWrapper}>
         <button
+          data-testid="deleteExerciseBtn"
           className={`GlobalBtn-1 ${classes.ConfirmBtn}`}
           onClick={deleteExerciseHandler}
         >
           Delete exercise
         </button>
         <button
+          data-testid="cancelBtn"
           className={`GlobalBtn-1 ${classes.CancelBtn}`}
           onClick={closeModal}
         >
