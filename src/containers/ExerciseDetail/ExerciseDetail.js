@@ -140,9 +140,7 @@ export default function ExerciseDetail({ location, history }) {
 
   const noExerciseError = error.code === 'noExercise' && error.message;
 
-  return exercise
-    ? display
-    : error.code === 'noExercise'
-    ? noExerciseError
-    : null;
+  if (error.code === 'noExercise') return noExerciseError;
+
+  return exercise ? display : null;
 }
