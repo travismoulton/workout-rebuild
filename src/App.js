@@ -88,6 +88,7 @@ function App({ firebase }) {
         )}
       />
       <Route path="/results/:category/:query" component={Results} />
+      <Route path="/results/my-custom-exercises" component={Results} />
       <Route path="/" component={Search} />
     </Switch>
   );

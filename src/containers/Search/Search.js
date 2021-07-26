@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 
 import SearchCategory from '../../components/SearchCategory/SearchCategory';
@@ -14,11 +15,38 @@ export default function Search() {
   const [equipment, setEquipment] = useState(null);
   const [loaded, setLoaded] = useState(false);
   const [categoryOpen, setCategoryOpen] = useState(null);
+  const [showCustomOption, setShowCustomOption] = useState(null);
+  const [error, setError] = useState({
+    isError: false,
+    message: (
+      <p style={{ color: 'red' }}>
+        Sorry, we're having trouble right now. please refresh the page or try
+        again later
+      </p>
+    ),
+  });
+
   const history = useHistory();
+
+  const { user, uid, accessToken } = useSelector((state) => state.auth);
 
   useEffect(() => {
     document.title = 'Search For Exercises';
   }, []);
+
+  useEffect(() => {
+    if (user && showCustomOption === null) {
+      console.log(user);
+      utils
+        .fetchCustomExercises(uid, accessToken)
+        .then((exercises) => setShowCustomOption(exercises ? true : false))
+        .catch(() => setError({ ...error, isError: true }));
+    }
+  }, [user, uid, accessToken, showCustomOption, error]);
+
+  useEffect(() => {
+    if (!user && showCustomOption) setShowCustomOption(false);
+  }, [user, showCustomOption]);
 
   useEffect(() => {
     if (!exerciseCategories && !muscles && !equipment) {
@@ -31,8 +59,10 @@ export default function Search() {
   }, [exerciseCategories, muscles, equipment]);
 
   useEffect(() => {
-    if (exerciseCategories && muscles && equipment && !loaded) setLoaded(true);
-  }, [loaded, exerciseCategories, muscles, equipment]);
+    const wgerReady = exerciseCategories && muscles && equipment;
+    if (!loaded && wgerReady)
+      if ((user && showCustomOption !== null) || !user) setLoaded(true);
+  }, [loaded, exerciseCategories, muscles, equipment, showCustomOption, user]);
 
   const closeSubCategories = () => {
     setCategoryOpen(null);
