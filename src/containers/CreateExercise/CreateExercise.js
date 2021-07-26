@@ -178,7 +178,7 @@ export default function CreateExercise() {
         nameIsValid={exerciseNameInput.valid}
         categoryIsValid={categoryInput.valid}
         title={exerciseNameInput.value}
-        description={descriptionInput.value}
+        description={descriptionInput.value || null}
         category={categoryInput.value}
         primaryMuscles={utils.getCheckedBoxes(primaryMusclesUsed)}
         secondaryMuscles={utils.getCheckedBoxes(requiredEquipmentList)}

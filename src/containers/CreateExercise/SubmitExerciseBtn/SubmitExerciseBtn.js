@@ -1,12 +1,25 @@
 import { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 import { nanoid } from '@reduxjs/toolkit';
-import axios from 'axios';
 
+import { submitExerciseBtnUtils as utils } from './submitExerciseBtnUtils';
 import Tooltip from '../../../components/UI/Tooltip/Tooltip';
 import classes from './SubmitExerciseBtn.module.css';
 
-const SubmitExerciseBtn = (props) => {
+export default function SubmitExerciseBtn(props) {
+  const {
+    formIsValid,
+    description,
+    title,
+    nameIsValid,
+    categoryIsValid,
+    primaryMuscle,
+    equipment,
+    secondaryMuscles,
+    category,
+  } = props;
+
   const [error, setError] = useState({ isError: false, code: '', msg: '' });
   const [tooltipData, setTooltipData] = useState({
     show: false,
@@ -15,6 +28,7 @@ const SubmitExerciseBtn = (props) => {
     innerTxt: null,
   });
   const { uid, accessToken } = useSelector((state) => state.auth);
+  const history = useHistory();
 
   const axiosError = {
     ...error,
@@ -36,70 +50,47 @@ const SubmitExerciseBtn = (props) => {
       </p>
     ),
     code: 'nameTaken',
-    takenName: props.title,
+    takenName: title,
   };
 
   useEffect(() => {
-    if (error)
-      if (error.takenName && error.takenName !== props.title) setError(null);
-  }, [error, props.title]);
-
-  const checkForPreviousNameUse = async () => {
-    let nameTaken = false;
-    await axios
-      .get(
-        `https://workout-81691-default-rtdb.firebaseio.com/customExercises/${uid}.json?auth=${accessToken}`,
-        { timeout: 5000 }
-      )
-      .then((res) => {
-        for (const key in res.data) {
-          if (res.data[key].name === props.title) {
-            setError(nameTakenError);
-            nameTaken = true;
-            break;
-          }
-        }
-      })
-      .catch((err) => {
-        setError(axiosError);
-      });
-
-    return nameTaken;
-  };
+    if (error) if (error.takenName && error.takenName !== title) setError(null);
+  }, [error, title]);
 
   const exerciseData = {
-    name: props.title,
-    description: props.description,
-    category: props.category,
-    muscles: props.primaryMuscle,
-    equipment: props.equipment,
-    muscles_secondary: props.secondaryMuscles,
-    id: `$custom-${nanoid()}`,
+    name: title,
+    description,
+    category,
+    muscles: primaryMuscle,
+    equipment,
+    muscles_secondary: secondaryMuscles,
+    id: `custom-${nanoid()}`,
   };
 
   const submitValidFormHandler = async () => {
-    if (await checkForPreviousNameUse()) return;
+    const nameTaken = await utils
+      .checkForPreviousNameUse(uid, accessToken, title)
+      .catch((err) => setError(axiosError));
 
-    axios({
-      method: 'post',
-      url: `https://workout-81691-default-rtdb.firebaseio.com/customExercises/${uid}.json?auth=${accessToken}`,
-      timeout: 5000,
-      data: exerciseData,
-    })
-      .then(() => {
-        props.history.push(`/my-profile`);
-      })
-      .catch((err) => {
-        setError(axiosError);
-      });
+    if (nameTaken) {
+      setError(nameTakenError);
+      return;
+    }
+
+    if (error.code !== 'axios')
+      await utils
+        .submitExercise(uid, accessToken, exerciseData)
+        .catch((err) => setError(axiosError));
+
+    history.push('/my-profile');
   };
 
   const createTooltipInnerTxt = () => {
-    if (!props.nameIsValid && !props.categoryIsValid) {
+    if (!nameIsValid && !categoryIsValid) {
       return <p>Name and category are required to create an exercise</p>;
-    } else if (props.nameIsValid && !props.categoryIsValid) {
+    } else if (nameIsValid && !categoryIsValid) {
       return <p>Category is required to create an exercise</p>;
-    } else if (!props.nameIsValid && props.categoryIsValid) {
+    } else if (!nameIsValid && categoryIsValid) {
       return <p>Name is required to create an exercise</p>;
     }
   };
@@ -111,7 +102,7 @@ const SubmitExerciseBtn = (props) => {
   ) : null;
 
   const showToolTip = (e) => {
-    if (!props.formIsValid) {
+    if (!formIsValid) {
       const btnCoordinateData = e.target.getBoundingClientRect();
       setTooltipData({
         show: true,
@@ -130,7 +121,7 @@ const SubmitExerciseBtn = (props) => {
       {error.isError && error.msg}
       <button
         className={`GlobalBtn-1 ${classes.Btn}`}
-        disabled={!props.formIsValid}
+        disabled={!formIsValid}
         onClick={submitValidFormHandler}
         onMouseOver={showToolTip}
         onMouseOut={hideToolTip}
@@ -141,6 +132,4 @@ const SubmitExerciseBtn = (props) => {
       {tooltip}
     </>
   );
-};
-
-export default SubmitExerciseBtn;
+}

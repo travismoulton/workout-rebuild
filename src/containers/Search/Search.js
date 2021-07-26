@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
 
 import SearchCategory from '../../components/SearchCategory/SearchCategory';
 import SearchSubCategoryList from '../../components/SearchSubCategoryList/SearchSubCategoryList';
@@ -13,6 +14,7 @@ export default function Search() {
   const [equipment, setEquipment] = useState(null);
   const [loaded, setLoaded] = useState(false);
   const [categoryOpen, setCategoryOpen] = useState(null);
+  const history = useHistory();
 
   useEffect(() => {
     document.title = 'Search For Exercises';
@@ -58,6 +60,13 @@ export default function Search() {
       : openSubCategory(category);
   };
 
+  const getCustomExercises = () => {
+    history.push({
+      pathname: '/results/my-custom-exercises',
+      state: { isCustom: true },
+    });
+  };
+
   const subCategoryList = (
     <SearchSubCategoryList
       category={categoryOpen}
@@ -91,6 +100,13 @@ export default function Search() {
           categoryOpen={categoryOpen === 'equipment'}
         />
         {categoryOpen === 'equipment' && subCategoryList}
+
+        {showCustomOption && (
+          <SearchCategory
+            categoryName={'My custom exercises'}
+            clicked={getCustomExercises}
+          />
+        )}
       </div>
     </>
   );
