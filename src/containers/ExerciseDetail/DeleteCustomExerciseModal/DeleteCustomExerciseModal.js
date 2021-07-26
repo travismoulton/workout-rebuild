@@ -22,7 +22,6 @@ export default function DeleteCustomExerciseModal(props) {
 
   function deleteExerciseHandler() {
     if (isFavorite) dispatch(removeFavorite(uid, firebaseId));
-    console.log(isFavorite);
 
     utils.deleteCustomExercise(uid, accessToken, firebaseSearchId);
 
