@@ -12,6 +12,7 @@ import Login from './containers/Auth/Login/Login';
 import Logout from './components/Logout/Logout';
 import Register from './containers/Auth/Register/Register';
 import ExerciseDetail from './containers/ExerciseDetail/ExerciseDetail';
+import CreateExercise from './containers/CreateExercise/CreateExercise';
 import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary';
 import './App.css';
 
@@ -77,6 +78,7 @@ function App({ firebase }) {
           {(firebase) => <Login firebase={firebase} history={history} />}
         </FirebaseContext.Consumer>
       </Route>
+      <Route path="/create-exercise" component={CreateExercise} />
       <Route
         path="/exercise/:name"
         render={(routeProps) => (

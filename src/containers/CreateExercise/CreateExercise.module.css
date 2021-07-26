@@ -1,0 +1,25 @@
+.CheckBoxGroup {
+  display: grid;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+}
+
+.EquipmentBoxes {
+  grid-template-columns: auto auto;
+}
+
+.CheckBoxGroup div {
+  display: flex;
+  justify-content: space-between;
+  margin: 0 auto;
+  padding: 0.2rem 1rem;
+}
+
+.EquipmentBoxes div {
+  width: 15rem;
+}
+
+.MuscleBoxes div {
+  width: 25rem;
+}

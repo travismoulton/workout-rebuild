@@ -1,0 +1,12 @@
+.Btn {
+  margin-top: 5rem;
+}
+
+.Btn:disabled {
+  background-color: rgba(var(--rgba-primary), 0.3);
+}
+
+.Btn:disabled:hover {
+  filter: brightness(100%);
+  cursor: not-allowed;
+}
