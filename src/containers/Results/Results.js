@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
 
 import { resultsUtils as utils } from './resultsUtils';
 import ExerciseResult from '../../components/ExerciseResult/ExerciseResult';
@@ -17,9 +18,10 @@ export default function Results(props) {
     ),
   });
 
-  // const { user, uid, accessToken } = useSelector((state) => state.auth);
+  const { user, uid, accessToken } = useSelector((state) => state.auth);
 
   const { category, subCategory, id, isCustom, wger } = props.location.state;
+  const { fetchCustomExercises, fetchWgerExercises } = utils;
 
   useEffect(() => {
     document.title =
@@ -36,12 +38,29 @@ export default function Results(props) {
     if (!exerciseResults.length && !error.isError) {
       const param = utils.getParam(category, id);
 
-      utils
-        .fetchWgerExercises(param)
+      fetchWgerExercises(param)
         .then((res) => setExerciseResults(res))
         .catch((err) => setError({ ...error, isError: true }));
     }
-  }, [exerciseResults, category, id, error]);
+  }, [exerciseResults, category, id, error, fetchWgerExercises]);
+
+  useEffect(() => {
+    const shouldFetchCustomExercises = isCustom && !exerciseResults.length;
+
+    if (shouldFetchCustomExercises)
+      fetchCustomExercises(uid, accessToken)
+        .then((exercises) => setExerciseResults(exercises))
+        .catch(() => setError({ ...error, isError: true }));
+  }, [
+    fetchCustomExercises,
+    error,
+    exerciseResults,
+    uid,
+    accessToken,
+    isCustom,
+  ]);
+
+  console.log(exerciseResults);
 
   const displayResults = exerciseResults.map((exercise) => (
     <ExerciseResult

@@ -1,4 +1,5 @@
 import wgerInstance from '../../shared/axiosInstances/wger';
+import firebaseInstance from '../../shared/axiosInstances/firebase';
 
 export const resultsUtils = {
   getParam: function (category, id) {
@@ -8,6 +9,7 @@ export const resultsUtils = {
       ? `muscles=${id}`
       : `equipment=${id}`;
   },
+
   fetchWgerExercises: async function (param) {
     let next = `exercise/?language=2&${param}`;
     const arr = [];
@@ -26,5 +28,23 @@ export const resultsUtils = {
     }
 
     return arr;
+  },
+
+  fetchCustomExercises: async function (uid, accessToken) {
+    const res = await firebaseInstance
+      .get(`customExercises/${uid}.json?auth=${accessToken}`)
+      .catch(() => {
+        throw new Error();
+      });
+
+    const exercises = [];
+
+    if (res.data) {
+      for (let key in res.data) {
+        exercises.push({ ...res.data[key], firebaseId: key });
+      }
+    }
+
+    return exercises.length ? exercises : null;
   },
 };

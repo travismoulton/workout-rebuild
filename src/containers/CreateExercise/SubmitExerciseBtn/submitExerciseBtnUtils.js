@@ -22,9 +22,7 @@ export const submitExerciseBtnUtils = {
 
   submitExercise: async function (uid, accessToken, exerciseData) {
     await axios
-      .post(`customExercises/${uid}.json?auth=${accessToken}`, {
-        exerciseData,
-      })
+      .post(`customExercises/${uid}.json?auth=${accessToken}`, exerciseData)
       .catch((err) => {
         throw new Error('axiosError');
       });
