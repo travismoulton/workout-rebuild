@@ -3,6 +3,14 @@ export const mockState = {
     ids: [1],
     entities: { 1: { id: 1, exerciseId: 'id1', firebaseId: 1 } },
   },
+  auth: {
+    error: null,
+    loading: false,
+    user: {},
+    inAuth: false,
+    uid: null,
+    accessToken: null,
+  },
 };
 
 export const wgerExercise = {
@@ -10,12 +18,12 @@ export const wgerExercise = {
   description: 'mock description',
   name: 'mock Exercise',
   muscles: [7, 13],
+  muscles_secondary: [5, 9, 15],
   equipment: [3],
 };
 
 export const customExercise = {
   category: 10,
-  description: 'mock description custom',
   name: 'mock Exercise custom',
 };
 

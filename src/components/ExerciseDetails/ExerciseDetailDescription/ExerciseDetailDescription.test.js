@@ -11,4 +11,9 @@ describe('<ExerciseDetailDescription />', () => {
 
     expect(getByTestId('description')).toBeInTheDocument();
   });
+
+  test('renders empty when not passed a description', () => {
+    const { container } = customRender(<ExerciseDetailDescription />);
+    expect(container).toBeEmptyDOMElement();
+  });
 });
