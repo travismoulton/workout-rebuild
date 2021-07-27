@@ -77,10 +77,15 @@ export default function SubmitExerciseBtn(props) {
       return;
     }
 
-    if (error.code !== 'axios')
-      await utils
-        .submitExercise(uid, accessToken, exerciseData)
-        .catch((err) => setError(axiosError));
+    const testing = await utils.randomFunc();
+
+    // if (error.code !== 'axios')
+    await utils
+      .submitExercise(uid, accessToken, exerciseData)
+      .then((res) => console.log(res))
+      .catch((err) => setError(axiosError));
+
+    console.log('confused as hell');
 
     history.push('/my-profile');
   };

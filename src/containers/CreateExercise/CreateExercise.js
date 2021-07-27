@@ -152,6 +152,7 @@ export default function CreateExercise() {
       required={field.validation.required}
       classname={field.className}
       wrapperClass={field.wrapperClass}
+      testid={field.testid}
     />
   ));
 

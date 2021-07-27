@@ -27,4 +27,8 @@ export const submitExerciseBtnUtils = {
         throw new Error('axiosError');
       });
   },
+
+  randomFunc: async function () {
+    return null;
+  },
 };

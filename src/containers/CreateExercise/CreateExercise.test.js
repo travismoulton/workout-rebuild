@@ -1,4 +1,6 @@
 import userEvent from '@testing-library/user-event';
+import { Router } from 'react-router-dom';
+import { createMemoryHistory } from 'history';
 
 import { customRender, fireEvent } from '../../shared/testUtils';
 import CreateExercise from './CreateExercise';
@@ -11,22 +13,27 @@ import { submitExerciseBtnUtils as submitUtils } from './SubmitExerciseBtn/submi
 //6: Test that it renders
 
 describe('<CreateExercise />', () => {
-  let mockSubmitExercise, mockNameTaken;
+  let mockSubmitExercise, mockNameTaken, mockRandom;
 
   beforeEach(() => {
     mockSubmitExercise = jest
       .spyOn(submitUtils, 'submitExercise')
-      .mockImplementation(jest.fn(() => {}));
+      .mockImplementation(jest.fn(() => Promise.resolve(123)));
 
     mockNameTaken = jest
       .spyOn(submitUtils, 'checkForPreviousNameUse')
-      .mockImplementation(jest.fn(() => {}));
+      .mockImplementation(jest.fn(() => Promise.resolve(false)));
+
+    mockRandom = jest
+      .spyOn(submitUtils, 'randomFunc')
+      .mockImplementation(jest.fn(() => Promise.resolve('randomFunc')));
   });
 
   afterEach(() => {
     jest.clearAllMocks();
     mockSubmitExercise = null;
     mockNameTaken = null;
+    mockRandom = null;
   });
 
   test('renders', () => {
@@ -50,5 +57,28 @@ describe('<CreateExercise />', () => {
     );
   });
 
-  test();
+  test('calls submit exercise with the appropriate data when the form is filled out', async () => {
+    const history = createMemoryHistory();
+    const { getByTestId, getByLabelText, findByText, getByText } = customRender(
+      <Router history={history}>
+        <CreateExercise />
+      </Router>
+    );
+    const select = getByLabelText('Exercise Category');
+    const nameInput = getByTestId('exerciseName');
+
+    userEvent.type(nameInput, 'mock exercise');
+
+    fireEvent.focus(select);
+    fireEvent.keyDown(select, { keyCode: 40 });
+
+    fireEvent.click(await findByText('Arms'));
+
+    fireEvent.click(getByText('Submit Exercise'));
+
+    expect(mockNameTaken).toBeCalled();
+
+    expect(mockRandom).toBeCalled();
+    // expect(mockSubmitExercise).toBeCalled();
+  });
 });

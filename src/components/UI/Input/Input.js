@@ -40,7 +40,12 @@ export default function Input(props) {
       inputElement = (
         <div className={classes[props.wrapperClass]}>
           {props.label && (
-            <label className={classes.SelectLabel}>{props.label}</label>
+            <label
+              className={classes.SelectLabel}
+              htmlFor="react-select-5-input"
+            >
+              {props.label}
+            </label>
           )}
           <span
             style={{
