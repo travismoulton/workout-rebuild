@@ -37,6 +37,7 @@ export const templates = {
     validation: {
       required: true,
     },
+    testid: 'exerciseName',
     valid: false,
     touched: false,
     id: 'name',
@@ -52,6 +53,7 @@ export const templates = {
     validation: {
       required: false,
     },
+    testid: 'description',
     valid: false,
     touched: false,
     id: 'description',
@@ -79,6 +81,7 @@ export const templates = {
     validation: {
       required: true,
     },
+    testid: 'category',
     valid: false,
     touched: false,
     id: 'category',

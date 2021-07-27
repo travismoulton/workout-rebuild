@@ -31,6 +31,17 @@ export default function CreateExercise() {
     document.title = 'Create Custom Exercise';
   }, []);
 
+  useEffect(() => {
+    if (!secondaryMusclesUsed && !primaryMusclesUsed) {
+      const muscles = {};
+      for (const key in wgerData.muscles) {
+        muscles[key] = { name: wgerData.muscles[key].name, checked: false };
+      }
+      setSecondaryMusclesUsed(muscles);
+      setPrimaryMusclesUsed(muscles);
+    }
+  }, [secondaryMusclesUsed, primaryMusclesUsed]);
+
   const equipmentCheckboxes = utils.getEquipment().map((equip) => {
     const checkbox = { ...templates.checkBox, label: equip.name };
 
@@ -91,17 +102,6 @@ export default function CreateExercise() {
     });
   }
 
-  useEffect(() => {
-    if (!secondaryMusclesUsed && !primaryMusclesUsed) {
-      const muscles = {};
-      for (const key in wgerData.muscles) {
-        muscles[key] = { name: wgerData.muscles[key].name, checked: false };
-      }
-      setSecondaryMusclesUsed(muscles);
-      setPrimaryMusclesUsed(muscles);
-    }
-  }, [secondaryMusclesUsed, primaryMusclesUsed]);
-
   const checkFormValidity = (updatedInput) => {
     if (updatedInput.id === 'name') {
       setFormIsValid(updatedInput.valid && categoryInput.valid);
@@ -159,17 +159,26 @@ export default function CreateExercise() {
     <>
       {form}
       <h4>Select all needed equipment</h4>
-      <div className={`${classes.CheckBoxGroup} ${classes.EquipmentBoxes}`}>
+      <div
+        className={`${classes.CheckBoxGroup} ${classes.EquipmentBoxes}`}
+        data-testid="equipmentCheckBoxes"
+      >
         {equipmentCheckboxes}
       </div>
 
       <h4>Select all primary muscles worked</h4>
-      <div className={`${classes.CheckBoxGroup} ${classes.MuscleBoxes}`}>
+      <div
+        className={`${classes.CheckBoxGroup} ${classes.MuscleBoxes}`}
+        data-testid="primaryMuscleCheckBoxes"
+      >
         {generateMuscleCheckboxes('primary')}
       </div>
 
       <h4>Select all secondary muscles worked</h4>
-      <div className={`${classes.CheckBoxGroup} ${classes.MuscleBoxes}`}>
+      <div
+        className={`${classes.CheckBoxGroup} ${classes.MuscleBoxes}`}
+        data-testid="secondaryMuscleCheckBoxes"
+      >
         {generateMuscleCheckboxes('secondary')}
       </div>
 

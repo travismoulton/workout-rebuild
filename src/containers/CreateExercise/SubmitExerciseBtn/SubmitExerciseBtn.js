@@ -112,9 +112,8 @@ export default function SubmitExerciseBtn(props) {
     }
   };
 
-  const hideToolTip = () => {
+  const hideToolTip = () =>
     setTooltipData({ show: false, x: null, y: null, innerTxt: null });
-  };
 
   return (
     <>
