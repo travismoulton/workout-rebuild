@@ -95,7 +95,7 @@ function App({ firebase }) {
 
   return (
     <div className="App">
-      <Layout isAuthenticated={isAuthenticated}>{routes}</Layout>
+      {loaded && <Layout isAuthenticated={isAuthenticated}>{routes}</Layout>}
     </div>
   );
 }

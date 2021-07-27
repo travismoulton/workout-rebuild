@@ -36,7 +36,6 @@ export default function Search() {
 
   useEffect(() => {
     if (user && showCustomOption === null) {
-      console.log(user);
       utils
         .fetchCustomExercises(uid, accessToken)
         .then((exercises) => setShowCustomOption(exercises ? true : false))
