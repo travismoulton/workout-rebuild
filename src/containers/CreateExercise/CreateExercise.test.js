@@ -1,8 +1,9 @@
 import userEvent from '@testing-library/user-event';
 import { Router } from 'react-router-dom';
 import { createMemoryHistory } from 'history';
+import { nanoid } from '@reduxjs/toolkit';
 
-import { customRender, fireEvent } from '../../shared/testUtils';
+import { customRender, fireEvent, waitFor } from '../../shared/testUtils';
 import CreateExercise from './CreateExercise';
 import { createExerciseUtils as createUtils } from './createExerciseUtils';
 import { submitExerciseBtnUtils as submitUtils } from './SubmitExerciseBtn/submitExerciseBtnUtils';
@@ -13,7 +14,8 @@ import { submitExerciseBtnUtils as submitUtils } from './SubmitExerciseBtn/submi
 //6: Test that it renders
 
 describe('<CreateExercise />', () => {
-  let mockSubmitExercise, mockNameTaken, mockRandom;
+  let mockSubmitExercise, mockNameTaken;
+  jest.mock('nanoid');
 
   beforeEach(() => {
     mockSubmitExercise = jest
@@ -23,17 +25,12 @@ describe('<CreateExercise />', () => {
     mockNameTaken = jest
       .spyOn(submitUtils, 'checkForPreviousNameUse')
       .mockImplementation(jest.fn(() => Promise.resolve(false)));
-
-    mockRandom = jest
-      .spyOn(submitUtils, 'randomFunc')
-      .mockImplementation(jest.fn(() => Promise.resolve('randomFunc')));
   });
 
   afterEach(() => {
     jest.clearAllMocks();
     mockSubmitExercise = null;
     mockNameTaken = null;
-    mockRandom = null;
   });
 
   test('renders', () => {
@@ -64,6 +61,9 @@ describe('<CreateExercise />', () => {
         <CreateExercise />
       </Router>
     );
+
+    nanoid.mocResolvedValue('mockid');
+
     const select = getByLabelText('Exercise Category');
     const nameInput = getByTestId('exerciseName');
 
@@ -78,7 +78,6 @@ describe('<CreateExercise />', () => {
 
     expect(mockNameTaken).toBeCalled();
 
-    expect(mockRandom).toBeCalled();
-    // expect(mockSubmitExercise).toBeCalled();
+    // await waitFor(() => expect(mockSubmitExercise).toBeCalledWith(null, null));
   });
 });

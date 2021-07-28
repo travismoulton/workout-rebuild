@@ -153,6 +153,7 @@ export default function CreateExercise() {
       classname={field.className}
       wrapperClass={field.wrapperClass}
       testid={field.testid}
+      selectId={field.selectId}
     />
   ));
 

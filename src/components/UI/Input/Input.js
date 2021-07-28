@@ -40,10 +40,7 @@ export default function Input(props) {
       inputElement = (
         <div className={classes[props.wrapperClass]}>
           {props.label && (
-            <label
-              className={classes.SelectLabel}
-              htmlFor="react-select-5-input"
-            >
+            <label className={classes.SelectLabel} htmlFor={props.selectId}>
               {props.label}
             </label>
           )}
@@ -65,6 +62,7 @@ export default function Input(props) {
               options={props.elementConfig.options}
               value={props.value}
               isSearchable={!props.notSearchable}
+              selectId={props.selectId}
             />
             {props.SetDetails && (
               <IncrementBtn clicked={props.incrementFunction} />

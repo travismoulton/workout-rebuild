@@ -54,6 +54,7 @@ export default function CustomSelect(props) {
       onChange={props.changed}
       options={props.options}
       styles={customStyles}
+      inputId={props.selectId}
       components={{ DropdownIndicator }}
       defaultValue={defaultValue}
       value={props.value}

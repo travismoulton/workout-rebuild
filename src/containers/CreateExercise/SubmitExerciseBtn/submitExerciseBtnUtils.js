@@ -20,15 +20,11 @@ export const submitExerciseBtnUtils = {
     return nameTaken;
   },
 
-  submitExercise: async function (uid, accessToken, exerciseData) {
-    await axios
+  submitExercise: function (uid, accessToken, exerciseData) {
+    axios
       .post(`customExercises/${uid}.json?auth=${accessToken}`, exerciseData)
       .catch((err) => {
         throw new Error('axiosError');
       });
-  },
-
-  randomFunc: async function () {
-    return null;
   },
 };

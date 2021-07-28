@@ -84,6 +84,7 @@ export const templates = {
     testid: 'category',
     valid: false,
     touched: false,
+    selectId: 'category',
     id: 'category',
     className: 'CreateExerciseSelect',
     wrapperClass: 'CreateExerciseSelectWrapper',

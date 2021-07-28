@@ -60,8 +60,6 @@ export default function Results(props) {
     isCustom,
   ]);
 
-  console.log(exerciseResults);
-
   const displayResults = exerciseResults.map((exercise) => (
     <ExerciseResult
       key={exercise.name}

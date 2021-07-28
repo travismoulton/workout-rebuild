@@ -77,15 +77,11 @@ export default function SubmitExerciseBtn(props) {
       return;
     }
 
-    const testing = await utils.randomFunc();
-
-    // if (error.code !== 'axios')
-    await utils
-      .submitExercise(uid, accessToken, exerciseData)
-      .then((res) => console.log(res))
-      .catch((err) => setError(axiosError));
-
-    console.log('confused as hell');
+    if (error.code !== 'axios')
+      await utils
+        .submitExercise(uid, accessToken, exerciseData)
+        .then((res) => console.log(res))
+        .catch((err) => setError(axiosError));
 
     history.push('/my-profile');
   };
@@ -100,11 +96,11 @@ export default function SubmitExerciseBtn(props) {
     }
   };
 
-  const tooltip = tooltipData.show ? (
+  const tooltip = tooltipData.show && (
     <Tooltip x={tooltipData.x} y={tooltipData.y}>
       {createTooltipInnerTxt()}
     </Tooltip>
-  ) : null;
+  );
 
   const showToolTip = (e) => {
     if (!formIsValid) {
