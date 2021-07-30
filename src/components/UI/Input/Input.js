@@ -22,7 +22,7 @@ export default function Input(props) {
           className={classes[props.wrapperClass]}
           style={{ position: 'relative' }}
         >
-          {props.label ? <label>{props.label}</label> : null}
+          {props.label && <label htmlFor={props.id}>{props.label}</label>}
           <input
             {...props.elementConfig}
             value={props.value}
@@ -30,6 +30,7 @@ export default function Input(props) {
             autoComplete="false"
             className={inputClasses.join(' ')}
             data-testid={props.testid}
+            id={props.id}
           />
           {props.required && <span className={classes.InputAsteric}>*</span>}
         </div>
@@ -84,6 +85,7 @@ export default function Input(props) {
             onChange={props.changed}
             autoComplete="false"
             className={inputClasses.join(' ')}
+            data-testid={props.testid}
           ></textarea>
           {props.required && <span>*</span>}
         </div>

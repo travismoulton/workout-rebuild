@@ -1,30 +1,20 @@
 import userEvent from '@testing-library/user-event';
 import { Router } from 'react-router-dom';
 import { createMemoryHistory } from 'history';
-import { nanoid } from '@reduxjs/toolkit';
 
 import { customRender, fireEvent, waitFor } from '../../shared/testUtils';
 import CreateExercise from './CreateExercise';
-import { createExerciseUtils as createUtils } from './createExerciseUtils';
 import { submitExerciseBtnUtils as submitUtils } from './SubmitExerciseBtn/submitExerciseBtnUtils';
-
-//1: Test that the checkboxes update the state
-//2: Test form is valid?
-//5: Test that if there are no errors there is a call to submit exercise
-//6: Test that it renders
 
 describe('<CreateExercise />', () => {
   let mockSubmitExercise, mockNameTaken;
-  jest.mock('nanoid');
 
   beforeEach(() => {
     mockSubmitExercise = jest
       .spyOn(submitUtils, 'submitExercise')
       .mockImplementation(jest.fn(() => Promise.resolve(123)));
 
-    mockNameTaken = jest
-      .spyOn(submitUtils, 'checkForPreviousNameUse')
-      .mockImplementation(jest.fn(() => Promise.resolve(false)));
+    mockNameTaken = jest.spyOn(submitUtils, 'checkForPreviousNameUse');
   });
 
   afterEach(() => {
@@ -62,12 +52,17 @@ describe('<CreateExercise />', () => {
       </Router>
     );
 
-    nanoid.mocResolvedValue('mockid');
+    mockNameTaken.mockImplementation(jest.fn(() => Promise.resolve(false)));
 
     const select = getByLabelText('Exercise Category');
     const nameInput = getByTestId('exerciseName');
+    const descriptionInput = getByTestId('description');
 
     userEvent.type(nameInput, 'mock exercise');
+    userEvent.type(descriptionInput, 'mock description');
+    fireEvent.click(getByLabelText('Barbell'));
+    fireEvent.click(getByTestId('secondary-Soleus'));
+    fireEvent.click(getByTestId('primary-Brachialis'));
 
     fireEvent.focus(select);
     fireEvent.keyDown(select, { keyCode: 40 });
@@ -78,6 +73,47 @@ describe('<CreateExercise />', () => {
 
     expect(mockNameTaken).toBeCalled();
 
-    // await waitFor(() => expect(mockSubmitExercise).toBeCalledWith(null, null));
+    await waitFor(() =>
+      expect(mockSubmitExercise).toBeCalledWith(
+        null,
+        null,
+        expect.objectContaining({
+          category: 8,
+          description: 'mock description',
+          equipment: ['15'],
+          id: expect.any(String),
+          muscles: ['13'],
+          muscles_secondary: ['1'],
+          name: 'mock exercise',
+        })
+      )
+    );
+  });
+
+  test('if the name is taken, it throws an error', async () => {
+    const { getByTestId, getByLabelText, findByText, getByText } = customRender(
+      <CreateExercise />
+    );
+
+    mockNameTaken.mockImplementation(jest.fn(() => Promise.resolve(true)));
+
+    const select = getByLabelText('Exercise Category');
+    const nameInput = getByTestId('exerciseName');
+
+    userEvent.type(nameInput, 'mock exercise');
+
+    fireEvent.focus(select);
+    fireEvent.keyDown(select, { keyCode: 40 });
+    fireEvent.click(await findByText('Arms'));
+
+    fireEvent.click(getByText('Submit Exercise'));
+
+    await waitFor(() => expect(mockNameTaken).toBeCalled());
+
+    const nameTakenMsg = getByText(
+      'That name is already taken, please try a different name'
+    );
+
+    expect(nameTakenMsg).toBeInTheDocument();
   });
 });

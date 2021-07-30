@@ -61,6 +61,7 @@ export default function CreateExercise() {
         label={checkbox.label}
         key={checkbox.label}
         changed={() => changed(equip.code)}
+        id={checkbox.label}
       />
     );
   });
@@ -86,8 +87,17 @@ export default function CreateExercise() {
         );
     };
 
+    const setId = (muscleName) =>
+      muscleGroup === 'primary'
+        ? `primary-${muscleName}`
+        : `secondary-${muscleName}`;
+
     return utils.getMuscles().map((muscle) => {
-      const checkbox = { ...templates.checkBox, label: muscle.name };
+      const checkbox = {
+        ...templates.checkBox,
+        label: muscle.name,
+        id: setId(muscle.name),
+      };
 
       return (
         <Input
@@ -97,6 +107,8 @@ export default function CreateExercise() {
           label={checkbox.label}
           key={checkbox.label}
           changed={() => changed(muscle.code, muscleGroup)}
+          id={checkbox.id}
+          testid={checkbox.id}
         />
       );
     });
