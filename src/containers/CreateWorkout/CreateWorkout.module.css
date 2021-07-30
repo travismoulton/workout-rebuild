@@ -1,0 +1,24 @@
+.AddBySearchBtn {
+  width: 23.75rem;
+}
+
+.ClearBtn {
+  display: block;
+  margin: 1rem auto;
+  width: 15rem;
+}
+
+.WorkoutList {
+  list-style: none;
+  padding: 0;
+}
+
+@media only screen and (max-width: 800px) {
+  .WorkoutList {
+    width: 100%;
+  }
+
+  .Wrapper {
+    width: 100%;
+  }
+}
