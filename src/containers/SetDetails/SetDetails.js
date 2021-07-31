@@ -8,7 +8,10 @@ import {
 } from '../../store/workoutSlice';
 import Input from '../../components/UI/Input/Input';
 
-const SetDetails = (props) => {
+export default function SetDetails(props) {
+  const { weight, reps, minutes, seconds, id, setNumber, focus, numberOfSets } =
+    props;
+
   const exercises = useSelector((state) => selectAllWorkouts(state));
   const dispatch = useDispatch();
 
@@ -24,10 +27,10 @@ const SetDetails = (props) => {
     },
     get displayValue() {
       return this.elementConfig.options.filter(
-        (option) => option.value === props.weight
+        (option) => option.value === weight
       )[0];
     },
-    value: props.weight,
+    value: weight,
     label: 'weight',
     id: 1,
   };
@@ -44,10 +47,10 @@ const SetDetails = (props) => {
     },
     get displayValue() {
       return this.elementConfig.options.filter(
-        (option) => option.value === props.reps
+        (option) => option.value === reps
       )[0];
     },
-    value: props.reps,
+    value: reps,
     label: 'reps',
     id: 3,
   };
@@ -64,10 +67,10 @@ const SetDetails = (props) => {
     },
     get displayValue() {
       return this.elementConfig.options.filter(
-        (option) => option.value === props.minutes
+        (option) => option.value === minutes
       )[0];
     },
-    value: props.minutes,
+    value: minutes,
     label: 'minutes',
     id: 3,
   };
@@ -84,23 +87,17 @@ const SetDetails = (props) => {
     },
     get displayValue() {
       return this.elementConfig.options.filter(
-        (option) => option.value === props.seconds
+        (option) => option.value === seconds
       )[0];
     },
-    value: props.seconds,
+    value: seconds,
     label: 'seconds',
     id: 4,
   };
 
   const updateSetViaSelectMenu = (e, input) => {
     dispatch(
-      updateExerciseData(
-        exercises,
-        props.id,
-        input,
-        e.value * 1,
-        props.setNumber - 1
-      )
+      updateExerciseData(exercises, id, input, e.value * 1, setNumber - 1)
     );
   };
 
@@ -108,10 +105,10 @@ const SetDetails = (props) => {
     dispatch(
       updateExerciseData(
         exercises,
-        props.id,
+        id,
         input.label,
         input.value + (input.label === 'weight' ? 5 : 1),
-        props.setNumber - 1
+        setNumber - 1
       )
     );
   };
@@ -121,18 +118,16 @@ const SetDetails = (props) => {
       dispatch(
         updateExerciseData(
           exercises,
-          props.id,
+          id,
           input.label,
           input.value - (input.label === 'weight' ? 5 : 1),
-          props.setNumber - 1
+          setNumber - 1
         )
       );
   };
 
   const formFields =
-    props.focus === 'reps'
-      ? [weightInput, repsInput]
-      : [minutesInput, secondsInput];
+    focus === 'reps' ? [weightInput, repsInput] : [minutesInput, secondsInput];
 
   const form = formFields.map((field, i) => (
     <Input
@@ -156,9 +151,7 @@ const SetDetails = (props) => {
     <button
       className={`GlobalBtn-1 ${classes.Btn}`}
       onClick={() =>
-        dispatch(
-          removeSetFromExercise(exercises, props.id, props.setNumber - 1)
-        )
+        dispatch(removeSetFromExercise(exercises, id, setNumber - 1))
       }
     >
       Remove set
@@ -167,11 +160,9 @@ const SetDetails = (props) => {
 
   return (
     <li className={classes.Set}>
-      <p>Set # {props.setNumber}</p>
+      <p>Set # {setNumber}</p>
       <div className={classes.Form}>{form}</div>
-      {props.numberOfSets > 1 && removeSetBtn}
+      {numberOfSets > 1 && removeSetBtn}
     </li>
   );
-};
-
-export default SetDetails;
+}

@@ -10,7 +10,19 @@ import {
 } from '../../../store/workoutSlice';
 import { updateObject, checkValidityHandler } from '../../../shared/utility';
 
-const WorkoutDetailsForm = (props) => {
+export default function WorkoutDetailsForm(props) {
+  const {
+    shouldClearFormInputs,
+    shouldLoadWorkoutData,
+    shouldSetInputAsTouched,
+    shouldSetInputAsTouchedToFalse,
+    setShouldClearFormInputsToFalse,
+    setShouldLoadWorkoutDataToFalse,
+    history,
+    setOriginalTitle,
+    setFormIsValid,
+  } = props;
+
   const { formData } = useSelector((state) => state.workout);
   const dispatch = useDispatch();
 
@@ -84,8 +96,8 @@ const WorkoutDetailsForm = (props) => {
   });
 
   useEffect(() => {
-    if (props.shouldLoadWorkoutData) {
-      const { workout } = props.history.location.state;
+    if (shouldLoadWorkoutData) {
+      const { workout } = history.location.state;
 
       if (workout) {
         dispatch(setExercises(workout.exercises));
@@ -116,18 +128,22 @@ const WorkoutDetailsForm = (props) => {
             )[0],
           });
 
-        props.setOriginalTitle(workout.title);
-        props.setFormIsValid(true);
-        props.setShouldLoadWorkoutDataToFalse();
+        setOriginalTitle(workout.title);
+        setFormIsValid(true);
+        setShouldLoadWorkoutDataToFalse();
         dispatch(setFirebaseId(workout.firebaseId));
       }
     }
   }, [
-    props,
+    history,
     dispatch,
     secondaryTargetAreaInput,
     targetAreaInput,
     workoutNameInput,
+    setOriginalTitle,
+    setFormIsValid,
+    setShouldLoadWorkoutDataToFalse,
+    shouldLoadWorkoutData,
   ]);
 
   const formFields = [
@@ -150,7 +166,7 @@ const WorkoutDetailsForm = (props) => {
         touched: true,
       });
 
-      if (input.id === 'workoutName') props.setFormIsValid(updatedInput.valid);
+      if (input.id === 'workoutName') setFormIsValid(updatedInput.valid);
 
       input.id === 'workoutName'
         ? setWorkoutNameInput(updatedInput)
@@ -160,7 +176,7 @@ const WorkoutDetailsForm = (props) => {
 
       dispatch(setFormData(formData, input.id, e.value));
     },
-    [dispatch, formData, props, workoutNameInput]
+    [dispatch, formData, setFormIsValid, workoutNameInput]
   );
 
   const detailsForm = formFields.map((field) => (
@@ -194,20 +210,26 @@ const WorkoutDetailsForm = (props) => {
   }, [clearAllFormInputs, dispatch]);
 
   useEffect(() => {
-    if (props.shouldSetInputAsTouched) {
+    if (shouldSetInputAsTouched) {
       setInputAsTouched(true);
-      props.shouldSetInputAsTouchedToFalse();
+      shouldSetInputAsTouchedToFalse();
     }
-  }, [props, setInputAsTouched]);
+  }, [
+    shouldSetInputAsTouchedToFalse,
+    shouldSetInputAsTouched,
+    setInputAsTouched,
+  ]);
 
   useEffect(() => {
-    if (props.shouldClearFormInputs) {
+    if (shouldClearFormInputs) {
       clearAllWorkoutData();
-      props.setShouldClearFormInputsToFalse();
+      setShouldClearFormInputsToFalse();
     }
-  }, [props, clearAllWorkoutData]);
+  }, [
+    shouldClearFormInputs,
+    setShouldClearFormInputsToFalse,
+    clearAllWorkoutData,
+  ]);
 
   return detailsForm;
-};
-
-export default WorkoutDetailsForm;
+}

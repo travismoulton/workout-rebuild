@@ -12,8 +12,7 @@ import classes from './CreateWorkout.module.css';
 
 export default function CreateWorkout({ history }) {
   const exercises = useSelector((state) => selectAllWorkouts(state));
-  const { formData } = useSelector((state) => state.workout);
-  const { firebaseId } = useSelector((state) => state.workout);
+  const { formData, firebaseId } = useSelector((state) => state.workout);
 
   const dispatch = useDispatch();
 

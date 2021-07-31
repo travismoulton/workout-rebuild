@@ -12,8 +12,18 @@ import {
 } from '../../store/workoutSlice';
 import classes from './WorkoutListItem.module.css';
 
-const WorkoutListItem = (props) => {
-  const [exerciseFocus, setExerciseFocus] = useState(props.focus || 'reps');
+export default function WorkoutListItem(props) {
+  const {
+    focus,
+    id,
+    sets,
+    isFirstExercise,
+    isLastExercise,
+    inRecordMode,
+    name,
+  } = props;
+
+  const [exerciseFocus, setExerciseFocus] = useState(focus || 'reps');
   const { exercises } = useSelector((state) => state.workout);
   const dispatch = useDispatch();
 
@@ -40,8 +50,8 @@ const WorkoutListItem = (props) => {
     setExerciseFocus(e.value);
 
     e.value === 'time'
-      ? dispatch(resetExerciseFocus({ id: props.id, focus: e.value }))
-      : dispatch(resetExerciseFocus({ id: props.id, focus: e.value }));
+      ? dispatch(resetExerciseFocus({ id, focus: e.value }))
+      : dispatch(resetExerciseFocus({ id, focus: e.value }));
   };
 
   const focusSelectMenu = (
@@ -60,7 +70,7 @@ const WorkoutListItem = (props) => {
   const moveUpInOrderBtn = (
     <button
       className={`GlobalBtn-1 ${classes.OrderBtn}`}
-      onClick={() => dispatch(changeExerciseOrder(exercises, props.id, 'up'))}
+      onClick={() => dispatch(changeExerciseOrder(exercises, id, 'up'))}
     >
       Move Exercise Up <BsArrowUpShort size="2em" color="#fff" />
     </button>
@@ -69,17 +79,16 @@ const WorkoutListItem = (props) => {
   const moveDownInOrderBtn = (
     <button
       className={`GlobalBtn-1 ${classes.OrderBtn}`}
-      onClick={() => dispatch(changeExerciseOrder(exercises, props.id, 'down'))}
+      onClick={() => dispatch(changeExerciseOrder(exercises, id, 'down'))}
     >
       Move Exercise Down <BsArrowDownShort size="2em" color="#fff" />
     </button>
   );
 
-  const addSet = () => {
+  const addSet = () =>
     exerciseFocus === 'reps'
-      ? dispatch(addSetToExercise({ id: props.id }))
-      : dispatch(addSetToExercise({ id: props.id }));
-  };
+      ? dispatch(addSetToExercise({ id }))
+      : dispatch(addSetToExercise({ id }));
 
   const addSetBtn = (
     <button className={`GlobalBtn-1 ${classes.AddSetBtn}`} onClick={addSet}>
@@ -87,34 +96,33 @@ const WorkoutListItem = (props) => {
     </button>
   );
 
-  const sets =
-    props.sets.length &&
-    props.sets.map((set, i) => (
+  const setListItems =
+    sets.length &&
+    sets.map((set, i) => (
       <SetDetails
-        key={props.id}
+        key={id}
         reps={set.reps}
         weight={set.weight}
         minutes={set.minutes}
         seconds={set.seconds}
         focus={exerciseFocus}
-        id={props.id}
+        id={id}
         setNumber={i + 1}
-        numberOfSets={props.sets.length}
+        numberOfSets={sets.length}
       />
     ));
 
   return (
     <li className={classes.WorkoutListItem}>
-      <div className={classes.WorkoutTitle}>{props.name}</div>
+      <div className={classes.WorkoutTitle}>{name}</div>
       {focusSelectMenu}
-      {sets && <ul className={classes.SetsWrapper}>{sets}</ul>}
+      {setListItems && <ul className={classes.SetsWrapper}>{setListItems}</ul>}
       <div className={classes.BtnRow}>
-        {!props.isFirstExercise && !props.inRecordMode && moveUpInOrderBtn}
+        {!isFirstExercise && !inRecordMode && moveUpInOrderBtn}
         {addSetBtn}
-        {!props.isLastExercise && !props.inRecordMode && moveDownInOrderBtn}
+        {!isLastExercise && !inRecordMode && moveDownInOrderBtn}
       </div>
-      <RemoveExerciseBtn id={props.id} exerciseName={props.name} />
+      <RemoveExerciseBtn id={id} exerciseName={name} />
     </li>
   );
-};
-export default WorkoutListItem;
+}
