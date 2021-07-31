@@ -1,11 +1,11 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import axios from 'axios';
-import uniqid from 'uniqid';
+import { nanoid } from '@reduxjs/toolkit';
 
-import wgerDict from '../../../shared/wgerDict';
+import wgerData from '../../../shared/wgerData';
 import Input from '../../../components/UI/Input/Input';
-import { addExercise } from '../../../store/actions';
+import { addExercise } from '../../../store/workoutSlice';
 
 const FavoritesSelectMenu = (props) => {
   const { favorites } = useSelector((state) => state.favorites);
@@ -112,7 +112,7 @@ const FavoritesSelectMenu = (props) => {
       );
 
       const finalOptions = categories.map((category, i) => ({
-        label: wgerDict.exerciseCategoryList[category],
+        label: wgerData.exerciseCategoryList[category],
         options: groupedOptions[i].map((exercise) => ({
           label: exercise.name,
           value: exercise.id,
@@ -183,7 +183,7 @@ const FavoritesSelectMenu = (props) => {
       dispatch(
         addExercise({
           name: exercise.name,
-          id: uniqid(`${exercise.id}-`),
+          id: `${exercise.id}-${nanoid()}`,
           sets: [{ weight: 0, reps: 0 }],
           focus: 'reps',
         })

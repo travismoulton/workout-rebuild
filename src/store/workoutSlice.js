@@ -77,6 +77,9 @@ const workoutSlice = createSlice({
     removeExercise(state, action) {
       workoutAdapter.removeOne(state, action.payload);
     },
+    setExercises(state, action) {
+      workoutAdapter.addMany(state, action.payload);
+    },
     setFormData(state, action) {
       const { workoutName, targetArea, secondaryTarget } = action.payload;
       state.formData.workoutName = workoutName;
@@ -113,6 +116,7 @@ export const {
   changeExerciseOrder,
   addExercise,
   removeExercise,
+  setExercises,
   setFormData,
   clearFormData,
   clearExercises,

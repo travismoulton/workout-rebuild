@@ -13,6 +13,7 @@ import Logout from './components/Logout/Logout';
 import Register from './containers/Auth/Register/Register';
 import ExerciseDetail from './containers/ExerciseDetail/ExerciseDetail';
 import CreateExercise from './containers/CreateExercise/CreateExercise';
+import CreateWorkout from './containers/CreateWorkout/CreateWorkout';
 import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary';
 import './App.css';
 
@@ -79,6 +80,7 @@ function App({ firebase }) {
         </FirebaseContext.Consumer>
       </Route>
       <Route path="/create-exercise" component={CreateExercise} />
+      <Route path="/create-workout" component={CreateWorkout} />
       <Route
         path="/exercise/:name"
         render={(routeProps) => (

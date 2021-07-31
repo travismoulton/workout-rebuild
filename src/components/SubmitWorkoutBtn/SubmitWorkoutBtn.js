@@ -2,7 +2,7 @@ import axios from 'axios';
 import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
-import { resetWorkoutStore } from '../../store/actions';
+import { resetWorkoutStore } from '../../store/workoutSlice';
 import classes from './SubmitWorkoutBtn.module.css';
 
 const SubmitWorkoutBtn = (props) => {

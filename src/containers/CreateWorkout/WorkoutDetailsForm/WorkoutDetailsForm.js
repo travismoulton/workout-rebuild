@@ -5,10 +5,9 @@ import Input from '../../../components/UI/Input/Input';
 import {
   setFormData,
   setExercises,
-  setEntireForm,
   resetWorkoutStore,
   setFirebaseId,
-} from '../../../store/actions';
+} from '../../../store/workoutSlice';
 import { updateObject, checkValidityHandler } from '../../../shared/utility';
 
 const WorkoutDetailsForm = (props) => {
@@ -89,10 +88,9 @@ const WorkoutDetailsForm = (props) => {
       const { workout } = props.history.location.state;
 
       if (workout) {
-        console.log(workout);
         dispatch(setExercises(workout.exercises));
         dispatch(
-          setEntireForm(
+          setFormData(
             workout.title,
             workout.targetArea,
             workout.secondaryTargetArea
