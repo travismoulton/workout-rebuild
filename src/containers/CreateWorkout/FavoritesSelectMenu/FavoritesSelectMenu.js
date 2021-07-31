@@ -1,14 +1,21 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import axios from 'axios';
 import { nanoid } from '@reduxjs/toolkit';
 
 import wgerData from '../../../shared/wgerData';
 import Input from '../../../components/UI/Input/Input';
 import { addExercise } from '../../../store/workoutSlice';
+import { selectAllFavorites } from '../../../store/favoritesSlice';
+import { favoriteSelectMenuUtils as utils } from './favoriteSelectMenuUtils';
 
-const FavoritesSelectMenu = (props) => {
-  const { favorites } = useSelector((state) => state.favorites);
+export default function FavoritesSelectMenu({
+  isError,
+  toggleError,
+  toggleLoaded,
+  isLoaded,
+  clearSelect,
+}) {
+  const favorites = useSelector((state) => selectAllFavorites(state));
   const { uid, accessToken } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const [favoritesAsExercises, setFavoritesAsExercises] = useState([]);
@@ -46,47 +53,30 @@ const FavoritesSelectMenu = (props) => {
   useEffect(() => {
     let arr = [];
 
-    (async () => {
-      if (favorites)
-        if (
-          favorites.length &&
-          !favoritesAsExercises.length &&
-          !props.isError
-        ) {
-          await axios
-            .get(
-              `https://workout-81691-default-rtdb.firebaseio.com/masterExerciseList.json`,
-              { timeout: 5000 }
-            )
-            .then((res) => {
-              filterFavorites(arr, res);
-            })
-            .catch((err) => {
-              props.toggleError();
-            });
+    const { fetchMasterExerciseList, fetchCustomExercises } = utils;
 
-          await axios
-            .get(
-              `https://workout-81691-default-rtdb.firebaseio.com/customExercises/${uid}.json?auth=${accessToken}`,
-              { timeout: 5000 }
-            )
-            .then((res) => {
-              if (res.data) filterFavorites(arr, res);
-            })
-            .catch((err) => {
-              props.toggleError();
-            });
+    if (favorites)
+      if (favorites.length && !favoritesAsExercises.length && !isError) {
+        fetchMasterExerciseList()
+          .then((res) => filterFavorites(arr, res))
+          .catch((err) => toggleError());
 
-          setFavoritesAsExercises(arr);
-        }
-    })();
+        fetchCustomExercises(uid, accessToken)
+          .then((res) => {
+            if (res.data) filterFavorites(arr, res);
+          })
+          .catch((err) => toggleError());
+
+        setFavoritesAsExercises(arr);
+      }
   }, [
     favorites,
     favoritesAsExercises,
     uid,
     accessToken,
     filterFavorites,
-    props,
+    isError,
+    toggleError,
   ]);
 
   const getExerciseCategories = useCallback(() => {
@@ -120,24 +110,23 @@ const FavoritesSelectMenu = (props) => {
       }));
 
       setFavoritesAsSelectOptions(finalOptions);
-      props.toggleLoaded();
+      toggleLoaded();
     }
   }, [
     favoritesAsExercises,
     favoritesAsSelectOptions,
-    props,
     getExerciseCategories,
+    toggleLoaded,
   ]);
 
   useEffect(() => {
     // If there are no favorites, the page can be loaded immediatley
-    if (favorites)
-      if (!favorites.length && !props.isLoaded) props.toggleLoaded();
-  }, [favorites, props]);
+    if (favorites) if (!favorites.length && !isLoaded) toggleLoaded();
+  }, [favorites, toggleLoaded, isLoaded]);
 
   useEffect(() => {
-    if (props.isError) props.toggleLoaded();
-  }, [props]);
+    if (isError) toggleLoaded();
+  }, [toggleLoaded, isError]);
 
   useEffect(() => {
     if (
@@ -154,10 +143,10 @@ const FavoritesSelectMenu = (props) => {
   }, [addFromFavorites, favoritesAsSelectOptions]);
 
   useEffect(() => {
-    if (props.clearSelect) {
+    if (clearSelect) {
       setAddFromFavorites({ ...addFromFavorites, value: null });
     }
-  }, [props.clearSelect, addFromFavorites]);
+  }, [clearSelect, addFromFavorites]);
 
   const setAddFromFavoritesValue = (val) => {
     let returnVal;
@@ -206,6 +195,4 @@ const FavoritesSelectMenu = (props) => {
       wrapperClass="WorkoutDetailsSelectWrapper"
     />
   ) : null;
-};
-
-export default FavoritesSelectMenu;
+}
