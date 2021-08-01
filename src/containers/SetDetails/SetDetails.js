@@ -4,7 +4,7 @@ import classes from './SetDetails.module.css';
 import {
   updateExerciseData,
   removeSetFromExercise,
-  selectAllWorkouts,
+  selectAllExercises,
 } from '../../store/workoutSlice';
 import Input from '../../components/UI/Input/Input';
 
@@ -12,7 +12,7 @@ export default function SetDetails(props) {
   const { weight, reps, minutes, seconds, id, setNumber, focus, numberOfSets } =
     props;
 
-  const exercises = useSelector((state) => selectAllWorkouts(state));
+  const exercises = useSelector((state) => selectAllExercises(state));
   const dispatch = useDispatch();
 
   const weightInput = {

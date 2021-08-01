@@ -3,7 +3,9 @@ import axios from '../../../shared/axiosInstances/firebase';
 export const favoriteSelectMenuUtils = {
   fetchMasterExerciseList: async function () {
     const res = await axios.get('masterExerciseList.json');
-    return res;
+
+    // console.log(res.data);
+    return res.data;
   },
 
   fetchCustomExercises: async function (uid, accessToken) {
@@ -11,6 +13,8 @@ export const favoriteSelectMenuUtils = {
       `customExercises/${uid}.json?auth=${accessToken}`
     );
 
-    return res;
+    // console.log(res);
+
+    return res.data;
   },
 };

@@ -15,7 +15,8 @@ export default function FavoritesSelectMenu({
   isLoaded,
   clearSelect,
 }) {
-  const favorites = useSelector((state) => selectAllFavorites(state));
+  const favorites = useSelector(selectAllFavorites);
+  const { noFavorites } = useSelector((state) => state.favorites);
   const { uid, accessToken } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const [favoritesAsExercises, setFavoritesAsExercises] = useState([]);
@@ -37,14 +38,16 @@ export default function FavoritesSelectMenu({
     className: 'CreateWorkoutSelect',
   });
 
+  const [favoritesReady, setFavoritesReady] = useState(false);
+
   const filterFavorites = useCallback(
     (arr, res) => {
-      for (const key in res.data) {
+      for (const key in res) {
         const exercise = favorites.filter(
-          (fav) => fav.exercise.toString() === res.data[key].id.toString()
+          (fav) => fav.exerciseId.toString() === res[key].id.toString()
         )[0];
 
-        if (exercise) arr.push(res.data[key]);
+        if (exercise) arr.push(res[key]);
       }
     },
     [favorites]
@@ -52,23 +55,18 @@ export default function FavoritesSelectMenu({
 
   useEffect(() => {
     let arr = [];
-
     const { fetchMasterExerciseList, fetchCustomExercises } = utils;
 
-    if (favorites)
-      if (favorites.length && !favoritesAsExercises.length && !isError) {
-        fetchMasterExerciseList()
-          .then((res) => filterFavorites(arr, res))
-          .catch((err) => toggleError());
+    (async () => {
+      if (favorites)
+        if (favorites.length && !favoritesAsExercises.length && !isError) {
+          const masterExerciseList = await fetchMasterExerciseList();
+          const customExercises = await fetchCustomExercises(uid, accessToken);
 
-        fetchCustomExercises(uid, accessToken)
-          .then((res) => {
-            if (res.data) filterFavorites(arr, res);
-          })
-          .catch((err) => toggleError());
-
-        setFavoritesAsExercises(arr);
-      }
+          filterFavorites(arr, { ...masterExerciseList, ...customExercises });
+          setFavoritesAsExercises(arr);
+        }
+    })();
   }, [
     favorites,
     favoritesAsExercises,
@@ -120,9 +118,8 @@ export default function FavoritesSelectMenu({
   ]);
 
   useEffect(() => {
-    // If there are no favorites, the page can be loaded immediatley
-    if (favorites) if (!favorites.length && !isLoaded) toggleLoaded();
-  }, [favorites, toggleLoaded, isLoaded]);
+    if (noFavorites && !isLoaded) toggleLoaded();
+  }, [toggleLoaded, isLoaded, noFavorites]);
 
   useEffect(() => {
     if (isError) toggleLoaded();

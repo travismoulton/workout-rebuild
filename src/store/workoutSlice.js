@@ -127,7 +127,7 @@ export const {
 export const {
   selectById: selectExerciseById,
   selectIds: selectExerciseIds,
-  selectAll: selectAllWorkouts,
+  selectAll: selectAllExercises,
 } = workoutAdapter.getSelectors((state) => state.workout);
 
 export default workoutSlice.reducer;

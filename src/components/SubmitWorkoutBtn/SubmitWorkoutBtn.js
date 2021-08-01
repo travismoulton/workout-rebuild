@@ -2,7 +2,10 @@ import axios from 'axios';
 import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
-import { resetWorkoutStore, selectAllWorkouts } from '../../store/workoutSlice';
+import {
+  resetWorkoutStore,
+  selectAllExercises,
+} from '../../store/workoutSlice';
 import classes from './SubmitWorkoutBtn.module.css';
 
 export default function SubmitWorkoutBtn(props) {
@@ -27,7 +30,7 @@ export default function SubmitWorkoutBtn(props) {
     msg: '',
     errorCode: null,
   });
-  const exercises = useSelector((state) => selectAllWorkouts(state));
+  const exercises = useSelector(selectAllExercises);
   const { formData } = useSelector((state) => state.workout);
   const { uid, accessToken } = useSelector((state) => state.auth);
   const dispatch = useDispatch();

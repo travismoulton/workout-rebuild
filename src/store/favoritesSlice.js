@@ -9,6 +9,10 @@ import axios from '../shared/axiosInstances/firebase';
 
 const favoritesAdapter = createEntityAdapter();
 
+const initialState = favoritesAdapter.getInitialState({
+  noFavorites: false,
+});
+
 export const fetchFavorites = createAsyncThunk(
   'favorites/setFavorites',
   async ({ uid, accessToken }) => {
@@ -60,14 +64,22 @@ export const removeFavorite = createAsyncThunk(
 
 const favoritesSlice = createSlice({
   name: 'favorites',
-  initialState: favoritesAdapter.getInitialState(),
+  initialState,
   reducers: {},
   extraReducers: {
     [fetchFavorites.fulfilled]: (state, action) => {
-      favoritesAdapter.upsertMany(state, action.payload);
+      action.payload.length
+        ? favoritesAdapter.upsertMany(state, action.payload)
+        : (state.noFavorites = true);
     },
-    [addFavorite.fulfilled]: favoritesAdapter.addOne,
-    [removeFavorite.fulfilled]: favoritesAdapter.removeOne,
+    [addFavorite.fulfilled]: (state, action) => {
+      favoritesAdapter.addOne(state, action);
+      if (state.noFavorites) state.noFavorites = false;
+    },
+    [removeFavorite.fulfilled]: (state, action) => {
+      if (state.entities.length === 1) state.noFavorites = true;
+      favoritesAdapter.removeOne(state, action);
+    },
   },
 });
 

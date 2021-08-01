@@ -6,12 +6,12 @@ import SubmitWorkoutBtn from '../../components/SubmitWorkoutBtn/SubmitWorkoutBtn
 import Spinner from '../../components/UI/Spinner/Spinner';
 import FavoritesSelectMenu from './FavoritesSelectMenu/FavoritesSelectMenu';
 import WorkoutDetailsForm from './WorkoutDetailsForm/WorkoutDetailsForm';
-import { enterSearchMode, selectAllWorkouts } from '../../store/workoutSlice';
+import { enterSearchMode, selectAllExercises } from '../../store/workoutSlice';
 import wgerData from '../../shared/wgerData';
 import classes from './CreateWorkout.module.css';
 
 export default function CreateWorkout({ history }) {
-  const exercises = useSelector((state) => selectAllWorkouts(state));
+  const exercises = useSelector(selectAllExercises);
   const { formData, firebaseId } = useSelector((state) => state.workout);
 
   const dispatch = useDispatch();
@@ -63,7 +63,7 @@ export default function CreateWorkout({ history }) {
   return (
     <>
       <div className={classes.Wrapper} style={{ display: !loaded && 'none' }}>
-        {error.isError ? error.message : null}
+        {error.isError && error.message}
 
         <WorkoutDetailsForm
           shouldLoadWorkoutData={shouldLoadWorkoutData}

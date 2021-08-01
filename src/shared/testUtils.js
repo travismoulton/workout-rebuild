@@ -4,6 +4,7 @@ import { Provider } from 'react-redux';
 
 import authReducer from '../store/authSlice';
 import favoritesReducer from '../store/favoritesSlice';
+import workoutSlice from '../store/workoutSlice';
 
 function customRender(
   ui,
@@ -13,6 +14,7 @@ function customRender(
       reducer: {
         auth: authReducer,
         favorites: favoritesReducer,
+        workout: workoutSlice,
       },
       preloadedState,
     }),
