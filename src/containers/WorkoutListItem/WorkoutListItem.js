@@ -100,7 +100,7 @@ export default function WorkoutListItem(props) {
     sets.length &&
     sets.map((set, i) => (
       <SetDetails
-        key={id}
+        key={`${id}#${i + 1}`}
         reps={set.reps}
         weight={set.weight}
         minutes={set.minutes}

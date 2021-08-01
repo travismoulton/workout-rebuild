@@ -75,6 +75,7 @@ const workoutSlice = createSlice({
       workoutAdapter.addOne(state, action.payload);
     },
     removeExercise(state, action) {
+      console.log(action.payload);
       workoutAdapter.removeOne(state, action.payload);
     },
     setExercises(state, action) {

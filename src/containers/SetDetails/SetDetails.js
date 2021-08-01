@@ -95,34 +95,41 @@ export default function SetDetails(props) {
     id: 4,
   };
 
-  const updateSetViaSelectMenu = (e, input) => {
-    dispatch(
-      updateExerciseData(exercises, id, input, e.value * 1, setNumber - 1)
-    );
-  };
+  const setData = focus === 'reps' ? { reps, weight } : { minutes, seconds };
+  const setIndex = setNumber - 1;
 
-  const increment = (input) => {
+  const updateSetViaSelectMenu = (e, input) =>
     dispatch(
-      updateExerciseData(
-        exercises,
+      updateExerciseData({
         id,
-        input.label,
-        input.value + (input.label === 'weight' ? 5 : 1),
-        setNumber - 1
-      )
+        setIndex,
+        setData: { ...setData, [input]: e.value * 1 },
+      })
     );
-  };
+
+  const increment = (input) =>
+    dispatch(
+      updateExerciseData({
+        id,
+        setIndex,
+        setData: {
+          ...setData,
+          [input.label]: input.value + (input.label === 'weight' ? 5 : 1),
+        },
+      })
+    );
 
   const decrement = (input) => {
     if (input.value > 0)
       dispatch(
-        updateExerciseData(
-          exercises,
+        updateExerciseData({
           id,
-          input.label,
-          input.value - (input.label === 'weight' ? 5 : 1),
-          setNumber - 1
-        )
+          setIndex,
+          setData: {
+            ...setData,
+            [input.label]: input.value - (input.label === 'weight' ? 5 : 1),
+          },
+        })
       );
   };
 
@@ -133,13 +140,12 @@ export default function SetDetails(props) {
     <Input
       elementType={field.elementType}
       elementConfig={field.elementConfig}
-      key={field.id}
+      key={`${setNumber}-${field.id}-${field.label}`}
       value={field.displayValue}
       changed={(e) => updateSetViaSelectMenu(e, field.label)}
       label={field.label}
       classname="SetDetailsSelect"
       wrapperClass="SetDetailsSelectWrapper"
-      setClipPath
       SetDetails
       decrementFunction={() => decrement(field)}
       incrementFunction={() => increment(field)}

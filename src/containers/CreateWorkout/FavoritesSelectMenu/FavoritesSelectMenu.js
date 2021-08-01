@@ -38,8 +38,6 @@ export default function FavoritesSelectMenu({
     className: 'CreateWorkoutSelect',
   });
 
-  const [favoritesReady, setFavoritesReady] = useState(false);
-
   const filterFavorites = useCallback(
     (arr, res) => {
       for (const key in res) {
@@ -77,6 +75,7 @@ export default function FavoritesSelectMenu({
     toggleError,
   ]);
 
+  // can this be a reduce statement?
   const getExerciseCategories = useCallback(() => {
     const categories = [];
     favoritesAsExercises.forEach((exercise) => {

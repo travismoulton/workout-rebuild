@@ -1,19 +1,18 @@
 import { useState, useRef } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { AiOutlineCloseCircle } from 'react-icons/ai';
 
 import Tooltip from '../../../components/UI/Tooltip/Tooltip';
 import { removeExercise } from '../../../store/workoutSlice';
 import classes from './RemoveExerciseBtn.module.css';
 
-const RemoveWorkoutBtn = (props) => {
+export default function RemoveWorkoutBtn({ id, exerciseName }) {
   const [tooltipData, setTooltipData] = useState({
     show: false,
     x: null,
     y: null,
   });
   const divRef = useRef(null);
-  const { exercises } = useSelector((state) => state.workout);
   const dispatch = useDispatch();
 
   const showToolTip = (e) => {
@@ -30,7 +29,7 @@ const RemoveWorkoutBtn = (props) => {
 
   const tooltip = tooltipData.show && (
     <Tooltip x={tooltipData.x} y={tooltipData.y}>
-      Remove {props.exerciseName} from workout
+      Remove {exerciseName} from workout
     </Tooltip>
   );
 
@@ -41,8 +40,8 @@ const RemoveWorkoutBtn = (props) => {
         onMouseOver={showToolTip}
         onMouseOut={hideToolTip}
         className={classes.CloseWorkoutBtnContainer}
-        onClick={() => dispatch(removeExercise(exercises, props.id))}
-        onTouchStart={() => dispatch(removeExercise(exercises, props.id))}
+        onClick={() => dispatch(removeExercise(id))}
+        onTouchStart={() => dispatch(removeExercise(id))}
       >
         <AiOutlineCloseCircle
           className={classes.CloseWorkoutBtn}
@@ -52,6 +51,4 @@ const RemoveWorkoutBtn = (props) => {
       {tooltip}
     </>
   );
-};
-
-export default RemoveWorkoutBtn;
+}
