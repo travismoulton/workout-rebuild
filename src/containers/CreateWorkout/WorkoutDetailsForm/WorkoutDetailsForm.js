@@ -19,7 +19,6 @@ export default function WorkoutDetailsForm(props) {
     setShouldClearFormInputsToFalse,
     setShouldLoadWorkoutDataToFalse,
     history,
-    setOriginalTitle,
     setFormIsValid,
   } = props;
 
@@ -128,7 +127,6 @@ export default function WorkoutDetailsForm(props) {
             )[0],
           });
 
-        setOriginalTitle(workout.title);
         setFormIsValid(true);
         setShouldLoadWorkoutDataToFalse();
         dispatch(setFirebaseId(workout.firebaseId));
@@ -140,7 +138,6 @@ export default function WorkoutDetailsForm(props) {
     secondaryTargetAreaInput,
     targetAreaInput,
     workoutNameInput,
-    setOriginalTitle,
     setFormIsValid,
     setShouldLoadWorkoutDataToFalse,
     shouldLoadWorkoutData,

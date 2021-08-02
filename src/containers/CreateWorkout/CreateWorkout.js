@@ -19,7 +19,6 @@ export default function CreateWorkout({ history }) {
   const [shouldClearFormInputs, setShouldClearFormInputs] = useState(false);
   const [shouldSetInputAsTouched, setShouldSetInputAsTouuched] =
     useState(false);
-  const [originalTitle, setOriginalTitle] = useState('');
   const [shouldLoadWorkoutData, setShouldLoadWorkoutData] = useState(
     history.location.state
   );
@@ -70,7 +69,6 @@ export default function CreateWorkout({ history }) {
           setShouldLoadWorkoutDataToFalse={() =>
             setShouldLoadWorkoutData(false)
           }
-          setOriginalTitle={(title) => setOriginalTitle(title)}
           setFormIsValid={(bool) => setFormIsValid(bool)}
           shouldClearFormInputs={shouldClearFormInputs}
           setShouldClearFormInputsToFalse={() =>
@@ -115,9 +113,7 @@ export default function CreateWorkout({ history }) {
               formIsValid={formIsValid}
               clearAllFormInputs={() => setShouldClearFormInputs(true)}
               setInputAsTouched={() => setShouldSetInputAsTouuched(true)}
-              // titleChanged={formData.workoutName}
               firebaseId={firebaseId}
-              originalTitleEntact={originalTitle === formData.workoutName}
               createNewWorkout={firebaseId === null}
               history={history}
             />
