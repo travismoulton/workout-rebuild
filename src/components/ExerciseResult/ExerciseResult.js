@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import slugify from 'slugify';
 
+import AddToWorkoutBtn from '../AddToWorkoutBtn/AddToWorkoutBtn';
 import FavoriteBtn from '../FavoriteBtn/FavoriteBtn';
 import classes from './ExerciseResult.module.css';
 
@@ -10,6 +11,7 @@ export default function ExerciseResult(props) {
     props;
 
   const { user } = useSelector((state) => state.auth);
+  const { buildingWorkout } = useSelector((state) => state.workout);
 
   return (
     <li
@@ -31,6 +33,7 @@ export default function ExerciseResult(props) {
         </Link>
         <div className={classes.BtnPairContainer}>
           {user && <FavoriteBtn exerciseId={exerciseId} />}
+          {buildingWorkout && <AddToWorkoutBtn name={name} id={exerciseId} />}
         </div>
       </div>
 

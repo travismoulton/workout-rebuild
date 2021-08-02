@@ -7,7 +7,7 @@ import ExerciseDetailDescription from '../../components/ExerciseDetails/Exercise
 import ExerciseDetailMuscles from '../../components/ExerciseDetails/ExerciseDetailMuscles/ExerciseDetailMuscles';
 import ExericseDetailImg from '../../components/ExerciseDetails/ExerciseDetailImg/ExerciseDetailImg';
 import DeleteCustomExerciseModal from './DeleteCustomExerciseModal/DeleteCustomExerciseModal';
-// import AddToWorkoutBtn from '../../components/AddToWorkoutBtn/AddToWorkoutBtn';
+import AddToWorkoutBtn from '../../components/AddToWorkoutBtn/AddToWorkoutBtn';
 
 import FavoriteBtn from '../../components/FavoriteBtn/FavoriteBtn';
 import classes from './ExerciseDetail.module.css';
@@ -32,7 +32,7 @@ export default function ExerciseDetail({ location, history }) {
   });
   const { user, uid, accessToken } = useSelector((state) => state.auth);
 
-  // const buildingWorkout = useSelector((state) => state.workout.buildingWorkout);
+  const buildingWorkout = useSelector((state) => state.workout.buildingWorkout);
 
   useEffect(() => {
     if (exercise) document.title = exercise.name;
@@ -117,15 +117,11 @@ export default function ExerciseDetail({ location, history }) {
           <FavoriteBtn exerciseId={exerciseId} />
         </div>
       )}
-      {/* {buildingWorkout && (
+      {buildingWorkout && (
         <div className={classes.AddToWorkoutBtnContainer}>
-          <AddToWorkoutBtn
-            history={props.history}
-            id={exerciseId}
-            name={exercise.name}
-          />
+          <AddToWorkoutBtn id={exerciseId} name={exercise.name} />
         </div>
-      )} */}
+      )}
       {isCustom && showDeleteExerciseModalBtn}
       {isCustom && (
         <DeleteCustomExerciseModal
@@ -138,9 +134,9 @@ export default function ExerciseDetail({ location, history }) {
     </>
   );
 
-  const noExerciseError = error.code === 'noExercise' && error.message;
+  // const noExerciseError = error.code === 'noExercise' && error.message;
 
-  if (error.code === 'noExercise') return noExerciseError;
+  if (error.code === 'noExercise') return error.message;
 
   return exercise ? display : null;
 }

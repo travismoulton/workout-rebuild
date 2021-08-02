@@ -111,10 +111,9 @@ export default function CreateWorkout({ history }) {
             </ul>
             <SubmitWorkoutBtn
               formIsValid={formIsValid}
-              clearAllFormInputs={() => setShouldClearFormInputs(true)}
               setInputAsTouched={() => setShouldSetInputAsTouuched(true)}
               firebaseId={firebaseId}
-              createNewWorkout={firebaseId === null}
+              shouldCreateNewWorkout={firebaseId === null}
               history={history}
             />
             {clearWorkoutBtn}

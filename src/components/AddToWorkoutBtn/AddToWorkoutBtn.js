@@ -1,23 +1,29 @@
 import { useDispatch } from 'react-redux';
 import { nanoid } from 'nanoid';
+import { useHistory } from 'react-router-dom';
 
+import { addExercise } from '../../store/workoutSlice';
 import classes from './AddToWorkoutBtn.module.css';
 
-const AddExerciseBtn = (props) => {
+export default function AddExerciseBtn({ name, id }) {
   const dispatch = useDispatch();
-  // const addWorkoutAndRedirect = () => {
-  //   dispatch(
-  //     addExercise({
-  //       name: props.name,
-  //       id: nanoid(`${props.id}-`),
-  //       sets: [{ weight: 0, reps: 1 }],
-  //       focus: 'reps',
-  //     })
-  //   );
-  //   props.history.push('/create-workout');
-  // };
+  const history = useHistory();
 
-  return <button className={classes.Btn}>Add to workout</button>;
-};
+  const addWorkoutAndRedirect = () => {
+    dispatch(
+      addExercise({
+        name,
+        id: `${id}-${nanoid()}`,
+        sets: [{ weight: 0, reps: 0 }],
+        focus: 'reps',
+      })
+    );
+    history.push('/create-workout');
+  };
 
-export default AddExerciseBtn;
+  return (
+    <button onClick={addWorkoutAndRedirect} className={classes.Btn}>
+      Add to workout
+    </button>
+  );
+}

@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 
 import {
   resetWorkoutStore,
+  clearExercises,
   selectAllExercises,
 } from '../../store/workoutSlice';
 import { submitWorkoutBtnUtils as utils } from './submitWorkoutBtnUtils';
@@ -13,9 +14,8 @@ export default function SubmitWorkoutBtn(props) {
     formIsValid,
     setInputAsTouched,
     history,
-    createNewWorkout,
+    shouldCreateNewWorkout,
     firebaseId,
-    clearAllFormInputs,
   } = props;
 
   const [error, setError] = useState({
@@ -63,7 +63,7 @@ export default function SubmitWorkoutBtn(props) {
     history.push({
       pathname: '/my-profile',
       state: {
-        message: createNewWorkout ? 'Workout created' : 'Workout Updated',
+        message: shouldCreateNewWorkout ? 'Workout created' : 'Workout Updated',
       },
     });
   };
@@ -93,7 +93,7 @@ export default function SubmitWorkoutBtn(props) {
     const { workoutName: title } = formData;
     const { checkForPreviousNameUse, createWorkout, updateWorkout } = utils;
 
-    if (createNewWorkout || workoutNameChanged)
+    if (shouldCreateNewWorkout || workoutNameChanged)
       nameTaken = await checkForPreviousNameUse(uid, accessToken, title);
 
     if (nameTaken) {
@@ -112,14 +112,14 @@ export default function SubmitWorkoutBtn(props) {
     };
 
     const pushDataToFirebase = () =>
-      createNewWorkout
+      shouldCreateNewWorkout
         ? createWorkout(uid, accessToken, workoutData)
         : updateWorkout(uid, accessToken, firebaseId, workoutData);
 
     pushDataToFirebase()
       .then(() => {
+        dispatch(clearExercises());
         dispatch(resetWorkoutStore());
-        clearAllFormInputs();
         redirectToMyProfile();
       })
       .catch(() => setAxiosError());
@@ -131,7 +131,7 @@ export default function SubmitWorkoutBtn(props) {
   return (
     <>
       <button className={`GlobalBtn-1 ${classes.Btn}`} onClick={onSubmit}>
-        {createNewWorkout ? 'Create Workout' : 'Update workout'}
+        {shouldCreateNewWorkout ? 'Create Workout' : 'Update workout'}
       </button>
       {error.isError && error.msg}
     </>

@@ -89,12 +89,16 @@ const workoutSlice = createSlice({
       state.formData.targetArea = '';
       state.formData.secondaryTarget = '';
     },
-    // clearExercises(state, action) {
-    //   workoutAdapter.removeAll(state, action);
-    // },
-    resetWorkoutStore(state, action) {
+    clearExercises(state, action) {
       workoutAdapter.removeAll(state, action);
-      state = initialState;
+    },
+    resetWorkoutStore(state, action) {
+      state.formData.workoutName = '';
+      state.formData.targetArea = '';
+      state.formData.secondaryTarget = '';
+      state.buildingWorkout = false;
+      state.firebaseId = null;
+      state.updated = false;
     },
     setFirebaseId(state, action) {
       const { firebaseId } = action.payload;
@@ -115,7 +119,7 @@ export const {
   setExercises,
   setFormData,
   clearFormData,
-  // clearExercises,
+  clearExercises,
   resetWorkoutStore,
   setFirebaseId,
 } = workoutSlice.actions;

@@ -7,6 +7,7 @@ import {
   setExercises,
   resetWorkoutStore,
   setFirebaseId,
+  clearExercises,
 } from '../../../store/workoutSlice';
 import { updateObject, checkValidityHandler } from '../../../shared/utility';
 
@@ -220,6 +221,7 @@ export default function WorkoutDetailsForm(props) {
   const clearAllWorkoutData = useCallback(() => {
     clearAllFormInputs();
     dispatch(resetWorkoutStore());
+    dispatch(clearExercises());
   }, [clearAllFormInputs, dispatch]);
 
   useEffect(() => {
