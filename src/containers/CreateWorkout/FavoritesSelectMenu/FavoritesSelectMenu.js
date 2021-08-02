@@ -8,15 +8,10 @@ import { addExercise } from '../../../store/workoutSlice';
 import { selectAllFavorites } from '../../../store/favoritesSlice';
 import { favoriteSelectMenuUtils as utils } from './favoriteSelectMenuUtils';
 
-export default function FavoritesSelectMenu({
-  isError,
-  toggleError,
-  toggleLoaded,
-  isLoaded,
-  clearSelect,
-}) {
+export default function FavoritesSelectMenu(props) {
+  const { isError, toggleError, toggleLoaded, clearSelect } = props;
+
   const favorites = useSelector(selectAllFavorites);
-  const { noFavorites } = useSelector((state) => state.favorites);
   const { uid, accessToken } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const [favoritesAsExercises, setFavoritesAsExercises] = useState([]);
@@ -115,10 +110,6 @@ export default function FavoritesSelectMenu({
     getExerciseCategories,
     toggleLoaded,
   ]);
-
-  useEffect(() => {
-    if (noFavorites && !isLoaded) toggleLoaded();
-  }, [toggleLoaded, isLoaded, noFavorites]);
 
   useEffect(() => {
     if (isError) toggleLoaded();

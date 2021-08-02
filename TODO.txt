@@ -1,2 +1,11 @@
 //1: Display a proper error message on the results page.
-//2: Checkout the error being thrown when logging in through the Login component
+
+
+WHAT TO TEST NEXT:
+//1: AddToWorkoutBtn
+//2: CreateWorkout
+//3: SubmitWorkoutBtn
+//4: FavoritesSelectMenu
+//5: WorkoutDetailsForm
+//6: SetDetails
+//7: WorkoutLisItem

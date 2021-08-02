@@ -36,6 +36,13 @@ export default function CreateWorkout({ history }) {
     formData.workoutName ? true : false
   );
 
+  const { user } = useSelector((state) => state.auth);
+  const { noFavorites } = useSelector((state) => state.favorites);
+
+  useEffect(() => {
+    if (noFavorites || !user) setLoaded(true);
+  }, [loaded, noFavorites, user]);
+
   useEffect(() => {
     document.title = 'Create Workout';
   }, []);
@@ -80,13 +87,14 @@ export default function CreateWorkout({ history }) {
           }
         />
 
-        <FavoritesSelectMenu
-          toggleLoaded={() => setLoaded(true)}
-          toggleError={() => setError({ ...error, isError: true })}
-          isError={error.isError}
-          isLoaded={loaded}
-          clearSelect={shouldClearFormInputs}
-        />
+        {user && !noFavorites && (
+          <FavoritesSelectMenu
+            toggleLoaded={() => setLoaded(true)}
+            toggleError={() => setError({ ...error, isError: true })}
+            isError={error.isError}
+            clearSelect={shouldClearFormInputs}
+          />
+        )}
 
         <button
           className={`GlobalBtn-1 ${classes.AddBySearchBtn}`}
