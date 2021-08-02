@@ -44,7 +44,12 @@ export default function CustomSelect(props) {
   const formatGroupLabel = (data) => (
     <div className={classes.GroupStyles}>
       <span>{data.label}</span>
-      <span className={classes.GroupBadge}>{data.options.length}</span>
+      <span
+        data-testid={`select-badge-${data.options.length}`}
+        className={classes.GroupBadge}
+      >
+        {data.options.length}
+      </span>
     </div>
   );
 

@@ -70,15 +70,11 @@ export default function FavoritesSelectMenu(props) {
     toggleError,
   ]);
 
-  // can this be a reduce statement?
+  // Filters out duplicate categories
   const getExerciseCategories = useCallback(() => {
-    const categories = [];
-    favoritesAsExercises.forEach((exercise) => {
-      if (!categories.includes(exercise.category))
-        categories.push(exercise.category);
-    });
+    const categories = favoritesAsExercises.map((fav) => fav.category);
 
-    return categories;
+    return Array.from(new Set(categories));
   }, [favoritesAsExercises]);
 
   useEffect(() => {
@@ -138,6 +134,7 @@ export default function FavoritesSelectMenu(props) {
   const setAddFromFavoritesValue = (val) => {
     let returnVal;
     const optionGroups = addFromFavorites.elementConfig.options;
+
     optionGroups.forEach((group) => {
       if (group.options) {
         const matchingOption = group.options.filter(
@@ -180,6 +177,7 @@ export default function FavoritesSelectMenu(props) {
       changed={addExerciseFromFavorites}
       classname={addFromFavorites.className}
       wrapperClass="WorkoutDetailsSelectWrapper"
+      selectId="favoriteSelectMenu"
     />
   ) : null;
 }
