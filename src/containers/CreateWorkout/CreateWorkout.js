@@ -7,7 +7,6 @@ import Spinner from '../../components/UI/Spinner/Spinner';
 import FavoritesSelectMenu from './FavoritesSelectMenu/FavoritesSelectMenu';
 import WorkoutDetailsForm from './WorkoutDetailsForm/WorkoutDetailsForm';
 import { enterSearchMode, selectAllExercises } from '../../store/workoutSlice';
-import wgerData from '../../shared/wgerData';
 import classes from './CreateWorkout.module.css';
 
 export default function CreateWorkout({ history }) {
@@ -113,21 +112,10 @@ export default function CreateWorkout({ history }) {
               ))}
             </ul>
             <SubmitWorkoutBtn
-              title={formData.workoutName}
-              targetAreaCode={formData.targetArea}
-              secondaryTargetCode={formData.secondaryTarget}
-              targetArea={
-                formData.targetArea &&
-                wgerData.exerciseCategoryList[formData.targetArea]
-              }
-              secondaryTargetArea={
-                formData.secondaryTarget &&
-                wgerData.exerciseCategoryList[formData.secondaryTarget]
-              }
               formIsValid={formIsValid}
               clearAllFormInputs={() => setShouldClearFormInputs(true)}
               setInputAsTouched={() => setShouldSetInputAsTouuched(true)}
-              titleChanged={formData.workoutName}
+              // titleChanged={formData.workoutName}
               firebaseId={firebaseId}
               originalTitleEntact={originalTitle === formData.workoutName}
               createNewWorkout={firebaseId === null}

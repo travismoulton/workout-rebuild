@@ -101,13 +101,13 @@ export default function WorkoutDetailsForm(props) {
 
       if (workout) {
         dispatch(setExercises(workout.exercises));
-        dispatch(
-          setFormData(
-            workout.title,
-            workout.targetArea,
-            workout.secondaryTargetArea
-          )
-        );
+        // dispatch(
+        //   setFormData(
+        //     workout.title,
+        //     workout.targetArea,
+        //     workout.secondaryTargetArea
+        //   )
+        // );
 
         if (workout.title)
           setWorkoutNameInput({ ...workoutNameInput, value: workout.title });
@@ -155,13 +155,16 @@ export default function WorkoutDetailsForm(props) {
   const inputChangedHandler = useCallback(
     (e, input) => {
       if (e.target) e.value = e.target.value;
+
+      const updatedValue =
+        input === workoutNameInput
+          ? e.value
+          : input.elementConfig.options.filter(
+              (option) => option.value === e.value
+            )[0];
+
       const updatedInput = updateObject(input, {
-        value:
-          input === workoutNameInput
-            ? e.value
-            : input.elementConfig.options.filter(
-                (option) => option.value === e.value
-              )[0],
+        value: updatedValue,
         valid: checkValidityHandler(e.value, input.validation),
         touched: true,
       });
@@ -174,9 +177,22 @@ export default function WorkoutDetailsForm(props) {
         ? setTargetAreaInput(updatedInput)
         : setSecondaryTargetAreaInput(updatedInput);
 
-      dispatch(setFormData(formData, input.id, e.value));
+      const formData = {
+        workoutName: workoutNameInput.value,
+        targetArea: targetAreaInput.value,
+        secondaryTarget: secondaryTargetAreaInput.value,
+        [input.id]: updatedValue,
+      };
+
+      dispatch(setFormData(formData));
     },
-    [dispatch, formData, setFormIsValid, workoutNameInput]
+    [
+      dispatch,
+      setFormIsValid,
+      workoutNameInput,
+      targetAreaInput,
+      secondaryTargetAreaInput,
+    ]
   );
 
   const detailsForm = formFields.map((field) => (

@@ -50,9 +50,7 @@ const workoutSlice = createSlice({
       const { id, setIndex, setData } = action.payload;
       const exercise = state.entities[id];
 
-      if (exercise) {
-        exercise.sets[setIndex] = setData;
-      }
+      if (exercise) exercise.sets[setIndex] = setData;
     },
     removeSetFromExercise(state, action) {
       const { id, setIndex } = action.payload;
@@ -63,19 +61,18 @@ const workoutSlice = createSlice({
     changeExerciseOrder(state, action) {
       const { id, direction } = action.payload;
 
-      const index = state.entities.indexOf(state.entities[id]);
+      const index = state.ids.indexOf(id);
 
       const swap = (arr, i, j) => ([arr[i], arr[j]] = [arr[j], arr[i]]);
 
       direction === 'up'
-        ? swap(state.entities, index, index - 1)
-        : swap(state.entities, index, index + 1);
+        ? swap(state.ids, index, index - 1)
+        : swap(state.ids, index, index + 1);
     },
     addExercise(state, action) {
       workoutAdapter.addOne(state, action.payload);
     },
     removeExercise(state, action) {
-      console.log(action.payload);
       workoutAdapter.removeOne(state, action.payload);
     },
     setExercises(state, action) {
@@ -92,13 +89,11 @@ const workoutSlice = createSlice({
       state.formData.targetArea = '';
       state.formData.secondaryTarget = '';
     },
-    clearExercises(state, action) {
-      workoutAdapter.removeAll();
-    },
-
-    // setEntireForm placeholder -> May not need
-
+    // clearExercises(state, action) {
+    //   workoutAdapter.removeAll(state, action);
+    // },
     resetWorkoutStore(state, action) {
+      workoutAdapter.removeAll(state, action);
       state = initialState;
     },
     setFirebaseId(state, action) {
@@ -120,7 +115,7 @@ export const {
   setExercises,
   setFormData,
   clearFormData,
-  clearExercises,
+  // clearExercises,
   resetWorkoutStore,
   setFirebaseId,
 } = workoutSlice.actions;

@@ -49,9 +49,7 @@ export default function WorkoutListItem(props) {
     });
     setExerciseFocus(e.value);
 
-    e.value === 'time'
-      ? dispatch(resetExerciseFocus({ id, focus: e.value }))
-      : dispatch(resetExerciseFocus({ id, focus: e.value }));
+    dispatch(resetExerciseFocus({ id, focus: e.value }));
   };
 
   const focusSelectMenu = (
@@ -70,7 +68,7 @@ export default function WorkoutListItem(props) {
   const moveUpInOrderBtn = (
     <button
       className={`GlobalBtn-1 ${classes.OrderBtn}`}
-      onClick={() => dispatch(changeExerciseOrder(exercises, id, 'up'))}
+      onClick={() => dispatch(changeExerciseOrder({ id, direction: 'up' }))}
     >
       Move Exercise Up <BsArrowUpShort size="2em" color="#fff" />
     </button>
@@ -79,19 +77,17 @@ export default function WorkoutListItem(props) {
   const moveDownInOrderBtn = (
     <button
       className={`GlobalBtn-1 ${classes.OrderBtn}`}
-      onClick={() => dispatch(changeExerciseOrder(exercises, id, 'down'))}
+      onClick={() => dispatch(changeExerciseOrder({ id, direction: 'down' }))}
     >
       Move Exercise Down <BsArrowDownShort size="2em" color="#fff" />
     </button>
   );
 
-  const addSet = () =>
-    exerciseFocus === 'reps'
-      ? dispatch(addSetToExercise({ id }))
-      : dispatch(addSetToExercise({ id }));
-
   const addSetBtn = (
-    <button className={`GlobalBtn-1 ${classes.AddSetBtn}`} onClick={addSet}>
+    <button
+      className={`GlobalBtn-1 ${classes.AddSetBtn}`}
+      onClick={() => dispatch(addSetToExercise({ id }))}
+    >
       Add another set
     </button>
   );

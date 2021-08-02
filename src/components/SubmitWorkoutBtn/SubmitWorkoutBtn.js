@@ -1,11 +1,11 @@
-import axios from 'axios';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
 import {
   resetWorkoutStore,
   selectAllExercises,
 } from '../../store/workoutSlice';
+import { submitWorkoutBtnUtils as utils } from './submitWorkoutBtnUtils';
 import classes from './SubmitWorkoutBtn.module.css';
 
 export default function SubmitWorkoutBtn(props) {
@@ -14,15 +14,8 @@ export default function SubmitWorkoutBtn(props) {
     setInputAsTouched,
     history,
     createNewWorkout,
-    title,
-    targetArea,
-    targetAreaCode,
-    secondaryTargetArea,
-    secondaryTargetCode,
     firebaseId,
     clearAllFormInputs,
-    titleChanged,
-    originalTitleEntact,
   } = props;
 
   const [error, setError] = useState({
@@ -30,15 +23,31 @@ export default function SubmitWorkoutBtn(props) {
     msg: '',
     errorCode: null,
   });
+
   const exercises = useSelector(selectAllExercises);
   const { formData } = useSelector((state) => state.workout);
   const { uid, accessToken } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
 
+  const [workoutNameChanged, setWorkoutNameChanged] = useState(false);
+  const workoutNameRef = useRef(null);
+
+  useEffect(() => {
+    if (workoutNameRef.current !== formData.workoutName) {
+      workoutNameRef.current = formData.workoutName;
+      setWorkoutNameChanged(true);
+    }
+  }, [workoutNameRef, workoutNameChanged, formData.workoutName]);
+
   useEffect(() => {
     if (formIsValid && error.code === 'workoutNameFormError')
       setError({ ...error, isError: false, msg: '', code: null });
   }, [formIsValid, error]);
+
+  useEffect(() => {
+    if (error.code === 'nameTaken' && workoutNameChanged)
+      setError({ isError: false, msg: '', errorCode: null });
+  }, [error, workoutNameChanged]);
 
   const submitOnInvalidForm = () => {
     setInputAsTouched();
@@ -50,31 +59,6 @@ export default function SubmitWorkoutBtn(props) {
     });
   };
 
-  const checkForPreviousNameUse = async () => {
-    let nameTaken = false;
-    await axios
-      .get(
-        `https://workout-81691-default-rtdb.firebaseio.com/workouts/${uid}.json?auth=${accessToken}`
-      )
-      .then((res) => {
-        for (const key in res.data) {
-          if (res.data[key].title === formData.workoutName) {
-            setError({
-              ...error,
-              isError: true,
-              msg: (
-                <p>That name is already taken, please try a different name</p>
-              ),
-              code: 'nameTaken',
-            });
-            nameTaken = true;
-          }
-        }
-      });
-
-    return nameTaken;
-  };
-
   const redirectToMyProfile = () => {
     history.push({
       pathname: '/my-profile',
@@ -84,44 +68,61 @@ export default function SubmitWorkoutBtn(props) {
     });
   };
 
+  const setNameTakenError = () =>
+    setError({
+      ...error,
+      isError: true,
+      msg: <p>That name is already taken, please try a different name</p>,
+      code: 'nameTaken',
+    });
+
+  const setAxiosError = () =>
+    setError({
+      ...error,
+      isError: true,
+      code: 'axios',
+      msg: (
+        <p style={{ color: 'red' }}>
+          We're unable to update your workout right now. Please try again
+        </p>
+      ),
+    });
+
   const submitValidForm = async () => {
-    if (createNewWorkout || (titleChanged && !originalTitleEntact))
-      if (await checkForPreviousNameUse()) return;
+    let nameTaken;
+    const { workoutName: title } = formData;
+    const { checkForPreviousNameUse, createWorkout, updateWorkout } = utils;
+
+    if (createNewWorkout || workoutNameChanged)
+      nameTaken = await checkForPreviousNameUse(uid, accessToken, title);
+
+    if (nameTaken) {
+      setWorkoutNameChanged(false);
+      setNameTakenError();
+      return;
+    }
 
     const workoutData = {
       title,
-      targetAreaCode,
-      secondaryTargetCode,
-      targetArea,
-      secondaryTargetArea,
+      targetAreaCode: formData.targetArea.value,
+      secondaryTargetCode: formData.secondaryTarget.value,
+      targetArea: formData.targetArea.label,
+      secondaryTargetArea: formData.secondaryTarget.label,
       exercises,
     };
 
-    axios({
-      method: createNewWorkout ? 'post' : 'put',
-      url: createNewWorkout
-        ? `https://workout-81691-default-rtdb.firebaseio.com/workouts/${uid}.json?auth=${accessToken}`
-        : `https://workout-81691-default-rtdb.firebaseio.com/workouts/${uid}/${firebaseId}.json?auth=${accessToken}`,
-      timeout: 5000,
-      data: workoutData,
-    })
+    const pushDataToFirebase = () =>
+      createNewWorkout
+        ? createWorkout(uid, accessToken, workoutData)
+        : updateWorkout(uid, accessToken, firebaseId, workoutData);
+
+    pushDataToFirebase()
       .then(() => {
         dispatch(resetWorkoutStore());
         clearAllFormInputs();
         redirectToMyProfile();
       })
-      .catch((err) =>
-        setError({
-          ...error,
-          isError: true,
-          code: 'axios',
-          msg: (
-            <p style={{ color: 'red' }}>
-              We're unable to update your workout right now. Please try again
-            </p>
-          ),
-        })
-      );
+      .catch(() => setAxiosError());
   };
 
   const onSubmit = () =>

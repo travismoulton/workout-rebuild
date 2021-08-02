@@ -80,7 +80,6 @@ export default function SubmitExerciseBtn(props) {
     if (error.code !== 'axios')
       await utils
         .submitExercise(uid, accessToken, exerciseData)
-        .then((res) => console.log(res))
         .catch((err) => setError(axiosError));
 
     history.push('/my-profile');
