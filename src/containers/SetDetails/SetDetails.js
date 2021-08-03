@@ -1,10 +1,9 @@
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 
 import classes from './SetDetails.module.css';
 import {
   updateExerciseData,
   removeSetFromExercise,
-  selectAllExercises,
 } from '../../store/workoutSlice';
 import Input from '../../components/UI/Input/Input';
 
@@ -12,7 +11,6 @@ export default function SetDetails(props) {
   const { weight, reps, minutes, seconds, id, setNumber, focus, numberOfSets } =
     props;
 
-  const exercises = useSelector((state) => selectAllExercises(state));
   const dispatch = useDispatch();
 
   const weightInput = {
@@ -150,15 +148,14 @@ export default function SetDetails(props) {
       decrementFunction={() => decrement(field)}
       incrementFunction={() => increment(field)}
       notSearchable
+      selectId={field.label}
     />
   ));
 
   const removeSetBtn = (
     <button
       className={`GlobalBtn-1 ${classes.Btn}`}
-      onClick={() =>
-        dispatch(removeSetFromExercise(exercises, id, setNumber - 1))
-      }
+      onClick={() => dispatch(removeSetFromExercise({ id, setIndex }))}
     >
       Remove set
     </button>

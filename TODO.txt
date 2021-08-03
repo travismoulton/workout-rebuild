@@ -2,10 +2,8 @@
 
 
 WHAT TO TEST NEXT:
-//1: AddToWorkoutBtn
 //2: CreateWorkout
 //3: SubmitWorkoutBtn
-//4: FavoritesSelectMenu
 //5: WorkoutDetailsForm
 //6: SetDetails
 //7: WorkoutLisItem
