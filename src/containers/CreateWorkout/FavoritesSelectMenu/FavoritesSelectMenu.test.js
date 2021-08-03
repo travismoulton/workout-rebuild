@@ -1,12 +1,7 @@
 import * as reactRedux from 'react-redux';
 
 import * as mockActions from '../../../store/workoutSlice';
-import {
-  customRender,
-  findByText,
-  fireEvent,
-  waitFor,
-} from '../../../shared/testUtils';
+import { customRender, fireEvent, waitFor } from '../../../shared/testUtils';
 import FavoritesSelectMenu from './FavoritesSelectMenu';
 import { favoriteSelectMenuUtils as utils } from './favoriteSelectMenuUtils';
 
