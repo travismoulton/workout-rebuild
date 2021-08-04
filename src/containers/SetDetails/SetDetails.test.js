@@ -4,10 +4,6 @@ import * as mockActions from '../../store/workoutSlice';
 import { customRender, fireEvent, waitFor } from '../../shared/testUtils';
 import SetDetails from './SetDetails';
 
-//1: Test that it properly removes a set
-//2: Test that ir properly updates exercise data through incrememnt, decrement, and the select menu
-//3: Test that it renders
-
 const propsWithReps = {
   weight: 5,
   reps: 3,

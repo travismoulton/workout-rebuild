@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { BsArrowDownShort, BsArrowUpShort } from 'react-icons/bs';
 
 import RemoveExerciseBtn from './RemoveExerciseBtn/RemoveExerciseBtn';
@@ -24,7 +24,7 @@ export default function WorkoutListItem(props) {
   } = props;
 
   const [exerciseFocus, setExerciseFocus] = useState(focus || 'reps');
-  const { exercises } = useSelector((state) => state.workout);
+
   const dispatch = useDispatch();
 
   const [exerciseFocusInput, setExerciseFocusInput] = useState({
@@ -62,6 +62,7 @@ export default function WorkoutListItem(props) {
       wrapperClass={'ExerciseFocusSelectWrapper'}
       value={exerciseFocusInput.value}
       notSearchable
+      selectId={exerciseFocusInput.label}
     />
   );
 

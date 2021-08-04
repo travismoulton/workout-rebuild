@@ -15,7 +15,7 @@ export default function RemoveWorkoutBtn({ id, exerciseName }) {
   const divRef = useRef(null);
   const dispatch = useDispatch();
 
-  const showToolTip = (e) => {
+  const showToolTip = () => {
     const btnCoordinateData = divRef.current.getBoundingClientRect();
 
     setTooltipData({
