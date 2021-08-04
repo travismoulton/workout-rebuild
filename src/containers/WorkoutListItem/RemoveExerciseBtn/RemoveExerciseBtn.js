@@ -42,6 +42,7 @@ export default function RemoveWorkoutBtn({ id, exerciseName }) {
         className={classes.CloseWorkoutBtnContainer}
         onClick={() => dispatch(removeExercise(id))}
         onTouchStart={() => dispatch(removeExercise(id))}
+        data-testid="removeExerciseBtn"
       >
         <AiOutlineCloseCircle
           className={classes.CloseWorkoutBtn}
