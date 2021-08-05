@@ -40,7 +40,7 @@ function App({ firebase }) {
 
   useEffect(() => {
     if (user) dispatch(fetchFavorites({ uid, accessToken }));
-  });
+  }, [user, dispatch, uid, accessToken]);
 
   const history = useHistory();
 

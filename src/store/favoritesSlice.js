@@ -65,7 +65,15 @@ export const removeFavorite = createAsyncThunk(
 const favoritesSlice = createSlice({
   name: 'favorites',
   initialState,
-  reducers: {},
+  reducers: {
+    clearFavorites(state, action) {
+      favoritesAdapter.removeAll(state, action);
+    },
+    setNoFavoritesFalse(state, action) {
+      state.noFavorites = false;
+    },
+  },
+
   extraReducers: {
     [fetchFavorites.fulfilled]: (state, action) => {
       action.payload.length
@@ -82,6 +90,8 @@ const favoritesSlice = createSlice({
     },
   },
 });
+
+export const { clearFavorites, setNoFavoritesFalse } = favoritesSlice.actions;
 
 export const {
   selectAll: selectAllFavorites,
