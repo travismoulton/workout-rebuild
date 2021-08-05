@@ -36,12 +36,11 @@ export default function CreateWorkout({ history }) {
     formData.workoutName ? true : false
   );
 
-  const { user } = useSelector((state) => state.auth);
   const { noFavorites } = useSelector((state) => state.favorites);
 
   useEffect(() => {
-    if (noFavorites || !user) setLoaded(true);
-  }, [loaded, noFavorites, user]);
+    if (noFavorites) setLoaded(true);
+  }, [loaded, noFavorites]);
 
   useEffect(() => {
     document.title = 'Create Workout';
@@ -87,7 +86,7 @@ export default function CreateWorkout({ history }) {
           }
         />
 
-        {user && !noFavorites && (
+        {!noFavorites && (
           <FavoritesSelectMenu
             toggleLoaded={() => setLoaded(true)}
             toggleError={() => setError({ ...error, isError: true })}

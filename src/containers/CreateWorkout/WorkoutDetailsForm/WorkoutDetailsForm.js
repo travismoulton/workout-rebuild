@@ -101,13 +101,6 @@ export default function WorkoutDetailsForm(props) {
 
       if (workout) {
         dispatch(setExercises(workout.exercises));
-        // dispatch(
-        //   setFormData(
-        //     workout.title,
-        //     workout.targetArea,
-        //     workout.secondaryTargetArea
-        //   )
-        // );
 
         if (workout.title)
           setWorkoutNameInput({ ...workoutNameInput, value: workout.title });

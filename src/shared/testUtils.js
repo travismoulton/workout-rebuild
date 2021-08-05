@@ -27,6 +27,9 @@ function customRender(
   return render(ui, { wrapper, ...renderOptions });
 }
 
+export const createSpy = (obj, methodName, returnVal) =>
+  jest.spyOn(obj, methodName).mockImplementation(jest.fn(() => returnVal));
+
 export * from '@testing-library/react';
 export { customRender };
 

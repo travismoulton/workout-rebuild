@@ -5,9 +5,6 @@ WHAT TO TEST NEXT:
 //2: CreateWorkout
 //3: SubmitWorkoutBtn
 //5: WorkoutDetailsForm
-//7: WorkoutLisItem
-//8: RemoveExerciseBtn
 
 
-*********************************************************
-When logging out need to reset the redux store
+

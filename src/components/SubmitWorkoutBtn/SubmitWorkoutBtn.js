@@ -131,7 +131,7 @@ export default function SubmitWorkoutBtn(props) {
   return (
     <>
       <button className={`GlobalBtn-1 ${classes.Btn}`} onClick={onSubmit}>
-        {shouldCreateNewWorkout ? 'Create Workout' : 'Update workout'}
+        {shouldCreateNewWorkout ? 'Create Workout' : 'Update Workout'}
       </button>
       {error.isError && error.msg}
     </>
