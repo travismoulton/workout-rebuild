@@ -116,13 +116,11 @@ export default function SubmitWorkoutBtn(props) {
         ? createWorkout(uid, accessToken, workoutData)
         : updateWorkout(uid, accessToken, firebaseId, workoutData);
 
-    pushDataToFirebase()
-      .then(() => {
-        dispatch(clearExercises());
-        dispatch(resetWorkoutStore());
-        redirectToMyProfile();
-      })
-      .catch(() => setAxiosError());
+    await pushDataToFirebase().catch(() => setAxiosError());
+
+    dispatch(clearExercises());
+    dispatch(resetWorkoutStore());
+    redirectToMyProfile();
   };
 
   const onSubmit = () =>

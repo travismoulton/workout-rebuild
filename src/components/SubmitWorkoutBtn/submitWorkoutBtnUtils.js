@@ -7,11 +7,8 @@ export const submitWorkoutBtnUtils = {
     await axios
       .get(`workouts/${uid}.json?auth=${accessToken}`)
       .then(({ data }) => {
-        console.log(data);
         for (const key in data) {
-          if (data[key].title === name) {
-            nameTaken = true;
-          }
+          if (data[key].title === name) nameTaken = true;
         }
       })
       .catch((err) => {
