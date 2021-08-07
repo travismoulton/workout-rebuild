@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 
 import {
   resetWorkoutStore,
@@ -10,13 +11,8 @@ import { submitWorkoutBtnUtils as utils } from './submitWorkoutBtnUtils';
 import classes from './SubmitWorkoutBtn.module.css';
 
 export default function SubmitWorkoutBtn(props) {
-  const {
-    formIsValid,
-    setInputAsTouched,
-    history,
-    shouldCreateNewWorkout,
-    firebaseId,
-  } = props;
+  const { formIsValid, setInputAsTouched, shouldCreateNewWorkout, firebaseId } =
+    props;
 
   const [error, setError] = useState({
     isError: false,
@@ -24,6 +20,7 @@ export default function SubmitWorkoutBtn(props) {
     errorCode: null,
   });
 
+  const history = useHistory();
   const exercises = useSelector(selectAllExercises);
   const { formData } = useSelector((state) => state.workout);
   const { uid, accessToken } = useSelector((state) => state.auth);

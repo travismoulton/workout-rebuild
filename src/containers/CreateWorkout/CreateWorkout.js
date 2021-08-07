@@ -121,7 +121,6 @@ export default function CreateWorkout({ history }) {
               setInputAsTouched={() => setShouldSetInputAsTouuched(true)}
               firebaseId={firebaseId}
               shouldCreateNewWorkout={firebaseId === null}
-              history={history}
             />
             {clearWorkoutBtn}
           </>

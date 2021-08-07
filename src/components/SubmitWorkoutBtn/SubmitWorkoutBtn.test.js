@@ -8,7 +8,6 @@ import {
   fireEvent,
   createSpy,
   waitFor,
-  screen,
 } from '../../shared/testUtils';
 import { submitWorkoutBtnUtils as utils } from './submitWorkoutBtnUtils';
 import SubmitWorkoutBtn from './SubmitWorkoutBtn';
@@ -104,6 +103,9 @@ describe('<SubmitWorkoutBtn />', () => {
         expect.objectContaining(expectedObject)
       )
     );
+
+    expect(mockClearExercises).toBeCalled();
+    expect(mockResetStore).toBeCalled();
 
     await waitFor(() => expect(history.location.pathname).toBe('/my-profile'));
   });
