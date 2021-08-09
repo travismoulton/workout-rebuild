@@ -17,8 +17,7 @@ export default function CreateWorkout({ history }) {
 
   const [loaded, setLoaded] = useState(false);
   const [shouldClearFormInputs, setShouldClearFormInputs] = useState(false);
-  const [shouldSetInputAsTouched, setShouldSetInputAsTouuched] =
-    useState(false);
+  const [shouldSetInputAsTouched, setShouldSetInputAsTouched] = useState(false);
   const [shouldLoadWorkoutData, setShouldLoadWorkoutData] = useState(
     history.location.state
   );
@@ -82,7 +81,7 @@ export default function CreateWorkout({ history }) {
           }
           shouldSetInputAsTouched={shouldSetInputAsTouched}
           shouldSetInputAsTouchedToFalse={() =>
-            setShouldSetInputAsTouuched(false)
+            setShouldSetInputAsTouched(false)
           }
         />
 
@@ -118,7 +117,7 @@ export default function CreateWorkout({ history }) {
             </ul>
             <SubmitWorkoutBtn
               formIsValid={formIsValid}
-              setInputAsTouched={() => setShouldSetInputAsTouuched(true)}
+              setInputAsTouched={() => setShouldSetInputAsTouched(true)}
               firebaseId={firebaseId}
               shouldCreateNewWorkout={firebaseId === null}
             />

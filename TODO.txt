@@ -3,7 +3,6 @@
 
 WHAT TO TEST NEXT:
 //2: CreateWorkout
-//3: SubmitWorkoutBtn
 //5: WorkoutDetailsForm
 
 

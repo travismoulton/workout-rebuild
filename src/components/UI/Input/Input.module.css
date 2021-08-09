@@ -62,6 +62,11 @@
   width: 20rem;
 }
 
+.WorkoutNameWrapper {
+  display: flex;
+  flex-direction: column;
+}
+
 @media only screen and (max-width: 325px) {
   .WorkoutName,
   .ExerciseName,

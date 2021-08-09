@@ -40,6 +40,8 @@ export default function WorkoutDetailsForm(props) {
     touched: false,
     id: 'workoutName',
     className: 'WorkoutName',
+    wrapperClass: 'WorkoutNameWrapper',
+    label: 'Workout Name',
   });
 
   const [targetAreaInput, setTargetAreaInput] = useState({
@@ -98,6 +100,7 @@ export default function WorkoutDetailsForm(props) {
   useEffect(() => {
     if (shouldLoadWorkoutData) {
       const { workout } = history.location.state;
+      console.log(history);
 
       if (workout) {
         dispatch(setExercises(workout.exercises));
@@ -194,6 +197,7 @@ export default function WorkoutDetailsForm(props) {
       value={field.value}
       changed={(e) => inputChangedHandler(e, field)}
       label={field.label}
+      id={field.id}
       touched={field.touched}
       invalid={!field.valid}
       classname={field.className}
