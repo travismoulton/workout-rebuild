@@ -2,7 +2,7 @@ import * as reactRedux from 'react-redux';
 import { createMemoryHistory } from 'history';
 import { Router } from 'react-router-dom';
 
-import * as mockActions from '../../store/workoutSlice';
+import * as workoutSlice from '../../store/workoutSlice';
 import {
   customRender,
   fireEvent,
@@ -26,15 +26,15 @@ describe('<SubmitWorkoutBtn />', () => {
     mockUseDispatch = jest.spyOn(reactRedux, 'useDispatch');
     mockUseDispatch.mockReturnValue(dummyDispatch);
 
-    mockCreateWorkout = createSpy(utils, 'createWorkout', Promise.resolve(''));
-    mockUpdateWorkout = createSpy(utils, 'updateWorkout', Promise.resolve(''));
+    mockCreateWorkout = createSpy(utils, 'createWorkout', Promise.resolve({}));
+    mockUpdateWorkout = createSpy(utils, 'updateWorkout', Promise.resolve({}));
     mockNameTaken = createSpy(
       utils,
       'checkForPreviousNameUse',
       Promise.resolve(false)
     );
-    mockResetStore = createSpy(mockActions, 'resetWorkoutStore', null);
-    mockClearExercises = createSpy(mockActions, 'clearExercises', null);
+    mockResetStore = createSpy(workoutSlice, 'resetWorkoutStore', null);
+    mockClearExercises = createSpy(workoutSlice, 'clearExercises', null);
   });
 
   afterEach(() => {
@@ -125,7 +125,7 @@ describe('<SubmitWorkoutBtn />', () => {
     );
   });
 
-  test('displays an error message when the name of that workout is taken', async () => {
+  test('displays an error message when the name of that workout is taken and then removes that error after the name is changed', async () => {
     const { getByText } = setup(props);
 
     mockNameTaken.mockImplementation(jest.fn(() => Promise.resolve(true)));
