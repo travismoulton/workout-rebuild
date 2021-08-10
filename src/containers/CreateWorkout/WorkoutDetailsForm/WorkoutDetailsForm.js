@@ -102,10 +102,10 @@ export default function WorkoutDetailsForm(props) {
   useEffect(() => {
     if (shouldLoadWorkoutData) {
       const { workout } = history.location.state;
-      console.log(history);
 
       if (workout) {
         dispatch(setExercises(workout.exercises));
+        console.log(workout);
 
         if (workout.title)
           setWorkoutNameInput({ ...workoutNameInput, value: workout.title });

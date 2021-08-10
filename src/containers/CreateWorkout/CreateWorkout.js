@@ -6,11 +6,7 @@ import SubmitWorkoutBtn from '../../components/SubmitWorkoutBtn/SubmitWorkoutBtn
 import Spinner from '../../components/UI/Spinner/Spinner';
 import FavoritesSelectMenu from './FavoritesSelectMenu/FavoritesSelectMenu';
 import WorkoutDetailsForm from './WorkoutDetailsForm/WorkoutDetailsForm';
-import {
-  enterSearchMode,
-  selectAllExercises,
-  clearFormData,
-} from '../../store/workoutSlice';
+import { enterSearchMode, selectAllExercises } from '../../store/workoutSlice';
 import classes from './CreateWorkout.module.css';
 
 export default function CreateWorkout({ history }) {
