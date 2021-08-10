@@ -1,5 +1,6 @@
 import * as reactRedux from 'react-redux';
 import { createMemoryHistory } from 'history';
+import { Router } from 'react-router-dom';
 
 import * as workoutSlice from '../../store/workoutSlice';
 import {
@@ -38,6 +39,7 @@ describe('<CreateWorkout />', () => {
     mockResetStore = createSpy(workoutSlice, 'resetWorkoutStore', null);
     mockEnterSearch = createSpy(workoutSlice, 'enterSearchMode', null);
     mockSetFirebaseId = createSpy(workoutSlice, 'setFirebaseId', null);
+
     mockNameTaken = createSpy(
       utils,
       'checkForPreviousNameUse',
@@ -57,30 +59,43 @@ describe('<CreateWorkout />', () => {
     mockSetExercises = null;
   });
 
-  test('if there are favorites, it loads a spinner', () => {
-    const history = { location: { state: null } };
+  function setup(workout) {
+    const mockState = { favorites: { noFavorites: true } };
+    const history = createMemoryHistory();
 
-    const { getByTestId } = customRender(<CreateWorkout history={history} />);
+    if (workout) history.location.state = { workout };
+
+    const { getByLabelText, getByText, getByTestId, queryByLabelText } =
+      customRender(
+        <Router history={history}>
+          <CreateWorkout history={history} />
+        </Router>,
+        { preloadedState: mockState }
+      );
+
+    return {
+      getByText,
+      queryByLabelText,
+      getByLabelText,
+      getByTestId,
+      history,
+    };
+  }
+
+  test('if there are favorites, it loads a spinner', () => {
+    const { getByTestId } = setup(null);
     expect(getByTestId('Spinner')).toBeInTheDocument();
   });
 
   test('if there are no favorites, it does not load the select menu', async () => {
-    const history = { location: { state: null } };
-    const mockState = { favorites: { noFavorites: true } };
-
-    const { queryByLabelText } = customRender(
-      <CreateWorkout history={history} />,
-      {
-        preloadedState: mockState,
-      }
-    );
+    const { queryByLabelText } = setup(null);
 
     expect(queryByLabelText('Add exercise from favorites')).toBeNull();
 
     expect(queryByLabelText('Workout Name')).toBeInTheDocument();
   });
 
-  test('if there is workout data inside history the details form populates correctly', () => {
+  test('if there is workout data inside history the details form populates correctly', async () => {
     const workout = {
       exercises: [
         {
@@ -96,22 +111,16 @@ describe('<CreateWorkout />', () => {
       secondaryTargetCode: 9,
     };
 
-    const history = { location: { state: { workout } } };
+    const { getByLabelText, getByText } = setup(workout);
 
-    const mockState = {
-      favorites: {
-        entities: { fav1: { id: 'fav1', exericseId: 1, firebaseId: 1 } },
-        ids: ['fav1'],
-      },
-    };
+    await waitFor(() => {
+      expect(getByLabelText('Workout Name')).toHaveValue('workout');
+      expect(getByText('Arms')).toBeInTheDocument();
+      expect(getByText('Legs')).toBeInTheDocument();
+    });
+  });
 
-    const { getByLabelText } = customRender(
-      <CreateWorkout history={history} />,
-      {
-        preloadedState: mockState,
-      }
-    );
-
-    expect(getByLabelText('Workout Name')).toHaveValue('exercise');
+  test('dispatches enter search mode and redirects the page on clicking the add from search menu button', () => {
+    const {} = setup();
   });
 });

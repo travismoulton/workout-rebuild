@@ -105,7 +105,6 @@ export default function WorkoutDetailsForm(props) {
 
       if (workout) {
         dispatch(setExercises(workout.exercises));
-        console.log(workout);
 
         if (workout.title)
           setWorkoutNameInput({ ...workoutNameInput, value: workout.title });
