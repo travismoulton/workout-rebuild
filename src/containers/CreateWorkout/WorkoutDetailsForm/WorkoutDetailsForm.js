@@ -67,6 +67,7 @@ export default function WorkoutDetailsForm(props) {
     valid: true,
     touched: false,
     id: 'targetArea',
+    selectId: 'targetArea',
     className: 'CreateWorkoutSelect',
     wrapperClass: 'WorkoutDetailsSelectWrapper',
   });
@@ -93,6 +94,7 @@ export default function WorkoutDetailsForm(props) {
     valid: true,
     touched: false,
     id: 'secondaryTarget',
+    selectId: 'secondaryTarget',
     className: 'CreateWorkoutSelect',
     wrapperClass: 'WorkoutDetailsSelectWrapper',
   });
@@ -202,6 +204,7 @@ export default function WorkoutDetailsForm(props) {
       invalid={!field.valid}
       classname={field.className}
       wrapperClass={field.wrapperClass}
+      selectId={field.selectId}
     />
   ));
 
