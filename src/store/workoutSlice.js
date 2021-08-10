@@ -84,11 +84,11 @@ const workoutSlice = createSlice({
       state.formData.targetArea = targetArea;
       state.formData.secondaryTarget = secondaryTarget;
     },
-    clearFormData(state, action) {
-      state.formData.workoutName = '';
-      state.formData.targetArea = '';
-      state.formData.secondaryTarget = '';
-    },
+    // clearFormData(state, action) {
+    //   state.formData.workoutName = '';
+    //   state.formData.targetArea = '';
+    //   state.formData.secondaryTarget = '';
+    // },
     clearExercises(state, action) {
       workoutAdapter.removeAll(state, action);
     },
@@ -118,7 +118,7 @@ export const {
   removeExercise,
   setExercises,
   setFormData,
-  clearFormData,
+  // clearFormData,
   clearExercises,
   resetWorkoutStore,
   setFirebaseId,
