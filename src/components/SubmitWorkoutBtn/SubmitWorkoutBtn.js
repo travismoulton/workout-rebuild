@@ -32,7 +32,7 @@ export default function SubmitWorkoutBtn(props) {
   useEffect(() => {
     if (workoutNameRef.current !== formData.workoutName) {
       workoutNameRef.current = formData.workoutName;
-      setWorkoutNameChanged(true);
+      if (!workoutNameChanged) setWorkoutNameChanged(true);
     }
   }, [workoutNameRef, workoutNameChanged, formData.workoutName]);
 

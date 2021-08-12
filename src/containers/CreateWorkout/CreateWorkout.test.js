@@ -1,6 +1,7 @@
 import * as reactRedux from 'react-redux';
 import { createMemoryHistory } from 'history';
 import { Router } from 'react-router-dom';
+import userEvent from '@testing-library/user-event';
 
 import * as workoutSlice from '../../store/workoutSlice';
 import {
@@ -12,11 +13,6 @@ import {
 import { submitWorkoutBtnUtils as utils } from '../../components/SubmitWorkoutBtn/submitWorkoutBtnUtils';
 import CreateWorkout from './CreateWorkout';
 
-//1: Test that it renders
-
-//4: Test that if there is workout data in the history that the WorkoutDetailsForm populates correctly
-//5: Test that after clicking Add Exercise from search that it dispatches enterSearchMode and redirects
-//6: Test that if the clearFormData btn is hit, that the form is cleared, resetStore is dispatched, and clearExercises is dispatched
 //7: Test that if nameIsTaken error is true, that a change in the workoutName input field removes the error
 
 describe('<CreateWorkout />', () => {
@@ -26,6 +22,7 @@ describe('<CreateWorkout />', () => {
     mockNameTaken,
     mockResetStore,
     mockClearExercises,
+    mockSetForm,
     mockSetFirebaseId,
     mockSetExercises;
 
@@ -39,6 +36,7 @@ describe('<CreateWorkout />', () => {
     mockResetStore = createSpy(workoutSlice, 'resetWorkoutStore', null);
     mockEnterSearch = createSpy(workoutSlice, 'enterSearchMode', null);
     mockSetFirebaseId = createSpy(workoutSlice, 'setFirebaseId', null);
+    mockSetForm = createSpy(workoutSlice, 'setFormData', null);
 
     mockNameTaken = createSpy(
       utils,
@@ -57,38 +55,45 @@ describe('<CreateWorkout />', () => {
     mockResetStore = null;
     mockSetFirebaseId = null;
     mockSetExercises = null;
+    mockSetForm = null;
   });
 
-  function setup(workout) {
-    const mockState = { favorites: { noFavorites: true } };
+  function setup(workout, state) {
+    const mockState = state || { favorites: { noFavorites: true } };
     const history = createMemoryHistory();
 
     if (workout) history.location.state = { workout };
 
-    const { getByLabelText, getByText, getByTestId, queryByLabelText } =
-      customRender(
-        <Router history={history}>
-          <CreateWorkout history={history} />
-        </Router>,
-        { preloadedState: mockState }
-      );
+    const {
+      getByLabelText,
+      getByText,
+      getByTestId,
+      queryByLabelText,
+      queryByText,
+    } = customRender(
+      <Router history={history}>
+        <CreateWorkout history={history} />
+      </Router>,
+      { preloadedState: mockState }
+    );
 
     return {
       getByText,
       queryByLabelText,
       getByLabelText,
       getByTestId,
+      queryByText,
       history,
     };
   }
 
   test('if there are favorites, it loads a spinner', () => {
-    const { getByTestId } = setup(null);
+    const { getByTestId } = setup();
     expect(getByTestId('Spinner')).toBeInTheDocument();
   });
 
   test('if there are no favorites, it does not load the select menu', async () => {
-    const { queryByLabelText } = setup(null);
+    const { queryByLabelText } = setup();
 
     expect(queryByLabelText('Add exercise from favorites')).toBeNull();
 
@@ -120,7 +125,68 @@ describe('<CreateWorkout />', () => {
     });
   });
 
-  test('dispatches enter search mode and redirects the page on clicking the add from search menu button', () => {
-    const {} = setup();
+  test('dispatches enter search mode and redirects the page on clicking the add from search menu button', async () => {
+    const { getByText, history } = setup();
+
+    const btn = getByText('Add from exercise search menu');
+
+    fireEvent.click(btn);
+
+    await waitFor(() => expect(mockEnterSearch).toBeCalled());
+    expect(history.location.pathname).toBe('/search');
+  });
+
+  const mockState = {
+    favorites: {
+      noFavorites: true,
+    },
+    workout: {
+      formData: {
+        workoutName: 'mock workout',
+        targetArea: 'Arms',
+        secondaryTarget: 'Abs',
+      },
+      entities: {
+        exerciseId: {
+          id: 'exerciseId',
+          focus: 'reps',
+          sets: [{ reps: 10, weight: 50 }],
+        },
+      },
+      ids: ['exerciseId'],
+    },
+  };
+
+  test('clears form data when clear form button is clicked', () => {
+    const { getByText, getByLabelText } = setup(null, mockState);
+
+    const input = getByLabelText('Workout Name');
+    expect(input).toHaveValue('mock workout');
+
+    const btn = getByText('Clear form');
+    fireEvent.click(btn);
+
+    expect(mockClearExercises).toBeCalled();
+    expect(mockResetStore).toBeCalled();
+
+    expect(input).toHaveValue('');
+  });
+
+  test('that if the name taken error is true, that a change to workout name input removes the error message', async () => {
+    const { getByText, queryByText, getByLabelText } = setup(null, mockState);
+
+    fireEvent.click(getByText('Update Workout'));
+
+    await waitFor(() => expect(mockNameTaken).toBeCalled());
+
+    const errorMsg = 'That name is already taken, please try a different name';
+
+    expect(queryByText(errorMsg)).toBeInTheDocument();
+
+    userEvent.clear(getByLabelText('Workout Name'));
+
+    await waitFor(() => expect(mockSetForm).toBeCalled());
+
+    await waitFor(() => expect(queryByText(errorMsg)).toBeNull());
   });
 });

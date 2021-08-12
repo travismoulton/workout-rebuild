@@ -80,6 +80,7 @@ const workoutSlice = createSlice({
     },
     setFormData(state, action) {
       const { workoutName, targetArea, secondaryTarget } = action.payload;
+
       state.formData.workoutName = workoutName;
       state.formData.targetArea = targetArea;
       state.formData.secondaryTarget = secondaryTarget;
