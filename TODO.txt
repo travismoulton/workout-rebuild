@@ -7,9 +7,8 @@ Unfinished Tests:
       in SubmitWorkoutBtn
 
 
-WHAT TO TEST NEXT:
-//2: CreateWorkout
-//5: WorkoutDetailsForm
 
 
 
+
+ 
