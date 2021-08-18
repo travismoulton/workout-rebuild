@@ -37,14 +37,14 @@ export default function SubmitWorkoutBtn(props) {
   }, [workoutNameRef, workoutNameChanged, formData.workoutName]);
 
   useEffect(() => {
+    if (error.code === 'nameTaken' && workoutNameChanged)
+      setError({ isError: false, msg: '', errorCode: null });
+  }, [error, workoutNameChanged, dispatch]);
+
+  useEffect(() => {
     if (formIsValid && error.code === 'workoutNameFormError')
       setError({ ...error, isError: false, msg: '', code: null });
   }, [formIsValid, error]);
-
-  useEffect(() => {
-    if (error.code === 'nameTaken' && workoutNameChanged)
-      setError({ isError: false, msg: '', errorCode: null });
-  }, [error, workoutNameChanged]);
 
   const submitOnInvalidForm = () => {
     setInputAsTouched();

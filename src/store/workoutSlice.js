@@ -4,6 +4,7 @@ const workoutAdapter = createEntityAdapter();
 
 const initialState = workoutAdapter.getInitialState({
   buildingWorkout: false,
+  workoutNameChanged: false,
   formData: {
     workoutName: '',
     targetArea: '',
@@ -85,11 +86,6 @@ const workoutSlice = createSlice({
       state.formData.targetArea = targetArea;
       state.formData.secondaryTarget = secondaryTarget;
     },
-    // clearFormData(state, action) {
-    //   state.formData.workoutName = '';
-    //   state.formData.targetArea = '';
-    //   state.formData.secondaryTarget = '';
-    // },
     clearExercises(state, action) {
       workoutAdapter.removeAll(state, action);
     },
@@ -119,7 +115,6 @@ export const {
   removeExercise,
   setExercises,
   setFormData,
-  // clearFormData,
   clearExercises,
   resetWorkoutStore,
   setFirebaseId,

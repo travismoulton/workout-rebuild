@@ -1,5 +1,11 @@
 //1: Display a proper error message on the results page.
 
+Unfinished Tests:
+// CreateWorkout
+  // Test for proper functionality of the nameChange detection in the submit button. Ran into issues because 
+      set formData isn't actually being dispatched. the change in formData is what is triggering the functionality
+      in SubmitWorkoutBtn
+
 
 WHAT TO TEST NEXT:
 //2: CreateWorkout
