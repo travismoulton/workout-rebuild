@@ -1,10 +1,25 @@
-import axios from 'axios';
 import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
 import { fetchActiveRoutine } from '../../store/actions';
+import { submitRoutineBtnUtils as utils } from './submitRoutineBtnUtils';
 
-const SubmitRoutineBtn = (props) => {
+export default function SubmitRoutineBtn(props) {
+  const {
+    valid,
+    containsWorkout,
+    isActiveRoutine,
+    history,
+    createNewRoutine,
+    title,
+    titleChanged,
+    originalTitleEntact,
+    firebaseId,
+    workouts,
+  } = props;
+
+  const { checkForPreviousNameUse, createRoutine, updateRoutine } = utils;
+
   const [error, setError] = useState({ isError: false, code: '', msg: '' });
   const [shouldBeActiveRoutine, setShouldBeActiveRoutine] = useState(false);
   const { activeRoutine } = useSelector((state) => state.favorites);
@@ -13,58 +28,51 @@ const SubmitRoutineBtn = (props) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (props.valid && error.code === 'noRoutineName')
+    if (valid && error.code === 'noRoutineName')
       setError({ isError: false, msg: '', code: null });
-  }, [props.valid, error]);
+  }, [valid, error]);
 
   useEffect(() => {
-    if (props.containsWorkout() && error.code === 'noWorkouts')
+    if (containsWorkout() && error.code === 'noWorkouts')
       setError({ isError: false, code: '', msg: '' });
-  }, [props, error]);
-
-  const checkForPreviousNameUse = async () => {
-    let nameTaken = false;
-    await axios
-      .get(
-        `https://workout-81691-default-rtdb.firebaseio.com/routines/${uid}.json?auth=${accessToken}`
-      )
-      .then((res) => {
-        for (const key in res.data) {
-          if (res.data[key].title === props.title) {
-            setError({
-              ...error,
-              isError: true,
-              msg: (
-                <p>
-                  That routine name is already taken, please try a different
-                  name
-                </p>
-              ),
-              code: 'nameTaken',
-            });
-            nameTaken = true;
-          }
-        }
-      });
-
-    return nameTaken;
-  };
+  }, [containsWorkout, error]);
 
   useEffect(() => {
-    setShouldBeActiveRoutine(props.isActiveRoutine || !activeRoutine);
-  }, [props.isActiveRoutine, activeRoutine]);
+    setShouldBeActiveRoutine(isActiveRoutine || !activeRoutine);
+  }, [isActiveRoutine, activeRoutine]);
+
+  const setNameTakenError = () =>
+    setError({
+      isError: true,
+      code: 'nameTaken',
+      msg: (
+        <p>That routine name is already taken, please try a different name</p>
+      ),
+    });
+
+  const setAxiosError = () =>
+    setError({
+      ...error,
+      isError: true,
+      code: 'axios',
+      msg: (
+        <p style={{ color: 'red' }}>
+          We weren't able to create this workout, please try agian
+        </p>
+      ),
+    });
 
   const redirectToMyProfile = () => {
-    props.history.push({
+    history.push({
       pathname: '/my-profile',
       state: {
-        message: props.createNewRoutine ? 'Routine created' : 'Routine Updated',
+        message: createNewRoutine ? 'Routine created' : 'Routine Updated',
       },
     });
   };
 
   const onSubmit = async () => {
-    if (!props.containsWorkout()) {
+    if (!containsWorkout()) {
       setError({
         isError: true,
         code: 'noWorkouts',
@@ -73,7 +81,7 @@ const SubmitRoutineBtn = (props) => {
       return;
     }
 
-    if (!props.valid) {
+    if (!valid) {
       setError({
         isError: true,
         code: 'noRoutineName',
@@ -82,41 +90,34 @@ const SubmitRoutineBtn = (props) => {
       return;
     }
 
-    if (
-      props.createNewRoutine ||
-      (props.titleChanged && !props.originalTitleEntact)
-    )
-      if (await checkForPreviousNameUse()) return;
+    let nameTaken;
 
-    await axios({
-      method: props.createNewRoutine ? 'post' : 'put',
-      url: props.createNewRoutine
-        ? `https://workout-81691-default-rtdb.firebaseio.com/routines/${uid}.json?auth=${accessToken}`
-        : `https://workout-81691-default-rtdb.firebaseio.com/routines/${uid}/${props.firebaseId}.json?auth=${accessToken}`,
-      timeout: 5000,
-      data: {
-        title: props.title,
-        workouts: props.workouts,
-        activeRoutine: shouldBeActiveRoutine,
-      },
-    })
+    if (createNewRoutine || (titleChanged && !originalTitleEntact))
+      nameTaken = checkForPreviousNameUse();
+
+    if (nameTaken) {
+      setNameTakenError();
+      return;
+    }
+
+    const routineData = {
+      title,
+      workouts,
+      activeRoutine: shouldBeActiveRoutine,
+    };
+
+    const pushDataToFirebase = () =>
+      createNewRoutine
+        ? createRoutine(uid, accessToken, routineData)
+        : updateRoutine(uid, accessToken, firebaseId, routineData);
+
+    pushDataToFirebase
       .then(() => {
         if (shouldBeActiveRoutine)
           dispatch(fetchActiveRoutine(uid, accessToken));
         redirectToMyProfile();
       })
-      .catch((err) =>
-        setError({
-          ...error,
-          isError: true,
-          code: 'axios',
-          msg: (
-            <p style={{ color: 'red' }}>
-              We weren't able to create this workout, please try agian
-            </p>
-          ),
-        })
-      );
+      .catch(() => setAxiosError());
   };
 
   return (
@@ -126,11 +127,9 @@ const SubmitRoutineBtn = (props) => {
         onClick={onSubmit}
         style={{ width: '20rem', marginTop: '2rem' }}
       >
-        {props.createNewRoutine ? 'Create new routine' : 'Edit routine'}
+        {createNewRoutine ? 'Create new routine' : 'Edit routine'}
       </button>
       {error.isError ? error.msg : null}
     </>
   );
-};
-
-export default SubmitRoutineBtn;
+}

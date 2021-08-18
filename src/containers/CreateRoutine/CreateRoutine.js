@@ -1,13 +1,13 @@
-import axios from 'axios';
 import { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 
+import { createRoutineUtils as utils } from './createRoutineUtils';
 import { updateObject, checkValidityHandler } from '../../shared/utility';
 import Input from '../../components/UI/Input/Input';
 import SubmitRoutineBtn from '../../components/SubmitRoutineBtn/SubmitRoutineBtn';
 import classes from './CreateRoutine.module.css';
 
-const CreateRoutine = (props) => {
+export default function CreateRoutine({ history }) {
   const [historyUsed, setHistoryUsed] = useState(false);
   const [selectedWorkouts, setSelectedWorkouts] = useState([
     'Rest',
@@ -67,11 +67,8 @@ const CreateRoutine = (props) => {
     const shouldBuildWorkoutSelectMenuOptions =
       user && !workoutSelectMenu.elementConfig.options.length;
     if (shouldBuildWorkoutSelectMenuOptions)
-      axios({
-        method: 'get',
-        url: `https://workout-81691-default-rtdb.firebaseio.com/workouts/${uid}.json?auth=${accessToken}`,
-        timeout: 5000,
-      })
+      utils
+        .fetchWorkouts()
         .then((res) => {
           const userWorkouts = [{ label: 'Rest', value: 'Rest' }];
 
@@ -105,9 +102,9 @@ const CreateRoutine = (props) => {
   ];
 
   useEffect(() => {
-    const shouldLoadRoutineData = props.history.location.state && !historyUsed;
+    const shouldLoadRoutineData = history.location.state && !historyUsed;
     if (shouldLoadRoutineData) {
-      const { routine } = props.history.location.state;
+      const { routine } = history.location.state;
 
       if (routine) {
         setSelectedWorkouts(routine.workouts);
@@ -120,7 +117,7 @@ const CreateRoutine = (props) => {
       }
     }
   }, [
-    props.history.location.state,
+    history.location.state,
     historyUsed,
     selectedWorkouts,
     routineNameInput,
@@ -192,7 +189,7 @@ const CreateRoutine = (props) => {
       <SubmitRoutineBtn
         title={routineNameInput.value}
         workouts={selectedWorkouts}
-        history={props.history}
+        history={history}
         valid={formIsValid}
         containsWorkout={() => checkForWorkouts()}
         createNewRoutine={firebaseId === ''}
@@ -209,6 +206,4 @@ const CreateRoutine = (props) => {
     : workoutSelectMenu.elementConfig.options.length
     ? display
     : null;
-};
-
-export default CreateRoutine;
+}
