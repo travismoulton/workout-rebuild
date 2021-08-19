@@ -111,8 +111,6 @@ export default function SubmitRoutineBtn(props) {
       activeRoutine: shouldBeActiveRoutine,
     };
 
-    console.log(routineData);
-
     const pushDataToFirebase = () =>
       shouldCreateNewRoutine
         ? createRoutine(routineData, uid, accessToken)
