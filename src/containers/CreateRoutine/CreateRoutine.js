@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useSelector } from 'react-redux';
 
 import { createRoutineUtils as utils } from './createRoutineUtils';
@@ -63,33 +63,45 @@ export default function CreateRoutine({ history }) {
     document.title = 'Create Routine';
   }, []);
 
+  const buildWorkoutSelectMenu = useCallback(
+    (data) => {
+      const userWorkouts = [{ label: 'Rest', value: 'Rest' }];
+
+      for (const key in data)
+        userWorkouts.push({
+          label: data[key].title,
+          value: key,
+        });
+
+      setWorkoutSelectMenu({
+        ...workoutSelectMenu,
+        elementConfig: {
+          ...workoutSelectMenu.elementConfig,
+          options: userWorkouts,
+        },
+      });
+    },
+    [workoutSelectMenu]
+  );
+
   useEffect(() => {
     const shouldBuildWorkoutSelectMenuOptions =
       user && !workoutSelectMenu.elementConfig.options.length;
     if (shouldBuildWorkoutSelectMenuOptions)
       utils
         .fetchWorkouts(uid, accessToken)
-        .then((res) => {
-          const userWorkouts = [{ label: 'Rest', value: 'Rest' }];
-
-          for (const key in res.data)
-            userWorkouts.push({
-              label: res.data[key].title,
-              value: key,
-            });
-
-          setWorkoutSelectMenu({
-            ...workoutSelectMenu,
-            elementConfig: {
-              ...workoutSelectMenu.elementConfig,
-              options: userWorkouts,
-            },
-          });
-        })
+        .then(({ data }) => buildWorkoutSelectMenu(data))
         .catch((err) => {
           setError({ ...error, isError: true });
         });
-  }, [accessToken, uid, workoutSelectMenu, error, user]);
+  }, [
+    accessToken,
+    uid,
+    workoutSelectMenu,
+    error,
+    user,
+    buildWorkoutSelectMenu,
+  ]);
 
   const days = [
     'Monday',

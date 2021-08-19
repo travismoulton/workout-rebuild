@@ -21,11 +21,12 @@ export default function SubmitRoutineBtn(props) {
   const { checkForPreviousNameUse, createRoutine, updateRoutine } = utils;
 
   const [error, setError] = useState({ isError: false, code: '', msg: '' });
-  const [shouldBeActiveRoutine, setShouldBeActiveRoutine] = useState(false);
   const { activeRoutine } = useSelector((state) => state.favorites);
   const { uid, accessToken } = useSelector((state) => state.auth);
 
   const dispatch = useDispatch();
+
+  const shouldBeActiveRoutine = isActiveRoutine || !activeRoutine;
 
   useEffect(() => {
     if (valid && error.code === 'noRoutineName')
@@ -36,10 +37,6 @@ export default function SubmitRoutineBtn(props) {
     if (containsWorkout() && error.code === 'noWorkouts')
       setError({ isError: false, code: '', msg: '' });
   }, [containsWorkout, error]);
-
-  useEffect(() => {
-    setShouldBeActiveRoutine(isActiveRoutine || !activeRoutine);
-  }, [isActiveRoutine, activeRoutine]);
 
   const setNameTakenError = () =>
     setError({
