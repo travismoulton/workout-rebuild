@@ -68,7 +68,7 @@ export default function CreateRoutine({ history }) {
       user && !workoutSelectMenu.elementConfig.options.length;
     if (shouldBuildWorkoutSelectMenuOptions)
       utils
-        .fetchWorkouts()
+        .fetchWorkouts(uid, accessToken)
         .then((res) => {
           const userWorkouts = [{ label: 'Rest', value: 'Rest' }];
 
@@ -152,7 +152,6 @@ export default function CreateRoutine({ history }) {
   });
 
   const inputChangedHandler = (e, input) => {
-    console.log();
     const updatedInput = updateObject(input, {
       value: e.target.value,
       valid: checkValidityHandler(e.target.value, input.validation),
@@ -192,7 +191,7 @@ export default function CreateRoutine({ history }) {
         history={history}
         valid={formIsValid}
         containsWorkout={() => checkForWorkouts()}
-        createNewRoutine={firebaseId === ''}
+        shouldCreateNewRoutine={firebaseId === ''}
         firebaseId={firebaseId}
         isActiveRoutine={isActiveRoutine}
         titleChanged={routineNameInput.touched}

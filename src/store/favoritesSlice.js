@@ -11,6 +11,7 @@ const favoritesAdapter = createEntityAdapter();
 
 const initialState = favoritesAdapter.getInitialState({
   noFavorites: false,
+  activeRoutine: null,
 });
 
 export const fetchFavorites = createAsyncThunk(
@@ -62,6 +63,17 @@ export const removeFavorite = createAsyncThunk(
   }
 );
 
+export const fetchActiveRoutine = createAsyncThunk(
+  'favorites/fetchActiveRoutine',
+  async ({ uid, accessToken }) => {
+    const res = await axios.get(`routines/${uid}.json?auth=${accessToken}`);
+
+    console.log(res.data);
+
+    return res.data;
+  }
+);
+
 const favoritesSlice = createSlice({
   name: 'favorites',
   initialState,
@@ -87,6 +99,9 @@ const favoritesSlice = createSlice({
     [removeFavorite.fulfilled]: (state, action) => {
       if (state.entities.length === 1) state.noFavorites = true;
       favoritesAdapter.removeOne(state, action);
+    },
+    [fetchActiveRoutine.fufilled]: (state, action) => {
+      console.log(action.payload);
     },
   },
 });

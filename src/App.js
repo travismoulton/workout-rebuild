@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Switch, Route, withRouter, useHistory } from 'react-router-dom';
 
 import { authSuccess, authLogout } from './store/authSlice';
-import { fetchFavorites } from './store/favoritesSlice';
+import { fetchFavorites, fetchActiveRoutine } from './store/favoritesSlice';
 import { FirebaseContext } from './components/Firebase/index';
 import Layout from './components/Layout/Layout';
 import Search from './containers/Search/Search';
@@ -41,6 +41,10 @@ function App({ firebase }) {
 
   useEffect(() => {
     if (user) dispatch(fetchFavorites({ uid, accessToken }));
+  }, [user, dispatch, uid, accessToken]);
+
+  useEffect(() => {
+    if (user) dispatch(fetchActiveRoutine({ uid, accessToken }));
   }, [user, dispatch, uid, accessToken]);
 
   const history = useHistory();

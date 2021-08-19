@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
-import { fetchActiveRoutine } from '../../store/actions';
 import { submitRoutineBtnUtils as utils } from './submitRoutineBtnUtils';
+import { fetchActiveRoutine } from '../../store/favoritesSlice';
 
 export default function SubmitRoutineBtn(props) {
   const {
@@ -10,7 +10,7 @@ export default function SubmitRoutineBtn(props) {
     containsWorkout,
     isActiveRoutine,
     history,
-    createNewRoutine,
+    shouldCreateNewRoutine,
     title,
     titleChanged,
     originalTitleEntact,
@@ -52,7 +52,6 @@ export default function SubmitRoutineBtn(props) {
 
   const setAxiosError = () =>
     setError({
-      ...error,
       isError: true,
       code: 'axios',
       msg: (
@@ -62,38 +61,44 @@ export default function SubmitRoutineBtn(props) {
       ),
     });
 
+  const setNoWorkoutsError = () =>
+    setError({
+      isError: true,
+      code: 'noWorkouts',
+      msg: <p>A routine must contain at least one workout</p>,
+    });
+
+  const setNoRoutineNameError = () =>
+    setError({
+      isError: true,
+      code: 'noRoutineName',
+      msg: <p>A routine must have a title</p>,
+    });
+
   const redirectToMyProfile = () => {
     history.push({
       pathname: '/my-profile',
       state: {
-        message: createNewRoutine ? 'Routine created' : 'Routine Updated',
+        message: shouldCreateNewRoutine ? 'Routine created' : 'Routine Updated',
       },
     });
   };
 
   const onSubmit = async () => {
     if (!containsWorkout()) {
-      setError({
-        isError: true,
-        code: 'noWorkouts',
-        msg: <p>A routine must contain at least one workout</p>,
-      });
+      setNoWorkoutsError();
       return;
     }
 
     if (!valid) {
-      setError({
-        isError: true,
-        code: 'noRoutineName',
-        msg: <p>A routine must have a title</p>,
-      });
+      setNoRoutineNameError();
       return;
     }
 
     let nameTaken;
 
-    if (createNewRoutine || (titleChanged && !originalTitleEntact))
-      nameTaken = checkForPreviousNameUse();
+    if (shouldCreateNewRoutine || (titleChanged && !originalTitleEntact))
+      nameTaken = await checkForPreviousNameUse(title, uid, accessToken);
 
     if (nameTaken) {
       setNameTakenError();
@@ -106,18 +111,19 @@ export default function SubmitRoutineBtn(props) {
       activeRoutine: shouldBeActiveRoutine,
     };
 
-    const pushDataToFirebase = () =>
-      createNewRoutine
-        ? createRoutine(uid, accessToken, routineData)
-        : updateRoutine(uid, accessToken, firebaseId, routineData);
+    console.log(routineData);
 
-    pushDataToFirebase
-      .then(() => {
-        if (shouldBeActiveRoutine)
-          dispatch(fetchActiveRoutine(uid, accessToken));
-        redirectToMyProfile();
-      })
-      .catch(() => setAxiosError());
+    const pushDataToFirebase = () =>
+      shouldCreateNewRoutine
+        ? createRoutine(routineData, uid, accessToken)
+        : updateRoutine(routineData, uid, accessToken, firebaseId);
+
+    await pushDataToFirebase().catch(() => setAxiosError());
+
+    if (shouldBeActiveRoutine)
+      dispatch(fetchActiveRoutine({ uid, accessToken }));
+
+    redirectToMyProfile();
   };
 
   return (
@@ -127,9 +133,9 @@ export default function SubmitRoutineBtn(props) {
         onClick={onSubmit}
         style={{ width: '20rem', marginTop: '2rem' }}
       >
-        {createNewRoutine ? 'Create new routine' : 'Edit routine'}
+        {shouldCreateNewRoutine ? 'Create new routine' : 'Edit routine'}
       </button>
-      {error.isError ? error.msg : null}
+      {error.isError && error.msg}
     </>
   );
 }

@@ -14,15 +14,19 @@ export const submitRoutineBtnUtils = {
     return nameTaken;
   },
   createRoutine: async function (routineData, uid, accessToken) {
-    axios
+    console.log(routineData);
+    await axios
       .post(`routines/${uid}.json?auth=${accessToken}`, routineData)
       .catch(() => {
         throw new Error();
       });
   },
   updateRoutine: async function (routineData, uid, accessToken, firebaseId) {
-    axios
-      .put(`routines/${uid}/${firebaseId}.json?auth=${accessToken}`, routineData)
+    await axios
+      .put(
+        `routines/${uid}/${firebaseId}.json?auth=${accessToken}`,
+        routineData
+      )
       .catch(() => {
         throw new Error();
       });
