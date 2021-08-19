@@ -18,15 +18,13 @@ export default function SubmitRoutineBtn(props) {
     workouts,
   } = props;
 
-  const { checkForPreviousNameUse, createRoutine, updateRoutine } = utils;
-
   const [error, setError] = useState({ isError: false, code: '', msg: '' });
   const { activeRoutine } = useSelector((state) => state.favorites);
   const { uid, accessToken } = useSelector((state) => state.auth);
-
   const dispatch = useDispatch();
 
   const shouldBeActiveRoutine = isActiveRoutine || !activeRoutine;
+  const { checkForPreviousNameUse, createRoutine, updateRoutine } = utils;
 
   useEffect(() => {
     if (valid && error.code === 'noRoutineName')
@@ -72,14 +70,13 @@ export default function SubmitRoutineBtn(props) {
       msg: <p>A routine must have a title</p>,
     });
 
-  const redirectToMyProfile = () => {
+  const redirectToMyProfile = () =>
     history.push({
       pathname: '/my-profile',
       state: {
         message: shouldCreateNewRoutine ? 'Routine created' : 'Routine Updated',
       },
     });
-  };
 
   const onSubmit = async () => {
     if (!containsWorkout()) {
@@ -92,14 +89,13 @@ export default function SubmitRoutineBtn(props) {
       return;
     }
 
-    let nameTaken;
+    if (shouldCreateNewRoutine || (titleChanged && !originalTitleEntact)) {
+      const nameTaken = await checkForPreviousNameUse(title, uid, accessToken);
 
-    if (shouldCreateNewRoutine || (titleChanged && !originalTitleEntact))
-      nameTaken = await checkForPreviousNameUse(title, uid, accessToken);
-
-    if (nameTaken) {
-      setNameTakenError();
-      return;
+      if (nameTaken) {
+        setNameTakenError();
+        return;
+      }
     }
 
     const routineData = {
