@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
 import { submitRoutineBtnUtils as utils } from './submitRoutineBtnUtils';
@@ -18,6 +18,8 @@ export default function SubmitRoutineBtn(props) {
     workouts,
   } = props;
 
+  const routineNameRef = useRef(null);
+  const [routineNameChanged, setRoutineNameChanged] = useState(false);
   const [error, setError] = useState({ isError: false, code: '', msg: '' });
   const { activeRoutine } = useSelector((state) => state.favorites);
   const { uid, accessToken } = useSelector((state) => state.auth);
@@ -27,14 +29,26 @@ export default function SubmitRoutineBtn(props) {
   const { checkForPreviousNameUse, createRoutine, updateRoutine } = utils;
 
   useEffect(() => {
+    if (routineNameRef.current !== title) {
+      routineNameRef.current = title;
+      if (!routineNameChanged) setRoutineNameChanged(true);
+    }
+  }, [routineNameChanged, routineNameRef, title]);
+
+  useEffect(() => {
     if (valid && error.code === 'noRoutineName')
       setError({ isError: false, msg: '', code: null });
   }, [valid, error]);
 
   useEffect(() => {
-    if (containsWorkout() && error.code === 'noWorkouts')
+    if (containsWorkout && error.code === 'noWorkouts')
       setError({ isError: false, code: '', msg: '' });
   }, [containsWorkout, error]);
+
+  useEffect(() => {
+    if (routineNameChanged && error.code === 'nameTaken')
+      setError({ isError: false, code: '', msg: '' });
+  }, [routineNameChanged, error]);
 
   const setNameTakenError = () =>
     setError({
@@ -79,7 +93,7 @@ export default function SubmitRoutineBtn(props) {
     });
 
   const onSubmit = async () => {
-    if (!containsWorkout()) {
+    if (!containsWorkout) {
       setNoWorkoutsError();
       return;
     }
@@ -93,6 +107,7 @@ export default function SubmitRoutineBtn(props) {
       const nameTaken = await checkForPreviousNameUse(title, uid, accessToken);
 
       if (nameTaken) {
+        setRoutineNameChanged(false);
         setNameTakenError();
         return;
       }

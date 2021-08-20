@@ -202,7 +202,7 @@ export default function CreateRoutine({ history }) {
         workouts={selectedWorkouts}
         history={history}
         valid={formIsValid}
-        containsWorkout={() => checkForWorkouts()}
+        containsWorkout={checkForWorkouts()}
         shouldCreateNewRoutine={firebaseId === ''}
         firebaseId={firebaseId}
         isActiveRoutine={isActiveRoutine}
