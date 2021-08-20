@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { useHistory } from 'react-router';
 
 import { submitRoutineBtnUtils as utils } from './submitRoutineBtnUtils';
 import { fetchActiveRoutine } from '../../store/favoritesSlice';
@@ -9,7 +10,6 @@ export default function SubmitRoutineBtn(props) {
     valid,
     containsWorkout,
     isActiveRoutine,
-    history,
     shouldCreateNewRoutine,
     title,
     titleChanged,
@@ -24,6 +24,7 @@ export default function SubmitRoutineBtn(props) {
   const { activeRoutine } = useSelector((state) => state.favorites);
   const { uid, accessToken } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
+  const history = useHistory();
 
   const shouldBeActiveRoutine = isActiveRoutine || !activeRoutine;
   const { checkForPreviousNameUse, createRoutine, updateRoutine } = utils;

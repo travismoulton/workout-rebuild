@@ -200,7 +200,6 @@ export default function CreateRoutine({ history }) {
       <SubmitRoutineBtn
         title={routineNameInput.value}
         workouts={selectedWorkouts}
-        history={history}
         valid={formIsValid}
         containsWorkout={checkForWorkouts()}
         shouldCreateNewRoutine={firebaseId === ''}
