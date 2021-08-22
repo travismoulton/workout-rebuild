@@ -73,6 +73,8 @@ export default function CreateRoutine({ history }) {
           value: key,
         });
 
+      console.log(userWorkouts);
+
       setWorkoutSelectMenu({
         ...workoutSelectMenu,
         elementConfig: {
@@ -85,13 +87,14 @@ export default function CreateRoutine({ history }) {
   );
 
   useEffect(() => {
+    // If having problems with this later, add user back to the check. Refer to original project
     const shouldBuildWorkoutSelectMenuOptions =
-      user && !workoutSelectMenu.elementConfig.options.length;
+      !workoutSelectMenu.elementConfig.options.length;
     if (shouldBuildWorkoutSelectMenuOptions)
       utils
         .fetchWorkouts(uid, accessToken)
         .then(({ data }) => buildWorkoutSelectMenu(data))
-        .catch((err) => {
+        .catch(() => {
           setError({ ...error, isError: true });
         });
   }, [
@@ -102,6 +105,30 @@ export default function CreateRoutine({ history }) {
     user,
     buildWorkoutSelectMenu,
   ]);
+
+  // If having problems with this later, add user back to the check. Refer to original project
+  // useEffect(() => {
+  //   const { fetchWorkouts } = utils;
+
+  //   const shouldBuildWorkoutSelectMenuOptions =
+  //     !workoutSelectMenu.elementConfig.options.length;
+
+  //   if (shouldBuildWorkoutSelectMenuOptions) {
+  //     (async () => {
+  //       const { data } = await fetchWorkouts(uid, accessToken).catch(() =>
+  //         setError({ ...error, isError: true })
+  //       );
+  //       buildWorkoutSelectMenu(data);
+  //     })();
+  //   }
+  // }, [
+  //   accessToken,
+  //   uid,
+  //   workoutSelectMenu,
+  //   error,
+  //   user,
+  //   buildWorkoutSelectMenu,
+  // ]);
 
   const days = [
     'Monday',
@@ -149,6 +176,8 @@ export default function CreateRoutine({ history }) {
       tempWorkouts[i] = e.value;
       setSelectedWorkouts(tempWorkouts);
     };
+
+    // if (workoutSelectMenu.elementConfig.options.length) console.log(select);
     return (
       <Input
         elementType={select.elementType}
@@ -159,6 +188,7 @@ export default function CreateRoutine({ history }) {
         key={day}
         classname="RoutineSelect"
         wrapperClass="RoutineSelectWrapper"
+        selectId={day}
       />
     );
   });
