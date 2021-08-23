@@ -62,7 +62,8 @@
   width: 20rem;
 }
 
-.WorkoutNameWrapper {
+.WorkoutNameWrapper,
+.routineNameWrapper {
   display: flex;
   flex-direction: column;
   justify-content: center;

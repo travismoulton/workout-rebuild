@@ -30,7 +30,9 @@ export default function CreateRoutine({ history }) {
     },
     valid: false,
     touched: false,
+    label: 'Routine name',
     id: 'routineName',
+    wrapperClass: 'routineNameWrapper',
   });
   const [workoutSelectMenu, setWorkoutSelectMenu] = useState({
     elementType: 'select',
@@ -73,8 +75,6 @@ export default function CreateRoutine({ history }) {
           value: key,
         });
 
-      console.log(userWorkouts);
-
       setWorkoutSelectMenu({
         ...workoutSelectMenu,
         elementConfig: {
@@ -106,30 +106,6 @@ export default function CreateRoutine({ history }) {
     buildWorkoutSelectMenu,
   ]);
 
-  // If having problems with this later, add user back to the check. Refer to original project
-  // useEffect(() => {
-  //   const { fetchWorkouts } = utils;
-
-  //   const shouldBuildWorkoutSelectMenuOptions =
-  //     !workoutSelectMenu.elementConfig.options.length;
-
-  //   if (shouldBuildWorkoutSelectMenuOptions) {
-  //     (async () => {
-  //       const { data } = await fetchWorkouts(uid, accessToken).catch(() =>
-  //         setError({ ...error, isError: true })
-  //       );
-  //       buildWorkoutSelectMenu(data);
-  //     })();
-  //   }
-  // }, [
-  //   accessToken,
-  //   uid,
-  //   workoutSelectMenu,
-  //   error,
-  //   user,
-  //   buildWorkoutSelectMenu,
-  // ]);
-
   const days = [
     'Monday',
     'Tuesday',
@@ -141,6 +117,8 @@ export default function CreateRoutine({ history }) {
   ];
 
   useEffect(() => {
+    console.log(history.location.state);
+
     const shouldLoadRoutineData = history.location.state && !historyUsed;
     if (shouldLoadRoutineData) {
       const { routine } = history.location.state;
@@ -225,6 +203,9 @@ export default function CreateRoutine({ history }) {
         value={routineNameInput.value}
         changed={(e) => inputChangedHandler(e, routineNameInput)}
         classname="RoutineName"
+        label={routineNameInput.label}
+        wrapperClass={routineNameInput.wrapperClass}
+        id={routineNameInput.id}
       />
       {workoutSelectMenus}
       <SubmitRoutineBtn

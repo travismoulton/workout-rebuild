@@ -76,6 +76,6 @@ export const mockHistory = {
     },
     title: 'historyWorkout',
     firebaseId: 'firebaseId',
-    activeRoutine: true,
+    activeRoutine: false,
   },
 };
