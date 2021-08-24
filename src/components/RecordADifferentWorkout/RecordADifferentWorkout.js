@@ -1,13 +1,15 @@
 import { useState, useCallback, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
 
+import { recordADifferentWorkoutUtils as utils } from './recordADifferentWorkoutUtils';
 import Modal from '../UI/Modal/Modal';
 import Input from '../UI/Input/Input';
 import classes from './RecordADifferentWorkout.module.css';
 
-const RecordADifferentWorkout = (props) => {
+export default function RecordADifferentWorkout(props) {
+  const { switchWorkout, closeModal, show } = props;
+
   const [axiosError, setAxiosError] = useState({
     isError: false,
     message: (
@@ -48,18 +50,16 @@ const RecordADifferentWorkout = (props) => {
   const { activeRoutine } = useSelector((state) => state.favorites);
   const { uid, accessToken } = useSelector((state) => state.auth);
 
-  const fetchAllWorkouts = useCallback(() => {
-    axios
-      .get(
-        `https://workout-81691-default-rtdb.firebaseio.com/workouts/${uid}.json?auth=${accessToken}`,
-        { timeout: 5000 }
-      )
-      .then((res) => {
-        if (res.data) {
-          const tempArr = [];
-          for (const key in res.data)
-            tempArr.push({ ...res.data[key], firebaseId: key });
-          setAllWorkouts(tempArr);
+  const { fetchAllWorkouts, fetchWorkoutById } = utils;
+
+  const prepareAllWorkouts = useCallback(() => {
+    fetchAllWorkouts(uid, accessToken)
+      .then(({ data }) => {
+        if (data) {
+          const workouts = [];
+          for (const key in data)
+            workouts.push({ ...data[key], firebaseId: key });
+          setAllWorkouts(workouts);
         }
       })
       .catch((err) => {
@@ -68,40 +68,36 @@ const RecordADifferentWorkout = (props) => {
           isError: true,
         });
       });
-  }, [uid, axiosError, accessToken]);
+  }, [axiosError, fetchAllWorkouts, uid, accessToken]);
 
-  const fetchRoutineWorkouts = useCallback(async () => {
+  const prepareRoutineWorkouts = useCallback(async () => {
     if (activeRoutine) {
       const workoutIds = activeRoutine.workouts.filter(
         (workout) => workout !== 'Rest'
       );
 
-      const tempArr = [];
+      const workouts = [];
 
       for (let i = 0; i < workoutIds.length; i++) {
-        await axios
-          .get(
-            `https://workout-81691-default-rtdb.firebaseio.com/workouts/${uid}/${workoutIds[i]}.json?auth=${accessToken}`,
-            { timeout: 5000 }
-          )
-          .then((res) => {
-            tempArr.push({ ...res.data, firebaseId: workoutIds[i] });
+        await fetchWorkoutById(uid, accessToken, workoutIds[i])
+          .then(({ data }) => {
+            workouts.push({ ...data, firebaseId: workoutIds[i] });
           })
-          .catch((err) => {
+          .catch(() => {
             setAxiosError({
               ...axiosError,
               isError: true,
             });
           });
       }
-      setRoutineWorkouts(tempArr);
+      setRoutineWorkouts(workouts);
     }
-  }, [activeRoutine, uid, axiosError, accessToken]);
+  }, [activeRoutine, uid, axiosError, accessToken, fetchWorkoutById]);
 
   useEffect(() => {
-    fetchRoutineWorkouts();
-    fetchAllWorkouts();
-  }, [fetchRoutineWorkouts, fetchAllWorkouts]);
+    prepareRoutineWorkouts();
+    prepareAllWorkouts();
+  }, [prepareRoutineWorkouts, prepareAllWorkouts]);
 
   const filterMenuOptions = (unfilteredOptions) => {
     const filteredOptions = [];
@@ -196,16 +192,16 @@ const RecordADifferentWorkout = (props) => {
 
   const switchWorkoutAndCloseModal = (menu) => {
     if (menu === 'routine') {
-      props.switchWorkout(activeRoutineSelectMenu.value);
+      switchWorkout(activeRoutineSelectMenu.value);
       setActiveRoutineSelectMenu({
         ...activeRoutineSelectMenu,
         displayValue: null,
       });
     } else if (menu === 'allWorkouts') {
-      props.switchWorkout(allWorkoutSelectMenu.value);
+      switchWorkout(allWorkoutSelectMenu.value);
       setAllWorkoutSelectMenu({ ...allWorkoutSelectMenu, displayValue: null });
     }
-    props.closeModal();
+    closeModal();
   };
 
   const switchWorkoutBtn = (menu) => (
@@ -225,7 +221,7 @@ const RecordADifferentWorkout = (props) => {
   );
 
   const modal = (
-    <Modal show={props.show} modalClosed={() => props.closeModal()}>
+    <Modal show={show} modalClosed={() => closeModal()}>
       {activeRoutineSelectMenu.elementConfig.options.length ? (
         <div className={classes.MenuGrouping}>
           {routineBasedInput}
@@ -244,7 +240,7 @@ const RecordADifferentWorkout = (props) => {
         : null}
       <button
         className={`GlobalBtn-1 ${classes.CancelBtn}`}
-        onClick={props.closeModal}
+        onClick={closeModal}
       >
         Cancel
       </button>
@@ -252,6 +248,4 @@ const RecordADifferentWorkout = (props) => {
   );
 
   return axiosError.isError ? axiosError.message : modal;
-};
-
-export default RecordADifferentWorkout;
+}

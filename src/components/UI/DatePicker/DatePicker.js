@@ -3,7 +3,7 @@ import { useState, useEffect, useRef } from 'react';
 
 import classes from './DatePicker.module.css';
 
-const DatePicker = (props) => {
+export default function DatePicker({ onChange }) {
   const daysMap = [
     'Sunday',
     'Monday',
@@ -178,7 +178,7 @@ const DatePicker = (props) => {
     setSelectedDay(day.timeStamp);
     setDateToInput(day.timeStamp);
 
-    props.onChange(new Date(day.timeStamp));
+    onChange(new Date(day.timeStamp));
     setShowDatePicker(false);
   };
 
@@ -297,6 +297,4 @@ const DatePicker = (props) => {
       )}
     </div>
   );
-};
-
-export default DatePicker;
+}
