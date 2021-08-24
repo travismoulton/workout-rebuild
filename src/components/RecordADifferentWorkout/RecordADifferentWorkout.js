@@ -14,8 +14,8 @@ export default function RecordADifferentWorkout(props) {
     isError: false,
     message: (
       <p style={{ color: 'red' }}>
-        Trouble loading your workouts. Try re-freshing the page or come back
-        later
+        We're having trouble loading your workouts. Try re-freshing the page or
+        come back later
       </p>
     ),
   });
@@ -95,9 +95,16 @@ export default function RecordADifferentWorkout(props) {
   }, [activeRoutine, uid, axiosError, accessToken, fetchWorkoutById]);
 
   useEffect(() => {
-    prepareRoutineWorkouts();
-    prepareAllWorkouts();
-  }, [prepareRoutineWorkouts, prepareAllWorkouts]);
+    if (!initalWorkoutMenuSet && !initialRoutineMenuSet) {
+      prepareRoutineWorkouts();
+      prepareAllWorkouts();
+    }
+  }, [
+    prepareRoutineWorkouts,
+    prepareAllWorkouts,
+    initialRoutineMenuSet,
+    initalWorkoutMenuSet,
+  ]);
 
   const filterMenuOptions = (unfilteredOptions) => {
     const filteredOptions = [];
@@ -151,6 +158,7 @@ export default function RecordADifferentWorkout(props) {
   const routineBasedInput = (
     <Input
       label={'Choose from active routine'}
+      selectId={'activeRoutine'}
       value={activeRoutineSelectMenu.displayValue}
       elementConfig={activeRoutineSelectMenu.elementConfig}
       elementType={activeRoutineSelectMenu.elementType}
@@ -172,6 +180,7 @@ export default function RecordADifferentWorkout(props) {
   const workoutBasedInput = (
     <Input
       label="Choose from all your workouts"
+      selectId={'allWorkouts'}
       value={allWorkoutSelectMenu.displayValue}
       elementConfig={allWorkoutSelectMenu.elementConfig}
       elementType={allWorkoutSelectMenu.elementType}
