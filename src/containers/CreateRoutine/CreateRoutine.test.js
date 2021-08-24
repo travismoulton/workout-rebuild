@@ -1,4 +1,3 @@
-import * as reactRedux from 'react-redux';
 import { createMemoryHistory } from 'history';
 import { Router } from 'react-router-dom';
 import userEvent from '@testing-library/user-event';
@@ -14,17 +13,15 @@ import { workouts, mockHistory } from './mock';
 import { submitRoutineBtnUtils as btnUtils } from '../../components/SubmitRoutineBtn/submitRoutineBtnUtils';
 import { createRoutineUtils as utils } from './createRoutineUtils';
 
-//1: Test that noRoutineName error is cleared after a routine name is put in -- CREATEROUTINE
-//2: Test that if the routine title changes and the nameTaken error is present, that it is removed -- CREATEROUTINE
-//3: Test that noWorkouts error is cleared if a workout is added -- CREATEROTUINE
-
-//3: Test that if yourine data is passed through history that the page populates correctly
-
 describe('<CreateRoutine />', () => {
-  let mockFetchWorkouts, mockCreateRotuine, mockUpdateRoutine;
+  let mockFetchWorkouts, mockCreateRotuine, mockUpdateRoutine, mockCheckNameUse;
 
   beforeEach(() => {
-    createSpy(btnUtils, 'checkForPreviousNameUse', Promise.resolve(false));
+    mockCheckNameUse = createSpy(
+      btnUtils,
+      'checkForPreviousNameUse',
+      Promise.resolve(false)
+    );
     mockCreateRotuine = createSpy(
       btnUtils,
       'createRoutine',
@@ -47,13 +44,14 @@ describe('<CreateRoutine />', () => {
     mockFetchWorkouts = null;
     mockCreateRotuine = null;
     mockUpdateRoutine = null;
+    mockCheckNameUse = null;
   });
 
   function setup(mockHistory) {
     const history = createMemoryHistory();
     history.location.state = mockHistory || null;
 
-    const { getByText, getByLabelText } = customRender(
+    const { getByText, getByLabelText, queryByText } = customRender(
       <Router history={history}>
         <CreateRoutine history={history} />
       </Router>,
@@ -61,7 +59,7 @@ describe('<CreateRoutine />', () => {
       { preloadedState: { favorites: { activeRoutine: {} } } }
     );
 
-    return { history, getByLabelText, getByText };
+    return { history, getByLabelText, getByText, queryByText };
   }
 
   function openSelectMenu(select) {
@@ -79,6 +77,13 @@ describe('<CreateRoutine />', () => {
     expect(getByText('workout1')).toBeInTheDocument();
   });
 
+  // Object the call to create / edit routine should be called with
+  const expectedObject = {
+    title: 'mock routine',
+    workouts: ['workout1', 'workout2', 'Rest', 'Rest', 'Rest', 'Rest', 'Rest'],
+    activeRoutine: false,
+  };
+
   test('Passes the proper props to SubmitRoutineBtn', async () => {
     const { getByText, getByLabelText } = setup(null);
     await waitFor(() => expect(mockFetchWorkouts).toBeCalled());
@@ -94,20 +99,6 @@ describe('<CreateRoutine />', () => {
 
     fireEvent.click(getByText('Create new routine'));
 
-    const expectedObject = {
-      title: 'mock routine',
-      workouts: [
-        'workout1',
-        'workout2',
-        'Rest',
-        'Rest',
-        'Rest',
-        'Rest',
-        'Rest',
-      ],
-      activeRoutine: false,
-    };
-
     await waitFor(() =>
       expect(mockCreateRotuine).toBeCalledWith(
         expect.objectContaining(expectedObject),
@@ -121,6 +112,79 @@ describe('<CreateRoutine />', () => {
     const { getByText, getByLabelText } = setup(mockHistory);
     await waitFor(() => expect(mockFetchWorkouts).toBeCalled());
 
-    expect(getByText('historyWorkout')).toBeInTheDocument();
+    expect(getByLabelText('Routine name')).toHaveValue('historyWorkout');
+
+    fireEvent.click(getByText('Edit routine'));
+
+    await waitFor(() =>
+      expect(mockUpdateRoutine).toBeCalledWith(
+        expect.objectContaining({ ...expectedObject, title: 'historyWorkout' }),
+        null,
+        null,
+        'firebaseId'
+      )
+    );
+  });
+
+  test('noRoutineName error is cleared after a routine name is put in', async () => {
+    const { getByText, getByLabelText, queryByText } = setup();
+    await waitFor(() => expect(mockFetchWorkouts).toBeCalled());
+
+    openSelectMenu(getByLabelText('Monday'));
+    fireEvent.click(getByText('workout1'));
+
+    fireEvent.click(getByText('Create new routine'));
+
+    expect(getByText('A routine must have a title')).toBeInTheDocument();
+
+    const titleInput = getByLabelText('Routine name');
+    userEvent.type(titleInput, 'title');
+
+    expect(queryByText('A routine must have a title')).not.toBeInTheDocument();
+  });
+
+  test('nameTakenError is cleared if the title is changed', async () => {
+    mockCheckNameUse.mockImplementation(jest.fn(() => Promise.resolve(true)));
+
+    const { getByText, queryByText, getByLabelText } = setup();
+    await waitFor(() => expect(mockFetchWorkouts).toBeCalled());
+
+    // Add a workout to the routine to avoid the lack of workout error
+    openSelectMenu(getByLabelText('Monday'));
+    fireEvent.click(getByText('workout1'));
+
+    // Give the routine a title to avoid the noTitle error
+    const titleInput = getByLabelText('Routine name');
+    userEvent.type(titleInput, 'title');
+
+    fireEvent.click(getByText('Create new routine'));
+
+    const nameTakenMsg =
+      'That routine name is already taken, please try a different name';
+
+    await waitFor(() => expect(mockCheckNameUse).toBeCalled());
+    expect(getByText(nameTakenMsg)).toBeInTheDocument();
+
+    userEvent.clear(titleInput);
+
+    expect(queryByText(nameTakenMsg)).not.toBeInTheDocument();
+  });
+
+  test('noWorkouts error is cleared if a workout is added', async () => {
+    const { getByText, queryByText, getByLabelText } = setup();
+    await waitFor(() => expect(mockFetchWorkouts).toBeCalled());
+
+    const titleInput = getByLabelText('Routine name');
+    userEvent.type(titleInput, 'title');
+
+    fireEvent.click(getByText('Create new routine'));
+
+    const errorMessage = 'A routine must contain at least one workout';
+    expect(getByText(errorMessage)).toBeInTheDocument();
+
+    openSelectMenu(getByLabelText('Monday'));
+    fireEvent.click(getByText('workout1'));
+
+    expect(queryByText(errorMessage)).not.toBeInTheDocument();
   });
 });

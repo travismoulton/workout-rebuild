@@ -117,8 +117,6 @@ export default function CreateRoutine({ history }) {
   ];
 
   useEffect(() => {
-    console.log(history.location.state);
-
     const shouldLoadRoutineData = history.location.state && !historyUsed;
     if (shouldLoadRoutineData) {
       const { routine } = history.location.state;
@@ -155,7 +153,6 @@ export default function CreateRoutine({ history }) {
       setSelectedWorkouts(tempWorkouts);
     };
 
-    // if (workoutSelectMenu.elementConfig.options.length) console.log(select);
     return (
       <Input
         elementType={select.elementType}

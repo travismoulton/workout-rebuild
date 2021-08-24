@@ -52,28 +52,39 @@ export const workouts = {
   },
 };
 
+// export const mockHistory = {
+//   routine: {
+//     workouts: {
+//       workout1: {
+//         exercises: [
+//           {
+//             focus: 'reps',
+//             id: 'exercise1',
+//             name: 'exercise1',
+//             sets: [
+//               {
+//                 reps: 3,
+//                 weight: 50,
+//               },
+//             ],
+//           },
+//         ],
+//         targetAreaCode: 1,
+//         targetArea: 'target1',
+//         secondaryTargetCode: 2,
+//         secondaryTargetArea: 'secondaryTarget1',
+//         title: 'workout1',
+//       },
+//       title: 'historyWorkout',
+//       firebaseId: 'firebaseId',
+//       activeRoutine: false,
+//     },
+//   },
+// };
+
 export const mockHistory = {
-  workouts: {
-    workout1: {
-      exercises: [
-        {
-          focus: 'reps',
-          id: 'exercise1',
-          name: 'exercise1',
-          sets: [
-            {
-              reps: 3,
-              weight: 50,
-            },
-          ],
-        },
-      ],
-      targetAreaCode: 1,
-      targetArea: 'target1',
-      secondaryTargetCode: 2,
-      secondaryTargetArea: 'secondaryTarget1',
-      title: 'workout1',
-    },
+  routine: {
+    workouts: ['workout1', 'workout2', 'Rest', 'Rest', 'Rest', 'Rest', 'Rest'],
     title: 'historyWorkout',
     firebaseId: 'firebaseId',
     activeRoutine: false,
