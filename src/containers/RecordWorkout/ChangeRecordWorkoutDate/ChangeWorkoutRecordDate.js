@@ -4,19 +4,21 @@ import Modal from '../../../components/UI/Modal/Modal';
 import DatePicker from '../../../components/UI/DatePicker/DatePicker';
 import classes from './ChangeWorkoutRecordDate.module.css';
 
-const ChangeWorkoutRecordDate = (props) => {
+export default function ChangeWorkoutRecordDate(props) {
+  const { changeDate, closeModal, show } = props;
+
   const [date, setDate] = useState(new Date());
 
   const selectNewDate = () => {
     const dateStr = date.toISOString().split('-');
-    props.changeDate(
+    changeDate(
       new Date(+dateStr[0], --dateStr[1], +dateStr[2].substring(0, 2))
     );
   };
 
   const changeDateAndCloseModal = () => {
     selectNewDate();
-    props.closeModal();
+    closeModal();
   };
 
   const changeDateBtn = (
@@ -29,13 +31,13 @@ const ChangeWorkoutRecordDate = (props) => {
   );
 
   const cancelBtn = (
-    <button className={`GlobalBtn-1 ${classes.Btn}`} onClick={props.closeModal}>
+    <button className={`GlobalBtn-1 ${classes.Btn}`} onClick={closeModal}>
       Cancel
     </button>
   );
 
   return (
-    <Modal show={props.show} modalClosed={props.closeModal}>
+    <Modal show={show} modalClosed={closeModal}>
       <div className={classes.Container}>
         <DatePicker onChange={(date) => setDate(date)} />
         <div className={classes.BtnRow}>
@@ -45,6 +47,4 @@ const ChangeWorkoutRecordDate = (props) => {
       </div>
     </Modal>
   );
-};
-
-export default ChangeWorkoutRecordDate;
+}

@@ -1,16 +1,22 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import axios from 'axios';
+import { useHistory } from 'react-router';
 
+import { recordWorkoutUtils as utils } from './recordWorkoutUtils';
 import WorkoutListItem from '../WorkoutListItem/WorkoutListItem';
 import RecordWorkoutBtn from '../../components/RecordWorkoutBtn/RecordWorkoutBtn';
 import Spinner from '../../components/UI/Spinner/Spinner';
 import RecordADifferentWorkout from '../../components/RecordADifferentWorkout/RecordADifferentWorkout';
 import ChangeWorkoutRecordDate from './ChangeRecordWorkoutDate/ChangeWorkoutRecordDate';
-import { setExercises, resetWorkoutStore } from '../../store/actions';
+import {
+  setExercises,
+  resetWorkoutStore,
+  selectAllExercises,
+  clearExercises,
+} from '../../store/workoutSlice';
 import classes from './RecordWorkout.module.css';
 
-const RecordWorkout = (props) => {
+export default function RecordWorkout() {
   const [workoutDate, setWorkoutDate] = useState(new Date());
   const [suggestedWorkout, setSuggestedWorkout] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -20,9 +26,14 @@ const RecordWorkout = (props) => {
   const [error, setError] = useState({ isError: false, message: '', code: '' });
   const { uid, accessToken } = useSelector((state) => state.auth);
   const { activeRoutine } = useSelector((state) => state.favorites);
-  const { exercises } = useSelector((state) => state.workout);
   const { updated } = useSelector((state) => state.workout);
+  const exercises = useSelector(selectAllExercises);
+
   const dispatch = useDispatch();
+
+  const history = useHistory();
+
+  const { fetchWorkoutById, pushUpdateToFirebase } = utils;
 
   const workoutDateRef = useRef(null);
   workoutDateRef.current = workoutDate;
@@ -32,8 +43,9 @@ const RecordWorkout = (props) => {
   }, []);
 
   useEffect(() => {
-    const unlisten = props.history.listen((location, action) => {
+    const unlisten = history.listen((location, action) => {
       dispatch(resetWorkoutStore());
+      dispatch(clearExercises());
       unlisten();
     });
   });
@@ -48,20 +60,16 @@ const RecordWorkout = (props) => {
 
       if (workoutFirebaseId !== 'Rest') {
         (async () =>
-          await axios
-            .get(
-              `https://workout-81691-default-rtdb.firebaseio.com/workouts/${uid}/${workoutFirebaseId}.json?auth=${accessToken}`,
-              { timeout: 5000 }
-            )
-            .then((res) => {
+          await fetchWorkoutById(uid, accessToken, workoutFirebaseId)
+            .then(({ data }) => {
               setSuggestedWorkout({
-                ...res.data,
+                ...data,
                 firebaseId: workoutFirebaseId,
               });
-              dispatch(setExercises(res.data.exercises));
+              dispatch(setExercises(data.exercises));
               if (loading) setLoading(false);
             })
-            .catch((err) => {
+            .catch(() => {
               setError({
                 isError: true,
                 message: (
@@ -87,6 +95,7 @@ const RecordWorkout = (props) => {
     loading,
     dispatch,
     exercises,
+    fetchWorkoutById,
   ]);
 
   useEffect(() => {
@@ -112,8 +121,6 @@ const RecordWorkout = (props) => {
       setSuggestedWorkout({ ...suggestedWorkout, exercises });
   }, [exercises, suggestedWorkout]);
 
-  useEffect(() => {});
-
   const displayExercises =
     suggestedWorkout &&
     exercises.map((exercise) => (
@@ -129,19 +136,20 @@ const RecordWorkout = (props) => {
 
   const updateWorkoutInFirebase = async () => {
     const workoutFirebaseId = suggestedWorkout.firebaseId;
-    await axios({
-      method: 'put',
-      url: `https://workout-81691-default-rtdb.firebaseio.com/workouts/${uid}/${workoutFirebaseId}.json?auth=${accessToken}`,
-      data: {
-        title: suggestedWorkout.title,
-        targetAreaCode: suggestedWorkout.targetAreaCode,
-        secondaryTargetCode: suggestedWorkout.secondaryTargetCode,
-        targetArea: suggestedWorkout.targetArea,
-        secondaryTargetArea: suggestedWorkout.secondaryTargetArea,
-        exercises,
-      },
-      timeout: 5000,
-    }).catch((err) => {
+    const workoutData = {
+      title: suggestedWorkout.title,
+      targetAreaCode: suggestedWorkout.targetAreaCode,
+      secondaryTargetCode: suggestedWorkout.secondaryTargetCode,
+      targetArea: suggestedWorkout.targetArea,
+      secondaryTargetArea: suggestedWorkout.secondaryTargetArea,
+      exercises,
+    };
+    await pushUpdateToFirebase(
+      uid,
+      accessToken,
+      workoutFirebaseId,
+      workoutData
+    ).catch(() => {
       setError({
         isError: true,
         message: (
@@ -179,17 +187,13 @@ const RecordWorkout = (props) => {
 
   function switchWorkout(workoutId) {
     workoutId
-      ? axios
-          .get(
-            `https://workout-81691-default-rtdb.firebaseio.com/workouts/${uid}/${workoutId}.json?auth=${accessToken}`,
-            { timeout: 5000 }
-          )
-          .then((res) => {
-            setSuggestedWorkout({ ...res.data, firebaseId: workoutId });
-            dispatch(setExercises(res.data.exercises));
+      ? fetchWorkoutById(uid, accessToken, workoutId)
+          .then(({ data }) => {
+            setSuggestedWorkout({ ...data, firebaseId: workoutId });
+            dispatch(setExercises(data.exercises));
             if (error.code === 'noSelectedWorkout') setError(null);
           })
-          .catch((err) => {
+          .catch(() => {
             setError({
               isError: true,
               message: (
@@ -225,7 +229,7 @@ const RecordWorkout = (props) => {
           workout={suggestedWorkout}
           exercises={exercises}
           date={workoutDate}
-          history={props.history}
+          history={history}
           updated={updated}
           updateWorkoutInFirebase={updateWorkoutInFirebase}
         />
@@ -246,6 +250,4 @@ const RecordWorkout = (props) => {
   );
 
   return loading ? <Spinner /> : finalDisplay;
-};
-
-export default RecordWorkout;
+}

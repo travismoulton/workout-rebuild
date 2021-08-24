@@ -15,6 +15,7 @@ import ExerciseDetail from './containers/ExerciseDetail/ExerciseDetail';
 import CreateExercise from './containers/CreateExercise/CreateExercise';
 import CreateWorkout from './containers/CreateWorkout/CreateWorkout';
 import CreateRoutine from './containers/CreateRoutine/CreateRoutine';
+import RecordWorkout from './containers/RecordWorkout/RecordWorkout';
 import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary';
 import './App.css';
 
@@ -87,6 +88,7 @@ function App({ firebase }) {
       <Route path="/create-exercise" component={CreateExercise} />
       <Route path="/create-workout" component={CreateWorkout} />
       <Route path="/create-routine" component={CreateRoutine} />
+      <Route path="/record-workout" component={RecordWorkout} />
       <Route
         path="/exercise/:name"
         render={(routeProps) => (
