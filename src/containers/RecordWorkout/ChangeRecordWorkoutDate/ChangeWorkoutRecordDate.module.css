@@ -1,0 +1,35 @@
+.Btn {
+  width: 12rem;
+}
+
+.Container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.BtnRow {
+  margin-top: 2rem;
+  display: flex;
+  justify-content: space-between;
+  width: 40%;
+}
+
+@media only screen and (max-width: 1400px) {
+  .BtnRow {
+    width: 60%;
+  }
+}
+
+@media only screen and (max-width: 750px) {
+  .BtnRow {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .BtnRow .Btn:not(:last-child) {
+    margin-bottom: 2rem;
+  }
+}

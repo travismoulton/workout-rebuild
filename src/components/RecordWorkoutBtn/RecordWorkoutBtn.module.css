@@ -1,0 +1,33 @@
+.Btn {
+  width: 15rem;
+  margin-top: 2rem;
+}
+
+.ModalBtnWrapper {
+  width: 40%;
+  display: flex;
+  justify-content: space-between;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.ModalBtn {
+  width: 7rem;
+}
+
+@media only screen and (max-width: 1200px) {
+  .ModalBtnWrapper {
+    width: 50%;
+  }
+}
+
+@media only screen and (max-width: 700px) {
+  .ModalBtnWrapper {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .ModalBtnWrapper button:not(:last-child) {
+    margin-bottom: 0.7rem;
+  }
+}

@@ -1,0 +1,26 @@
+.MenuGrouping {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 3rem;
+}
+
+.MenuGrouping button {
+  margin-left: 5rem;
+  width: 20rem;
+}
+
+.CancelBtn {
+  width: 12rem;
+}
+
+@media only screen and (max-width: 1100px) {
+  .MenuGrouping {
+    flex-direction: column;
+  }
+
+  .MenuGrouping button {
+    margin-top: 1rem;
+    margin-left: 0;
+  }
+}
