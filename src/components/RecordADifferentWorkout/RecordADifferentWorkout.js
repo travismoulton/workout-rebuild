@@ -62,7 +62,7 @@ export default function RecordADifferentWorkout(props) {
           setAllWorkouts(workouts);
         }
       })
-      .catch((err) => {
+      .catch(() => {
         setAxiosError({
           ...axiosError,
           isError: true,

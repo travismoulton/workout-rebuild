@@ -1,11 +1,14 @@
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
-import axios from 'axios';
+import { useHistory } from 'react-router';
 
+import { recordWorkoutBtnUtils as utils } from './recordWorkoutBtnUtils';
 import classes from './RecordWorkoutBtn.module.css';
 import Modal from '../UI/Modal/Modal';
 
-const RecordWorkoutBtn = (props) => {
+export default function RecordWorkoutBtn(props) {
+  const { date, updateWorkoutInFirebase, updated, exercises, workout } = props;
+
   const [showModal, setShowModal] = useState(false);
   const [axiosError, setAxiosError] = useState({
     isError: null,
@@ -16,34 +19,33 @@ const RecordWorkoutBtn = (props) => {
     ),
   });
   const { uid, accessToken } = useSelector((state) => state.auth);
+  const history = useHistory();
 
   const recordWorkoutHandler = async () => {
-    axios({
-      method: 'post',
-      url: `https://workout-81691-default-rtdb.firebaseio.com/recordedWorkouts/${uid}.json?auth=${accessToken}`,
-      timeout: 5000,
-      data: {
-        exercises: props.exercises,
-        title: props.workout.title,
-        date: {
-          year: props.date.getFullYear(),
-          month: props.date.getMonth(),
-          day: props.date.getDate(),
-        },
+    const workoutData = {
+      exercises: exercises,
+      title: workout.title,
+      date: {
+        year: date.getFullYear(),
+        month: date.getMonth(),
+        day: date.getDate(),
       },
-    })
+    };
+
+    utils
+      .submitRecordedWorkout(uid, accessToken, workoutData)
       .then(() => {
-        props.history.push({
+        history.push({
           pathname: '/my-profile',
           state: { message: 'Workout Recorded' },
         });
       })
-      .catch((err) => setAxiosError({ ...axiosError, isError: true }));
+      .catch(() => setAxiosError({ ...axiosError, isError: true }));
   };
 
   const closeModalAndSaveWorkout = async () => {
     setShowModal(false);
-    await props.updateWorkoutInFirebase();
+    await updateWorkoutInFirebase();
     recordWorkoutHandler();
   };
 
@@ -85,15 +87,11 @@ const RecordWorkoutBtn = (props) => {
       {modal}
       <button
         className={`GlobalBtn-1 ${classes.Btn}`}
-        onClick={
-          props.updated ? () => setShowModal(true) : recordWorkoutHandler
-        }
+        onClick={updated ? () => setShowModal(true) : recordWorkoutHandler}
       >
         Record workout
       </button>
       {axiosError.isError ? axiosError.message : null}
     </>
   );
-};
-
-export default RecordWorkoutBtn;
+}
