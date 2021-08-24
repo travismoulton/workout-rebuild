@@ -24,10 +24,12 @@ export default function RecordWorkout() {
   const [showRecordDifferentWorkoutModal, setShowRecordDifferentWorkoutModal] =
     useState(false);
   const [error, setError] = useState({ isError: false, message: '', code: '' });
+
   const { uid, accessToken } = useSelector((state) => state.auth);
   const { activeRoutine } = useSelector((state) => state.favorites);
-  const { updated } = useSelector((state) => state.workout);
+
   const exercises = useSelector(selectAllExercises);
+  const { updated } = useSelector((state) => state.workout);
 
   const dispatch = useDispatch();
 
@@ -37,6 +39,9 @@ export default function RecordWorkout() {
 
   const workoutDateRef = useRef(null);
   workoutDateRef.current = workoutDate;
+
+  const exercisesRef = useRef(null);
+  exercisesRef.current = exercises;
 
   useEffect(() => {
     document.title = 'Record Workout';
@@ -227,10 +232,8 @@ export default function RecordWorkout() {
       {suggestedWorkout && exercises.length ? (
         <RecordWorkoutBtn
           workout={suggestedWorkout}
-          exercises={exercises}
           date={workoutDate}
-          history={history}
-          updated={updated}
+          isUpdated={updated}
           updateWorkoutInFirebase={updateWorkoutInFirebase}
         />
       ) : null}

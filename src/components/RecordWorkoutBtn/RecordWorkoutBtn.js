@@ -7,7 +7,7 @@ import classes from './RecordWorkoutBtn.module.css';
 import Modal from '../UI/Modal/Modal';
 
 export default function RecordWorkoutBtn(props) {
-  const { date, updateWorkoutInFirebase, updated, exercises, workout } = props;
+  const { date, updateWorkoutInFirebase, isUpdated, workout } = props;
 
   const [showModal, setShowModal] = useState(false);
   const [axiosError, setAxiosError] = useState({
@@ -23,7 +23,7 @@ export default function RecordWorkoutBtn(props) {
 
   const recordWorkoutHandler = async () => {
     const workoutData = {
-      exercises: exercises,
+      exercises: workout.exercises,
       title: workout.title,
       date: {
         year: date.getFullYear(),
@@ -87,7 +87,7 @@ export default function RecordWorkoutBtn(props) {
       {modal}
       <button
         className={`GlobalBtn-1 ${classes.Btn}`}
-        onClick={updated ? () => setShowModal(true) : recordWorkoutHandler}
+        onClick={isUpdated ? () => setShowModal(true) : recordWorkoutHandler}
       >
         Record workout
       </button>

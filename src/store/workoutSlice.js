@@ -29,6 +29,8 @@ const workoutSlice = createSlice({
         exercise.focus === 'time'
           ? exercise.sets.push({ minutes: 0, seconds: 0 })
           : exercise.sets.push({ weight: 0, reps: 0 });
+
+        state.updated = true;
       }
     },
     resetExerciseFocus(state, action) {
@@ -45,6 +47,8 @@ const workoutSlice = createSlice({
           exercise.sets = [{ weight: 0, reps: 0 }];
           exercise.focus = 'reps';
         }
+
+        state.updated = true;
       }
     },
     updateExerciseData(state, action) {
@@ -52,12 +56,14 @@ const workoutSlice = createSlice({
       const exercise = state.entities[id];
 
       if (exercise) exercise.sets[setIndex] = setData;
+      state.updated = true;
     },
     removeSetFromExercise(state, action) {
       const { id, setIndex } = action.payload;
       const exercise = workoutAdapter.entities[id];
 
       if (exercise) exercise.sets.splice(setIndex, 1);
+      state.updated = true;
     },
     changeExerciseOrder(state, action) {
       const { id, direction } = action.payload;
