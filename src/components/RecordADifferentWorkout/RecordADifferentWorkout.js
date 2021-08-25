@@ -230,7 +230,7 @@ export default function RecordADifferentWorkout(props) {
   );
 
   const modal = (
-    <Modal show={show} modalClosed={() => closeModal()}>
+    <Modal show={show} modalClosed={closeModal}>
       {activeRoutineSelectMenu.elementConfig.options.length ? (
         <div className={classes.MenuGrouping}>
           {routineBasedInput}

@@ -239,17 +239,27 @@ export default function DatePicker({ onChange }) {
 
   return (
     <div className={classes.DatePicker}>
-      <div className={classes.Input} onClick={() => setShowDatePicker(true)}>
+      <div
+        className={classes.Input}
+        onClick={() => setShowDatePicker(true)}
+        data-testid="datePicker"
+      >
         <input
           type="text"
           onChange={updateDateFromInput}
           ref={inputRef}
           placeholder="MM/DD/YYYY"
           className={classes.ClickableInput}
+          value={inputRef.current ? inputRef.current.value.trim() : ''}
+          data-testid="datePickerInput"
         />
       </div>
       {showDatePicker && (
-        <div className={classes.Container} ref={calendarRef}>
+        <div
+          className={classes.Container}
+          ref={calendarRef}
+          data-testid="datePickerContainer"
+        >
           <div className={classes.Container__head}>
             <div className={classes.Container__head__btn}>
               <div
