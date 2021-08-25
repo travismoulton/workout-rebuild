@@ -10,11 +10,11 @@ import {
   createSpy,
 } from '../../shared/testUtils';
 import { recordWorkoutUtils as utils } from './recordWorkoutUtils';
+import { recordADifferentWorkoutUtils as diffUtils } from '../../components/RecordADifferentWorkout/recordADifferentWorkoutUtils';
+import { recordWorkoutBtnUtils as btnUtils } from '../../components/RecordWorkoutBtn/recordWorkoutBtnUtils';
 import * as workoutSlice from '../../store/workoutSlice';
-import { mockWorkout1, mockWorkout2 } from './mock';
+import { workouts } from './mock';
 
-//2: Test that getWorkoutBasedOnDay is functioning
-//3: Terst that the page is loading the proper workout based on day of the week
 //4: Test that if a workout is removed or modified, that an update to Firebase is called
 // This might involve a ton of mocking
 //5: Test that the record a different workout btn brings up the modal.
@@ -24,43 +24,68 @@ import { mockWorkout1, mockWorkout2 } from './mock';
 describe('<RecordWorkout />', () => {
   let mockFetchWorkoutById,
     mockPushUpdate,
-    dummyDispatch,
     mockResetStore,
-    mockClearExercises;
+    mockClearExercises,
+    mockFetchAllWorkouts,
+    mockFetchDiffWorkoutById,
+    mockSubmitRecord;
 
   beforeEach(() => {
-    dummyDispatch = jest.fn();
-    createSpy(reactRedux, 'useDispatch', dummyDispatch);
     mockFetchWorkoutById = createSpy(
       utils,
       'fetchWorkoutById',
-      Promise.resolve(mockWorkout1)
+      Promise.resolve(null)
     );
-    mockPushUpdate = createSpy(utils, 'pushUpdateToFirebase', null);
-    mockResetStore = createSpy(workoutSlice, 'resetWorkoutStore', null);
-    mockClearExercises = createSpy(workoutSlice, 'clearExercises', null);
+    mockPushUpdate = createSpy(
+      utils,
+      'pushUpdateToFirebase',
+      Promise.resolve({})
+    );
+    mockResetStore = createSpy(workoutSlice, 'resetWorkoutStore', {
+      type: 'workoutSlice/resetWorkoutStore',
+    });
+    mockClearExercises = createSpy(workoutSlice, 'clearExercises', {
+      type: 'workoutSlice/clearExercises',
+    });
+    mockFetchAllWorkouts = createSpy(
+      diffUtils,
+      'fetchAllWorkouts',
+      Promise.resolve(workouts.workout1)
+    );
+    mockFetchDiffWorkoutById = createSpy(
+      diffUtils,
+      'fetchWorkoutById',
+      Promise.resolve(workouts.workout2)
+    );
+    mockSubmitRecord = createSpy(
+      btnUtils,
+      'submitRecordedWorkout',
+      Promise.resolve(null)
+    );
   });
 
   afterEach(() => {
     jest.clearAllMocks();
-    dummyDispatch = null;
     mockFetchWorkoutById = null;
     mockPushUpdate = null;
     mockResetStore = null;
     mockClearExercises = null;
+    mockFetchAllWorkouts = null;
+    mockFetchDiffWorkoutById = null;
+    mockSubmitRecord = null;
   });
 
   function setup(activeRoutine) {
     const history = createMemoryHistory();
 
-    const { getByText, getByTestId } = customRender(
+    const { getByText, getByTestId, getAllByTestId } = customRender(
       <Router history={history}>
         <RecordWorkout />
       </Router>,
       { preloadedState: { favorites: { activeRoutine } } }
     );
 
-    return { getByText, getByTestId, history };
+    return { getByText, getByTestId, getAllByTestId, history };
   }
 
   const activeRoutine = {
@@ -75,8 +100,18 @@ describe('<RecordWorkout />', () => {
     ],
   };
 
+  const awaitFetchCalls = async () =>
+    await waitFor(() => {
+      expect(mockFetchWorkoutById).toBeCalled();
+      expect(mockFetchAllWorkouts).toBeCalled();
+      expect(mockFetchDiffWorkoutById).toBeCalledTimes(7);
+    });
+
   test('if the page is redirected, resetStore and clearExercises are dispatched', async () => {
     const { history, getByText } = setup();
+
+    await waitFor(() => expect(mockFetchAllWorkouts).toBeCalled());
+
     expect(getByText('Rest')).toBeInTheDocument();
 
     history.push('/');
@@ -86,9 +121,61 @@ describe('<RecordWorkout />', () => {
   });
 
   test('if a workout in activeRoutine exists for the current day of the week, it is displayed by fault', async () => {
+    const dayOfWeekIndex = new Date().getDay();
+    const workoutKey = activeRoutine.workouts[dayOfWeekIndex];
+
+    mockFetchWorkoutById.mockReturnValue(Promise.resolve(workouts[workoutKey]));
+
     const { getByText } = setup(activeRoutine);
 
-    await waitFor(() => expect(mockFetchWorkoutById).toBeCalled());
-    expect(getByText('workout1')).toBeInTheDocument();
+    await awaitFetchCalls();
+
+    expect(
+      getByText(activeRoutine.workouts[dayOfWeekIndex])
+    ).toBeInTheDocument();
+  });
+
+  test('if there is a change to the workout, pushUpdateToFirebase is called', async () => {
+    const dayOfWeekIndex = new Date().getDay();
+    const workoutKey = activeRoutine.workouts[dayOfWeekIndex];
+
+    mockFetchWorkoutById.mockReturnValue(Promise.resolve(workouts[workoutKey]));
+
+    const { getAllByTestId, getByText } = setup(activeRoutine);
+
+    await awaitFetchCalls();
+
+    const deleteExerciseBtns = getAllByTestId('removeExerciseBtn');
+
+    fireEvent.click(deleteExerciseBtns[0]);
+
+    fireEvent.click(getByText('Record workout'));
+
+    // When the modal pops up asking if you would like to save changes to the workout, click yes
+    fireEvent.click(getByText('Yes'));
+    await waitFor(() => expect(mockPushUpdate).toBeCalled());
+    await waitFor(() => expect(mockSubmitRecord).toBeCalled());
+  });
+
+  test('if there is a change to the workout, pushUpdateToFirebase is not called if the user clicks no on the popup', async () => {
+    const dayOfWeekIndex = new Date().getDay();
+    const workoutKey = activeRoutine.workouts[dayOfWeekIndex];
+
+    mockFetchWorkoutById.mockReturnValue(Promise.resolve(workouts[workoutKey]));
+
+    const { getAllByTestId, getByText } = setup(activeRoutine);
+
+    await awaitFetchCalls();
+
+    const deleteExerciseBtns = getAllByTestId('removeExerciseBtn');
+
+    fireEvent.click(deleteExerciseBtns[0]);
+
+    fireEvent.click(getByText('Record workout'));
+
+    // When the modal pops up asking if you would like to save changes to the workout, click yes
+    fireEvent.click(getByText('No'));
+    await waitFor(() => expect(mockPushUpdate).not.toBeCalled());
+    await waitFor(() => expect(mockSubmitRecord).toBeCalled());
   });
 });

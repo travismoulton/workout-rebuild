@@ -81,6 +81,7 @@ const workoutSlice = createSlice({
     },
     removeExercise(state, action) {
       workoutAdapter.removeOne(state, action.payload);
+      state.updated = true;
     },
     setExercises(state, action) {
       workoutAdapter.addMany(state, action.payload);
