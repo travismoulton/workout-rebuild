@@ -62,6 +62,7 @@ export default function RecordWorkout() {
   const getWorkoutBasedOnDay = useCallback(() => {
     if (activeRoutine) {
       const workoutFirebaseId = activeRoutine.workouts[adjustDateForSunday()];
+      console.log(workoutFirebaseId);
 
       if (workoutFirebaseId !== 'Rest') {
         (async () =>
