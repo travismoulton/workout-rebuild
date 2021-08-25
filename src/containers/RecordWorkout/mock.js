@@ -1,15 +1,17 @@
-export const mockWorkout1 = {
+export const differentWorkout = {
   data: {
-    exercises: [
-      {
-        focus: 'reps',
-        id: 'wokout1_exercise',
-        name: 'wokout1_exercise',
-        sets: [{ reps: 15, weight: 100 }],
-      },
-    ],
-    title: 'workout1',
-    firebaseId: 'firebaseId1',
+    differentWorkout: {
+      exercises: [
+        {
+          focus: 'reps',
+          id: 'differentWorkout_exercise',
+          name: 'differentWorkout_exercise',
+          sets: [{ reps: 15, weight: 100 }],
+        },
+      ],
+      title: 'differentWorkout',
+      firebaseId: 'differentFirebaseId',
+    },
   },
 };
 

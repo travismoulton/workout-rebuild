@@ -13,10 +13,8 @@ import { recordWorkoutUtils as utils } from './recordWorkoutUtils';
 import { recordADifferentWorkoutUtils as diffUtils } from '../../components/RecordADifferentWorkout/recordADifferentWorkoutUtils';
 import { recordWorkoutBtnUtils as btnUtils } from '../../components/RecordWorkoutBtn/recordWorkoutBtnUtils';
 import * as workoutSlice from '../../store/workoutSlice';
-import { workouts } from './mock';
+import { differentWorkout, workouts } from './mock';
 
-//4: Test that if a workout is removed or modified, that an update to Firebase is called
-// This might involve a ton of mocking
 //5: Test that the record a different workout btn brings up the modal.
 // -> Also test the functionality? May not be necesary?
 //6: Test with a call to change the date, that the suggested workout is updated
@@ -50,12 +48,12 @@ describe('<RecordWorkout />', () => {
     mockFetchAllWorkouts = createSpy(
       diffUtils,
       'fetchAllWorkouts',
-      Promise.resolve(workouts.workout1)
+      Promise.resolve(differentWorkout)
     );
     mockFetchDiffWorkoutById = createSpy(
       diffUtils,
       'fetchWorkoutById',
-      Promise.resolve(workouts.workout2)
+      Promise.resolve(differentWorkout)
     );
     mockSubmitRecord = createSpy(
       btnUtils,
@@ -78,14 +76,15 @@ describe('<RecordWorkout />', () => {
   function setup(activeRoutine) {
     const history = createMemoryHistory();
 
-    const { getByText, getByTestId, getAllByTestId } = customRender(
-      <Router history={history}>
-        <RecordWorkout />
-      </Router>,
-      { preloadedState: { favorites: { activeRoutine } } }
-    );
+    const { getByText, getByTestId, getAllByTestId, getByLabelText } =
+      customRender(
+        <Router history={history}>
+          <RecordWorkout />
+        </Router>,
+        { preloadedState: { favorites: { activeRoutine } } }
+      );
 
-    return { getByText, getByTestId, getAllByTestId, history };
+    return { getByText, getByTestId, getAllByTestId, getByLabelText, history };
   }
 
   const activeRoutine = {
@@ -177,5 +176,24 @@ describe('<RecordWorkout />', () => {
     fireEvent.click(getByText('No'));
     await waitFor(() => expect(mockPushUpdate).not.toBeCalled());
     await waitFor(() => expect(mockSubmitRecord).toBeCalled());
+  });
+
+  test('when the user clicks record a different workout, the modal appears', async () => {
+    const dayOfWeekIndex = new Date().getDay();
+    const workoutKey = activeRoutine.workouts[dayOfWeekIndex];
+
+    mockFetchWorkoutById.mockReturnValue(Promise.resolve(workouts[workoutKey]));
+
+    const { getByText, getByLabelText } = setup(activeRoutine);
+
+    await awaitFetchCalls();
+
+    fireEvent.click(getByText('Record a different workout today'));
+
+    const select = getByLabelText('Choose from active routine');
+
+    fireEvent.focus(select);
+    fireEvent.keyDown(select, { keyCoode: 40 });
+    fireEvent.click(getByText('differentWorkout'));
   });
 });
