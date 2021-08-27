@@ -144,6 +144,7 @@ export default function RecordADifferentWorkout(props) {
         value: workout.firebaseId,
         label: workout.title,
       }));
+
       setAllWorkoutSelectMenu({
         ...allWorkoutSelectMenu,
         elementConfig: {

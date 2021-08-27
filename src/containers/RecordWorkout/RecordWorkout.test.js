@@ -8,6 +8,7 @@ import {
   fireEvent,
   waitFor,
   createSpy,
+  act,
 } from '../../shared/testUtils';
 import { recordWorkoutUtils as utils } from './recordWorkoutUtils';
 import { recordADifferentWorkoutUtils as diffUtils } from '../../components/RecordADifferentWorkout/recordADifferentWorkoutUtils';
@@ -76,15 +77,27 @@ describe('<RecordWorkout />', () => {
   function setup(activeRoutine) {
     const history = createMemoryHistory();
 
-    const { getByText, getByTestId, getAllByTestId, getByLabelText } =
-      customRender(
-        <Router history={history}>
-          <RecordWorkout />
-        </Router>,
-        { preloadedState: { favorites: { activeRoutine } } }
-      );
+    const {
+      getByText,
+      getByTestId,
+      getAllByTestId,
+      getByLabelText,
+      getAllByText,
+    } = customRender(
+      <Router history={history}>
+        <RecordWorkout />
+      </Router>,
+      { preloadedState: { favorites: { activeRoutine } } }
+    );
 
-    return { getByText, getByTestId, getAllByTestId, getByLabelText, history };
+    return {
+      getByText,
+      getByTestId,
+      getAllByTestId,
+      getByLabelText,
+      getAllByText,
+      history,
+    };
   }
 
   const activeRoutine = {
@@ -184,16 +197,38 @@ describe('<RecordWorkout />', () => {
 
     mockFetchWorkoutById.mockReturnValue(Promise.resolve(workouts[workoutKey]));
 
-    const { getByText, getByLabelText } = setup(activeRoutine);
+    const { getByText, getByLabelText, getAllByText } = setup(activeRoutine);
 
     await awaitFetchCalls();
 
     fireEvent.click(getByText('Record a different workout today'));
 
-    const select = getByLabelText('Choose from active routine');
-
+    const select = getByLabelText('Choose from all your workouts');
     fireEvent.focus(select);
-    fireEvent.keyDown(select, { keyCoode: 40 });
+    fireEvent.keyDown(select, { keyCode: 40 });
     fireEvent.click(getByText('differentWorkout'));
+
+    const chooseWorkoutBtns = getAllByText('Choose workout');
+    act(() => fireEvent.click(chooseWorkoutBtns[0]));
+
+    fireEvent.click(getByText('Record workout'));
+
+    const date = new Date();
+    const expectedDate = {
+      month: date.getMonth(),
+      day: date.getDate(),
+      year: date.getFullYear(),
+    };
+
+    const expectedObject = {
+      date: { ...expectedDate },
+      exercises: differentWorkout.data.differentWorkout.exercises,
+    };
+
+    expect(mockSubmitRecord).toBeCalledWith(
+      null,
+      null,
+      expect.objectContaining(expectedObject)
+    );
   });
 });
