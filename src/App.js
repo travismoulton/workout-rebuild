@@ -4,6 +4,11 @@ import { Switch, Route, withRouter, useHistory } from 'react-router-dom';
 
 import { authSuccess, authLogout } from './store/authSlice';
 import { fetchFavorites, fetchActiveRoutine } from './store/favoritesSlice';
+import {
+  fetchWorkouts,
+  fetchRoutines,
+  fetchRecords,
+} from './store/userProfileSlice';
 import { FirebaseContext } from './components/Firebase/index';
 import Layout from './components/Layout/Layout';
 import Search from './containers/Search/Search';
@@ -41,11 +46,13 @@ function App({ firebase }) {
   }, [authUser, isAuthenticated, dispatch, inAuth, user]);
 
   useEffect(() => {
-    if (user) dispatch(fetchFavorites({ uid, accessToken }));
-  }, [user, dispatch, uid, accessToken]);
-
-  useEffect(() => {
-    if (user) dispatch(fetchActiveRoutine({ uid, accessToken }));
+    if (user) {
+      dispatch(fetchFavorites({ uid, accessToken }));
+      dispatch(fetchActiveRoutine({ uid, accessToken }));
+      dispatch(fetchWorkouts({ uid, accessToken }));
+      dispatch(fetchRoutines({ uid, accessToken }));
+      dispatch(fetchRecords({ uid, accessToken }));
+    }
   }, [user, dispatch, uid, accessToken]);
 
   const history = useHistory();

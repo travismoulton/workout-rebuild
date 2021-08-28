@@ -19,11 +19,13 @@ export const submitWorkoutBtnUtils = {
   },
 
   createWorkout: async function (uid, accessToken, workoutData) {
-    await axios
+    const res = await axios
       .post(`workouts/${uid}.json?auth=${accessToken}`, workoutData)
       .catch((err) => {
         throw new Error();
       });
+
+    return res.data.name;
   },
 
   updateWorkout: async function (uid, accessToken, firebaseId, workoutData) {
@@ -35,5 +37,7 @@ export const submitWorkoutBtnUtils = {
       .catch((err) => {
         throw new Error();
       });
+
+    return null;
   },
 };

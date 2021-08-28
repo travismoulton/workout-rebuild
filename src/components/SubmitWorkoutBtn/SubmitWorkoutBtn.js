@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 
+import { addWorkout } from '../../store/userProfileSlice';
 import {
   resetWorkoutStore,
   clearExercises,
@@ -113,7 +114,10 @@ export default function SubmitWorkoutBtn(props) {
         ? createWorkout(uid, accessToken, workoutData)
         : updateWorkout(uid, accessToken, firebaseId, workoutData);
 
-    await pushDataToFirebase().catch(() => setAxiosError());
+    const workoutId = await pushDataToFirebase().catch(() => setAxiosError());
+
+    // Only dispatch if a new workout is created. Update workout returns null
+    if (workoutId) dispatch(addWorkout(workoutId));
 
     dispatch(clearExercises());
     dispatch(resetWorkoutStore());
