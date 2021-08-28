@@ -210,6 +210,7 @@ export default function RecordADifferentWorkout(props) {
     } else if (menu === 'allWorkouts') {
       switchWorkout(allWorkoutSelectMenu.value);
       setAllWorkoutSelectMenu({ ...allWorkoutSelectMenu, displayValue: null });
+      console.log('switchWorkoutAndCloseModal');
     }
     closeModal();
   };

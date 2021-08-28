@@ -38,10 +38,7 @@ export default function RecordWorkout() {
   const { fetchWorkoutById, pushUpdateToFirebase } = utils;
 
   const workoutDateRef = useRef(null);
-  workoutDateRef.current = workoutDate;
-
-  const exercisesRef = useRef(null);
-  exercisesRef.current = exercises;
+  if (!workoutDateRef.current) workoutDateRef.current = workoutDate;
 
   useEffect(() => {
     document.title = 'Record Workout';
@@ -64,28 +61,27 @@ export default function RecordWorkout() {
       const workoutFirebaseId = activeRoutine.workouts[adjustDateForSunday()];
 
       if (workoutFirebaseId !== 'Rest') {
-        (async () =>
-          await fetchWorkoutById(uid, accessToken, workoutFirebaseId)
-            .then(({ data }) => {
-              setSuggestedWorkout({
-                ...data,
-                firebaseId: workoutFirebaseId,
-              });
-              dispatch(setExercises(data.exercises));
-              if (loading) setLoading(false);
-            })
-            .catch(() => {
-              setError({
-                isError: true,
-                message: (
-                  <p>
-                    Sorry, we can't load your workouts right now. Please refresh
-                    the page or try again later
-                  </p>
-                ),
-                code: 'activeRoutineError',
-              });
-            }))();
+        fetchWorkoutById(uid, accessToken, workoutFirebaseId)
+          .then(({ data }) => {
+            setSuggestedWorkout({
+              ...data,
+              firebaseId: workoutFirebaseId,
+            });
+            dispatch(setExercises(data.exercises));
+            if (loading) setLoading(false);
+          })
+          .catch(() => {
+            setError({
+              isError: true,
+              message: (
+                <p>
+                  Sorry, we can't load your workouts right now. Please refresh
+                  the page or try again later
+                </p>
+              ),
+              code: 'activeRoutineError',
+            });
+          });
       } else if (workoutFirebaseId === 'Rest') {
         setSuggestedWorkout(null);
         if (exercises.length) dispatch(setExercises([]));
@@ -108,7 +104,7 @@ export default function RecordWorkout() {
       getWorkoutBasedOnDay();
       workoutDateRef.current = workoutDate;
     }
-  }, [getWorkoutBasedOnDay, workoutDate, dispatch, suggestedWorkout]);
+  }, [getWorkoutBasedOnDay, workoutDate, suggestedWorkout]);
 
   useEffect(() => {
     if (!suggestedWorkout) {

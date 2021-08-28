@@ -1,4 +1,3 @@
-import * as reactRedux from 'react-redux';
 import { Router } from 'react-router-dom';
 import { createMemoryHistory } from 'history';
 
@@ -8,17 +7,12 @@ import {
   fireEvent,
   waitFor,
   createSpy,
-  act,
 } from '../../shared/testUtils';
 import { recordWorkoutUtils as utils } from './recordWorkoutUtils';
 import { recordADifferentWorkoutUtils as diffUtils } from '../../components/RecordADifferentWorkout/recordADifferentWorkoutUtils';
 import { recordWorkoutBtnUtils as btnUtils } from '../../components/RecordWorkoutBtn/recordWorkoutBtnUtils';
 import * as workoutSlice from '../../store/workoutSlice';
 import { differentWorkout, workouts } from './mock';
-
-//5: Test that the record a different workout btn brings up the modal.
-// -> Also test the functionality? May not be necesary?
-//6: Test with a call to change the date, that the suggested workout is updated
 
 describe('<RecordWorkout />', () => {
   let mockFetchWorkoutById,
@@ -119,6 +113,8 @@ describe('<RecordWorkout />', () => {
       expect(mockFetchDiffWorkoutById).toBeCalledTimes(7);
     });
 
+  const adjustForSunday = (dayIndex) => (dayIndex === 0 ? 6 : dayIndex - 1);
+
   test('if the page is redirected, resetStore and clearExercises are dispatched', async () => {
     const { history, getByText } = setup();
 
@@ -134,7 +130,7 @@ describe('<RecordWorkout />', () => {
 
   test('if a workout in activeRoutine exists for the current day of the week, it is displayed by fault', async () => {
     const dayOfWeekIndex = new Date().getDay();
-    const workoutKey = activeRoutine.workouts[dayOfWeekIndex];
+    const workoutKey = activeRoutine.workouts[adjustForSunday(dayOfWeekIndex)];
 
     mockFetchWorkoutById.mockReturnValue(Promise.resolve(workouts[workoutKey]));
 
@@ -143,13 +139,13 @@ describe('<RecordWorkout />', () => {
     await awaitFetchCalls();
 
     expect(
-      getByText(activeRoutine.workouts[dayOfWeekIndex])
+      getByText(activeRoutine.workouts[adjustForSunday(dayOfWeekIndex)])
     ).toBeInTheDocument();
   });
 
   test('if there is a change to the workout, pushUpdateToFirebase is called', async () => {
     const dayOfWeekIndex = new Date().getDay();
-    const workoutKey = activeRoutine.workouts[dayOfWeekIndex];
+    const workoutKey = activeRoutine.workouts[adjustForSunday(dayOfWeekIndex)];
 
     mockFetchWorkoutById.mockReturnValue(Promise.resolve(workouts[workoutKey]));
 
@@ -171,7 +167,7 @@ describe('<RecordWorkout />', () => {
 
   test('if there is a change to the workout, pushUpdateToFirebase is not called if the user clicks no on the popup', async () => {
     const dayOfWeekIndex = new Date().getDay();
-    const workoutKey = activeRoutine.workouts[dayOfWeekIndex];
+    const workoutKey = activeRoutine.workouts[adjustForSunday(dayOfWeekIndex)];
 
     mockFetchWorkoutById.mockReturnValue(Promise.resolve(workouts[workoutKey]));
 
@@ -191,9 +187,9 @@ describe('<RecordWorkout />', () => {
     await waitFor(() => expect(mockSubmitRecord).toBeCalled());
   });
 
-  test('when the user clicks record a different workout, the modal appears', async () => {
+  test('when the user clicks record a different workout, the modal appears and switchWorkout is called when the user chooses a workout', async () => {
     const dayOfWeekIndex = new Date().getDay();
-    const workoutKey = activeRoutine.workouts[dayOfWeekIndex];
+    const workoutKey = activeRoutine.workouts[adjustForSunday(dayOfWeekIndex)];
 
     mockFetchWorkoutById.mockReturnValue(Promise.resolve(workouts[workoutKey]));
 
@@ -209,26 +205,38 @@ describe('<RecordWorkout />', () => {
     fireEvent.click(getByText('differentWorkout'));
 
     const chooseWorkoutBtns = getAllByText('Choose workout');
-    act(() => fireEvent.click(chooseWorkoutBtns[0]));
+    await waitFor(() => fireEvent.click(chooseWorkoutBtns[1]));
 
-    fireEvent.click(getByText('Record workout'));
+    // Inside RecordWorkout, check that switchWorkout is being called the correct workoutId
+    expect(mockFetchWorkoutById).toBeCalledWith(null, null, 'differentWorkout');
+  });
 
-    const date = new Date();
-    const expectedDate = {
-      month: date.getMonth(),
-      day: date.getDate(),
-      year: date.getFullYear(),
+  test('when the user changes the date, the correct workout is populated', async () => {
+    const dayOfWeekIndex = new Date().getDay();
+    const workoutKey = activeRoutine.workouts[adjustForSunday(dayOfWeekIndex)];
+
+    mockFetchWorkoutById.mockReturnValue(Promise.resolve(workouts[workoutKey]));
+
+    const { getByText, getByTestId } = setup(activeRoutine);
+
+    await awaitFetchCalls();
+
+    fireEvent.click(getByText('Record a workout for a different day'));
+
+    const determineExpectedWorkout = () => {
+      const today = new Date();
+      const workoutDate = new Date(today.getFullYear(), today.getMonth(), 25);
+      const workoutDayOfTheWeekIndex = adjustForSunday(workoutDate.getDay());
+
+      return activeRoutine.workouts[workoutDayOfTheWeekIndex];
     };
 
-    const expectedObject = {
-      date: { ...expectedDate },
-      exercises: differentWorkout.data.differentWorkout.exercises,
-    };
+    const expectedWorkout = determineExpectedWorkout();
 
-    expect(mockSubmitRecord).toBeCalledWith(
-      null,
-      null,
-      expect.objectContaining(expectedObject)
-    );
+    fireEvent.click(getByTestId('datePicker'));
+    fireEvent.click(getByText(25));
+    await waitFor(() => fireEvent.click(getByText('Change Date')));
+
+    expect(mockFetchWorkoutById).toBeCalledWith(null, null, expectedWorkout);
   });
 });
