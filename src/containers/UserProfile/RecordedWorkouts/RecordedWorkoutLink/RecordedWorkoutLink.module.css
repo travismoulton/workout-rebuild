@@ -1,0 +1,27 @@
+.Record {
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  border: 1px solid #eee;
+  color: #000;
+  width: 75rem;
+}
+
+.Link {
+  text-decoration: none;
+}
+
+.TopRow {
+  display: flex;
+  justify-content: center;
+}
+
+.FlexRow {
+  display: flex;
+  justify-content: space-around;
+}
+
+.BtnRow {
+  display: flex;
+  justify-content: space-evenly;
+}

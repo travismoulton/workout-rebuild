@@ -1,0 +1,8 @@
+.Wrapper {
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  border: 1px solid #eee;
+  color: #000;
+  width: 75rem;
+}
