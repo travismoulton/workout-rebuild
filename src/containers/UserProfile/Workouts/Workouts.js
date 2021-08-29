@@ -1,66 +1,41 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
 
 import WorkoutLink from './WorkoutLink/WorkoutLink';
 import classes from '../UserProfile.module.css';
-import { setWorkouts, toggleRoutineRefresh } from '../../../store/actions';
+import { workoutsUtils as utils } from './workoutsUtils';
+import {
+  selectWorkouts,
+  selectRoutines,
+  removeWorkout,
+  clearRoutines,
+  fetchRoutines,
+} from '../../../store/userProfileSlice';
 
-const Workouts = (props) => {
+export default function Workouts(props) {
+  const {
+    toggleError,
+    setModalContent,
+    toggleModal,
+    triggerWorkoutsShowing,
+    showWorkouts,
+  } = props;
+
   const [initialFetchCompleted, setInitialFetchCompleted] = useState(false);
   const [workoutDeleted, setWorkoutDeleted] = useState(false);
 
-  const { user, uid, accessToken } = useSelector((state) => state.auth);
-  const { workouts, routines } = useSelector((state) => state.userProfile);
+  const { uid, accessToken } = useSelector((state) => state.auth);
+  const routines = useSelector(selectRoutines);
+  const workouts = useSelector(selectWorkouts);
+
   const dispatch = useDispatch();
 
-  const fetchWorkouts = useCallback(() => {
-    axios
-      .get(
-        `https://workout-81691-default-rtdb.firebaseio.com/workouts/${uid}.json?auth=${accessToken}`,
-        { timeout: 5000 }
-      )
-      .then((res) => {
-        if (res.data) {
-          const tempArr = [];
-          for (const key in res.data)
-            tempArr.push({ ...res.data[key], firebaseId: key });
-          dispatch(setWorkouts(tempArr));
-        } else if (!res.data) {
-          dispatch(setWorkouts(null));
-        }
-      })
-      .catch((err) => {
-        props.toggleError();
-      });
-  }, [uid, accessToken, dispatch, props]);
+  const { deleteWorkout, removeWorkoutFromRoutine } = utils;
 
-  useEffect(() => {
-    if (!initialFetchCompleted && !props.isError) {
-      fetchWorkouts();
-      setInitialFetchCompleted(true);
-      props.setFetchCompleted();
-    }
-  }, [initialFetchCompleted, fetchWorkouts, props]);
-
-  useEffect(() => {
-    if (workoutDeleted) {
-      fetchWorkouts();
-      setWorkoutDeleted(false);
-    }
-  }, [workoutDeleted, fetchWorkouts]);
-
-  const deleteWorkout = async (firebaseId) => {
-    await axios
-      .delete(
-        `https://workout-81691-default-rtdb.firebaseio.com/workouts/${uid}/${firebaseId}.json?auth=${accessToken}`,
-        { timeout: 5000 }
-      )
-      .then(() => setWorkoutDeleted(true))
-      .catch((err) => {
-        props.toggleError();
-      });
+  const deleteWorkoutHandler = (firebaseId) => {
+    deleteWorkout(uid, accessToken, firebaseId);
+    removeWorkout(firebaseId);
   };
 
   const checkIfWorkoutBelongsToRoutine = (firebaseId) =>
@@ -77,21 +52,26 @@ const Workouts = (props) => {
       const updatedWorkouts = [...routinesToAlter[i].workouts];
       updatedWorkouts[updatedWorkouts.indexOf(firebaseId)] = 'Rest';
 
-      await axios({
-        method: 'patch',
-        url: `https://workout-81691-default-rtdb.firebaseio.com/routines/${user.authUser.uid}/${routinesToAlter[i].firebaseId}.json?auth=${accessToken}`,
-        data: { workouts: updatedWorkouts },
-        timeout: 5000,
-      }).catch((err) => {
-        props.toggleError();
-      });
+      const routineData = { ...routinesToAlter[i], workouts: updatedWorkouts };
+
+      await removeWorkoutFromRoutine(
+        uid,
+        accessToken,
+        firebaseId,
+        routineData
+      ).catch(() => toggleError());
     }
   };
 
+  const refreshRoutines = () => {
+    dispatch(clearRoutines);
+    dispatch(fetchRoutines);
+  };
+
   const deleteWorkoutAndRemoveHandler = async (firebaseId) => {
-    deleteWorkout(firebaseId);
+    deleteWorkoutHandler(firebaseId);
     await removeWorkoutFromAllRoutines(firebaseId);
-    dispatch(toggleRoutineRefresh());
+    refreshRoutines();
   };
 
   const workoutLinks = workouts ? (
@@ -107,9 +87,9 @@ const Workouts = (props) => {
         deleteWorkoutAndRemove={() =>
           deleteWorkoutAndRemoveHandler(workout.firebaseId)
         }
-        deleteWorkout={() => deleteWorkout(workout.firebaseId)}
-        setModalContent={(jsx) => props.setModalContent(jsx)}
-        toggleModal={props.toggleModal}
+        deleteWorkout={() => deleteWorkoutHandler(workout.firebaseId)}
+        setModalContent={(jsx) => setModalContent(jsx)}
+        toggleModal={toggleModal}
       />
     ))
   ) : (
@@ -120,17 +100,15 @@ const Workouts = (props) => {
 
   return (
     <div className={classes.Container}>
-      <div className={classes.Header} onClick={props.triggerWorkoutsShowing}>
+      <div className={classes.Header} onClick={triggerWorkoutsShowing}>
         <h3>My Workouts</h3>
         <div
           className={`${classes.Arrow} ${
-            props.showWorkouts ? 'ArrowDownWhite' : 'ArrowRightWhite'
+            showWorkouts ? 'ArrowDownWhite' : 'ArrowRightWhite'
           }`}
         ></div>
       </div>
-      {props.showWorkouts && workoutLinks}
+      {showWorkouts && workoutLinks}
     </div>
   );
-};
-
-export default Workouts;
+}

@@ -76,6 +76,25 @@ const profileSlice = createSlice({
       const record = { id: `record-${id}`, recordId: id, ...data };
       profileAdapter.addOne(state, record);
     },
+    removeWorkout(state, action) {
+      const id = action.payload;
+      const entityId = `workout-${id}`;
+      profileAdapter.removeOne(state, entityId);
+    },
+    removeRoutine(state, action) {
+      const id = action.payload;
+      const entityId = `routine-${id}`;
+      profileAdapter.removeOne(state, entityId);
+    },
+    removeRecord(state, action) {
+      const id = action.payload;
+      const entityId = `record-${id}`;
+      profileAdapter.removeOne(state, entityId);
+    },
+    clearRoutines(state, action) {
+      const routines = state.ids.filter((id) => id.startsWith('routine'));
+      profileAdapter.removeMany(state, routines);
+    },
   },
   extraReducers: {
     [fetchWorkouts.fulfilled]: (state, action) => {
@@ -107,6 +126,14 @@ export const selectRecords = createSelector(
   (profile) => profile.filter((obj) => obj.id.startsWith('record'))
 );
 
-export const { addWorkout, addRoutine, addRecord } = profileSlice.actions;
+export const {
+  addWorkout,
+  addRoutine,
+  addRecord,
+  removeWorkout,
+  removeRoutine,
+  removeRecord,
+  clearRoutines,
+} = profileSlice.actions;
 
 export default profileSlice.reducer;
