@@ -66,6 +66,16 @@ const profileSlice = createSlice({
       const workout = { id: `workout-${id}`, workoutId: id };
       profileAdapter.addOne(state, workout);
     },
+    addRoutine(state, action) {
+      const id = action.payload;
+      const routine = { id: `routine-${id}`, routineId: id };
+      profileAdapter.addOne(state, routine);
+    },
+    addRecord(state, action) {
+      const id = action.payload;
+      const record = { id: `record-${id}`, recordId: id };
+      profileAdapter.addOne(state, record);
+    },
   },
   extraReducers: {
     [fetchWorkouts.fulfilled]: (state, action) => {
@@ -97,6 +107,6 @@ export const selectRecords = createSelector(
   (profile) => profile.filter((obj) => obj.id.startsWith('record'))
 );
 
-export const { addWorkout } = profileSlice.actions;
+export const { addWorkout, addRoutine, addRecord } = profileSlice.actions;
 
 export default profileSlice.reducer;

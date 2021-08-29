@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useHistory } from 'react-router';
 
+import { addRoutine } from '../../store/userProfileSlice';
 import { submitRoutineBtnUtils as utils } from './submitRoutineBtnUtils';
 import { fetchActiveRoutine } from '../../store/favoritesSlice';
 
@@ -125,7 +126,10 @@ export default function SubmitRoutineBtn(props) {
         ? createRoutine(routineData, uid, accessToken)
         : updateRoutine(routineData, uid, accessToken, firebaseId);
 
-    await pushDataToFirebase().catch(() => setAxiosError());
+    // Add the routineId to the profile store if a new routine has been created.
+    // update routine returns null and will fail the if check
+    const routineId = await pushDataToFirebase().catch(() => setAxiosError());
+    if (routineId) dispatch(addRoutine(routineId));
 
     if (shouldBeActiveRoutine)
       dispatch(fetchActiveRoutine({ uid, accessToken }));

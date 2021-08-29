@@ -1,7 +1,8 @@
 import { useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { useHistory } from 'react-router';
 
+import { addRecord } from '../../store/userProfileSlice';
 import { recordWorkoutBtnUtils as utils } from './recordWorkoutBtnUtils';
 import classes from './RecordWorkoutBtn.module.css';
 import Modal from '../UI/Modal/Modal';
@@ -20,6 +21,7 @@ export default function RecordWorkoutBtn(props) {
   });
   const { uid, accessToken } = useSelector((state) => state.auth);
   const history = useHistory();
+  const dispatch = useDispatch();
 
   const recordWorkoutHandler = async () => {
     const workoutData = {
@@ -34,7 +36,10 @@ export default function RecordWorkoutBtn(props) {
 
     utils
       .submitRecordedWorkout(uid, accessToken, workoutData)
-      .then(() => {
+      .then((recordId) => {
+        console.log(recordId);
+        dispatch(addRecord(recordId));
+
         history.push({
           pathname: '/my-profile',
           state: { message: 'Workout Recorded' },

@@ -14,12 +14,13 @@ export const submitRoutineBtnUtils = {
     return nameTaken;
   },
   createRoutine: async function (routineData, uid, accessToken) {
-    console.log(routineData);
-    await axios
+    const { data } = await axios
       .post(`routines/${uid}.json?auth=${accessToken}`, routineData)
       .catch(() => {
         throw new Error();
       });
+
+    return data.name;
   },
   updateRoutine: async function (routineData, uid, accessToken, firebaseId) {
     await axios
@@ -30,5 +31,7 @@ export const submitRoutineBtnUtils = {
       .catch(() => {
         throw new Error();
       });
+
+    return null;
   },
 };

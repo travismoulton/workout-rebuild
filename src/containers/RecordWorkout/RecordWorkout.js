@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useHistory } from 'react-router';
 
@@ -50,11 +50,27 @@ export default function RecordWorkout() {
       dispatch(clearExercises());
       unlisten();
     });
+
+    return unlisten;
   });
 
   const adjustDateForSunday = useCallback(() => {
     return workoutDate.getDay() === 0 ? 6 : workoutDate.getDay() - 1;
   }, [workoutDate]);
+
+  const activeRoutineError = useMemo(
+    () => ({
+      isError: true,
+      message: (
+        <p>
+          Sorry, we can't load your workouts right now. Please refresh the page
+          or try again later
+        </p>
+      ),
+      code: 'activeRoutineError',
+    }),
+    []
+  );
 
   const getWorkoutBasedOnDay = useCallback(() => {
     if (activeRoutine) {
@@ -71,16 +87,7 @@ export default function RecordWorkout() {
             if (loading) setLoading(false);
           })
           .catch(() => {
-            setError({
-              isError: true,
-              message: (
-                <p>
-                  Sorry, we can't load your workouts right now. Please refresh
-                  the page or try again later
-                </p>
-              ),
-              code: 'activeRoutineError',
-            });
+            setError(activeRoutineError);
           });
       } else if (workoutFirebaseId === 'Rest') {
         setSuggestedWorkout(null);
@@ -97,6 +104,7 @@ export default function RecordWorkout() {
     dispatch,
     exercises,
     fetchWorkoutById,
+    activeRoutineError,
   ]);
 
   useEffect(() => {
