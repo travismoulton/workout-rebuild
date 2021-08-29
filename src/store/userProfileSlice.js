@@ -19,7 +19,7 @@ export const fetchWorkouts = createAsyncThunk(
     const workouts = [];
 
     for (const key in data)
-      workouts.push({ id: `workout-${key}`, workoutId: key });
+      workouts.push({ id: `workout-${key}`, workoutId: key, ...data[key] });
 
     return workouts;
   }
@@ -35,7 +35,7 @@ export const fetchRoutines = createAsyncThunk(
     const routines = [];
 
     for (const key in data)
-      routines.push({ id: `routine-${key}`, routineId: key });
+      routines.push({ id: `routine-${key}`, routineId: key, ...data[key] });
 
     return routines;
   }
@@ -51,7 +51,7 @@ export const fetchRecords = createAsyncThunk(
     const records = [];
 
     for (const key in data)
-      records.push({ id: `record-${key}`, recordId: key });
+      records.push({ id: `record-${key}`, recordId: key, ...data[key] });
 
     return records;
   }
@@ -62,18 +62,18 @@ const profileSlice = createSlice({
   initialState: profileAdapter.getInitialState(),
   reducers: {
     addWorkout(state, action) {
-      const id = action.payload;
-      const workout = { id: `workout-${id}`, workoutId: id };
+      const { id, data } = action.payload;
+      const workout = { id: `workout-${id}`, workoutId: id, ...data };
       profileAdapter.addOne(state, workout);
     },
     addRoutine(state, action) {
-      const id = action.payload;
-      const routine = { id: `routine-${id}`, routineId: id };
+      const { id, data } = action.payload;
+      const routine = { id: `routine-${id}`, routineId: id, ...data };
       profileAdapter.addOne(state, routine);
     },
     addRecord(state, action) {
-      const id = action.payload;
-      const record = { id: `record-${id}`, recordId: id };
+      const { id, data } = action.payload;
+      const record = { id: `record-${id}`, recordId: id, ...data };
       profileAdapter.addOne(state, record);
     },
   },

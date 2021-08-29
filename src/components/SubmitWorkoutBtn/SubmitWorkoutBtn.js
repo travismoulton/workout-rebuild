@@ -117,7 +117,7 @@ export default function SubmitWorkoutBtn(props) {
     const workoutId = await pushDataToFirebase().catch(() => setAxiosError());
 
     // Only dispatch if a new workout is created. Update workout returns null
-    if (workoutId) dispatch(addWorkout(workoutId));
+    if (workoutId) dispatch(addWorkout({ id: workoutId, data: workoutData }));
 
     dispatch(clearExercises());
     dispatch(resetWorkoutStore());

@@ -37,8 +37,7 @@ export default function RecordWorkoutBtn(props) {
     utils
       .submitRecordedWorkout(uid, accessToken, workoutData)
       .then((recordId) => {
-        console.log(recordId);
-        dispatch(addRecord(recordId));
+        dispatch(addRecord({ id: recordId, data: workoutData }));
 
         history.push({
           pathname: '/my-profile',

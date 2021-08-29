@@ -129,7 +129,7 @@ export default function SubmitRoutineBtn(props) {
     // Add the routineId to the profile store if a new routine has been created.
     // update routine returns null and will fail the if check
     const routineId = await pushDataToFirebase().catch(() => setAxiosError());
-    if (routineId) dispatch(addRoutine(routineId));
+    if (routineId) dispatch(addRoutine({ id: routineId, data: routineData }));
 
     if (shouldBeActiveRoutine)
       dispatch(fetchActiveRoutine({ uid, accessToken }));
