@@ -22,9 +22,6 @@ export default function Workouts(props) {
     showWorkouts,
   } = props;
 
-  const [initialFetchCompleted, setInitialFetchCompleted] = useState(false);
-  const [workoutDeleted, setWorkoutDeleted] = useState(false);
-
   const { uid, accessToken } = useSelector((state) => state.auth);
   const routines = useSelector(selectRoutines);
   const workouts = useSelector(selectWorkouts);
@@ -35,7 +32,7 @@ export default function Workouts(props) {
 
   const deleteWorkoutHandler = (firebaseId) => {
     deleteWorkout(uid, accessToken, firebaseId);
-    removeWorkout(firebaseId);
+    dispatch(removeWorkout(firebaseId));
   };
 
   const checkIfWorkoutBelongsToRoutine = (firebaseId) =>
@@ -64,8 +61,8 @@ export default function Workouts(props) {
   };
 
   const refreshRoutines = () => {
-    dispatch(clearRoutines);
-    dispatch(fetchRoutines);
+    dispatch(clearRoutines());
+    dispatch(fetchRoutines({ uid, accessToken }));
   };
 
   const deleteWorkoutAndRemoveHandler = async (firebaseId) => {

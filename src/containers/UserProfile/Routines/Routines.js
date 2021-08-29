@@ -44,6 +44,10 @@ export default function Routines(props) {
   const deleteRoutineHandler = (firebaseId) => {
     deleteRoutine(uid, accessToken, firebaseId);
     dispatch(removeRoutine(firebaseId));
+
+    // If the routine deleted is the active routine, set activeRoutine to null
+    if (activeRoutine.firebaseId === firebaseId)
+      dispatch(setActiveRoutine(null));
   };
 
   const routineLinks = routines ? (

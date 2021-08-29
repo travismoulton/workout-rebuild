@@ -106,43 +106,43 @@ const UserProfile = (props) => {
   return (
     <>
       {error.isError && error.message}
-      <div style={{ display: !initialFetchCompleted && 'none' }}>
-        {showMessage}
+      {/* <div style={{ display: !initialFetchCompleted && 'none' }}> */}
+      {showMessage}
 
-        <Workouts
-          setModalContent={(jsx) => setModalContent(jsx)}
-          toggleModal={() => setShowModal((prevShowModal) => !prevShowModal)}
-          triggerWorkoutsShowing={triggerWorkoutsShowing}
-          showWorkouts={workoutsShowing}
-          setFetchCompleted={() => setWorkoutsFetched(true)}
-          toggleError={() => setError({ ...error, isError: true })}
-          isError={error.isError}
-        />
+      <Workouts
+        setModalContent={(jsx) => setModalContent(jsx)}
+        toggleModal={() => setShowModal((prevShowModal) => !prevShowModal)}
+        triggerWorkoutsShowing={triggerWorkoutsShowing}
+        showWorkouts={workoutsShowing}
+        setFetchCompleted={() => setWorkoutsFetched(true)}
+        toggleError={() => setError({ ...error, isError: true })}
+        isError={error.isError}
+      />
 
-        <Routines
-          setModalContent={(jsx) => setModalContent(jsx)}
-          toggleModal={() => setShowModal((prevShowModal) => !prevShowModal)}
-          triggerRoutinesShowing={triggerRoutinesShowing}
-          showRoutines={routinesShowing}
-          setFetchCompleted={() => setRoutinesFetched(true)}
-          toggleError={() => setError({ ...error, isError: true })}
-          isError={error.isError}
-        />
-        <RecordedWorkouts
-          setModalContent={(jsx) => setModalContent(jsx)}
-          toggleModal={() => setShowModal((prevShowModal) => !prevShowModal)}
-          triggerRecordedWorkoutsShowing={triggerRecordedWorkoutsShowing}
-          showRecordedWorkouts={recordedWorkoutsShowing}
-          setFetchCompleted={() => setRecordedWorkoutsFetched(true)}
-          toggleError={() => setError({ ...error, isError: true })}
-          isError={error.isError}
-        />
-        <ChangePasswordLink />
+      <Routines
+        setModalContent={(jsx) => setModalContent(jsx)}
+        toggleModal={() => setShowModal((prevShowModal) => !prevShowModal)}
+        triggerRoutinesShowing={triggerRoutinesShowing}
+        showRoutines={routinesShowing}
+        setFetchCompleted={() => setRoutinesFetched(true)}
+        toggleError={() => setError({ ...error, isError: true })}
+        isError={error.isError}
+      />
+      <RecordedWorkouts
+        setModalContent={(jsx) => setModalContent(jsx)}
+        toggleModal={() => setShowModal((prevShowModal) => !prevShowModal)}
+        triggerRecordedWorkoutsShowing={triggerRecordedWorkoutsShowing}
+        showRecordedWorkouts={recordedWorkoutsShowing}
+        setFetchCompleted={() => setRecordedWorkoutsFetched(true)}
+        toggleError={() => setError({ ...error, isError: true })}
+        isError={error.isError}
+      />
+      <ChangePasswordLink />
 
-        {modal}
-      </div>
+      {modal}
+      {/* </div> */}
 
-      <div
+      {/* <div
         style={{
           display:
             (initialFetchCompleted && !error.isError) || error.isError
@@ -151,7 +151,7 @@ const UserProfile = (props) => {
         }}
       >
         <Spinner />
-      </div>
+      </div> */}
     </>
   );
 };

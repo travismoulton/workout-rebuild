@@ -19,7 +19,7 @@ export const fetchWorkouts = createAsyncThunk(
     const workouts = [];
 
     for (const key in data)
-      workouts.push({ id: `workout-${key}`, workoutId: key, ...data[key] });
+      workouts.push({ id: `workout-${key}`, firebaseId: key, ...data[key] });
 
     return workouts;
   }
@@ -35,7 +35,7 @@ export const fetchRoutines = createAsyncThunk(
     const routines = [];
 
     for (const key in data)
-      routines.push({ id: `routine-${key}`, routineId: key, ...data[key] });
+      routines.push({ id: `routine-${key}`, firebaseId: key, ...data[key] });
 
     return routines;
   }
@@ -51,7 +51,7 @@ export const fetchRecords = createAsyncThunk(
     const records = [];
 
     for (const key in data)
-      records.push({ id: `record-${key}`, recordId: key, ...data[key] });
+      records.push({ id: `record-${key}`, firebaseId: key, ...data[key] });
 
     return records;
   }
@@ -63,17 +63,17 @@ const profileSlice = createSlice({
   reducers: {
     addWorkout(state, action) {
       const { id, data } = action.payload;
-      const workout = { id: `workout-${id}`, workoutId: id, ...data };
+      const workout = { id: `workout-${id}`, firebaseId: id, ...data };
       profileAdapter.addOne(state, workout);
     },
     addRoutine(state, action) {
       const { id, data } = action.payload;
-      const routine = { id: `routine-${id}`, routineId: id, ...data };
+      const routine = { id: `routine-${id}`, firebaseId: id, ...data };
       profileAdapter.addOne(state, routine);
     },
     addRecord(state, action) {
       const { id, data } = action.payload;
-      const record = { id: `record-${id}`, recordId: id, ...data };
+      const record = { id: `record-${id}`, firebaseId: id, ...data };
       profileAdapter.addOne(state, record);
     },
     removeWorkout(state, action) {
@@ -118,7 +118,7 @@ export const selectWorkouts = createSelector(
 
 export const selectRoutines = createSelector(
   [selectAll, (state) => state],
-  (profile) => profile.filter((obj) => obj.id.startsWith('rotuine'))
+  (profile) => profile.filter((obj) => obj.id.startsWith('routine'))
 );
 
 export const selectRecords = createSelector(
