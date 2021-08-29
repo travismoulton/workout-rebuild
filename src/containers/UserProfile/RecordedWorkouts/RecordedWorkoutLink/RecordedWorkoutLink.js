@@ -2,23 +2,25 @@ import { Link } from 'react-router-dom';
 
 import classes from '../../UserProfile.module.css';
 
-const RecordedWorkoutLink = (props) => {
-  const date = new Date(props.date.year, props.date.month, props.date.day);
+export default function RecordedWorkoutLink(props) {
+  const { title, recordDate, firebaseId, deleteRecordedWorkout } = props;
+
+  const date = new Date(recordDate.year, recordDate.month, recordDate.day);
 
   return (
     <>
       <div className={classes.Record}>
-        <p>{props.title}</p>
+        <p>{title}</p>
         <p>{date.toString().substring(0, 15)}</p>
         <div className={classes.FlexRow}>
-          <Link to={`/recorded-workout-detail/${props.firebaseId}`}>
+          <Link to={`/recorded-workout-detail/${firebaseId}`}>
             <button className={`GlobalBtn-2 ${classes.Btn}`}>
               View details
             </button>
           </Link>
           <button
             className={`GlobalBtn-2 ${classes.Btn}`}
-            onClick={props.deleteRecordedWorkout}
+            onClick={deleteRecordedWorkout}
           >
             Delete this record
           </button>
@@ -26,6 +28,4 @@ const RecordedWorkoutLink = (props) => {
       </div>
     </>
   );
-};
-
-export default RecordedWorkoutLink;
+}
