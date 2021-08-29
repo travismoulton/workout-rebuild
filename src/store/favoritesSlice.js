@@ -92,6 +92,9 @@ const favoritesSlice = createSlice({
     setNoFavoritesFalse(state, action) {
       state.noFavorites = false;
     },
+    setActiveRoutine(state, action) {
+      state.activeRoutine = action.payload;
+    },
   },
 
   extraReducers: {
@@ -114,7 +117,8 @@ const favoritesSlice = createSlice({
   },
 });
 
-export const { clearFavorites, setNoFavoritesFalse } = favoritesSlice.actions;
+export const { clearFavorites, setNoFavoritesFalse, setActiveRoutine } =
+  favoritesSlice.actions;
 
 export const {
   selectAll: selectAllFavorites,
