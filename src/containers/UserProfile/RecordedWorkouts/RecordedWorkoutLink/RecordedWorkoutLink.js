@@ -13,7 +13,12 @@ export default function RecordedWorkoutLink(props) {
         <p>{title}</p>
         <p>{date.toString().substring(0, 15)}</p>
         <div className={classes.FlexRow}>
-          <Link to={`/recorded-workout-detail/${firebaseId}`}>
+          <Link
+            to={{
+              pathname: `/recorded-workout-detail/${firebaseId}`,
+              state: { firebaseId },
+            }}
+          >
             <button className={`GlobalBtn-2 ${classes.Btn}`}>
               View details
             </button>

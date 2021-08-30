@@ -4,9 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import Input from '../../../components/UI/Input/Input';
 import {
   setFormData,
-  setExercises,
   resetWorkoutStore,
-  setFirebaseId,
   clearExercises,
 } from '../../../store/workoutSlice';
 import { updateObject, checkValidityHandler } from '../../../shared/utility';
@@ -14,12 +12,9 @@ import { updateObject, checkValidityHandler } from '../../../shared/utility';
 export default function WorkoutDetailsForm(props) {
   const {
     shouldClearFormInputs,
-    shouldLoadWorkoutData,
     shouldSetInputAsTouched,
     shouldSetInputAsTouchedToFalse,
     setShouldClearFormInputsToFalse,
-    setShouldLoadWorkoutDataToFalse,
-    history,
     setFormIsValid,
   } = props;
 
@@ -44,20 +39,22 @@ export default function WorkoutDetailsForm(props) {
     label: 'Workout Name',
   });
 
+  const targetAreaSelectOptions = [
+    { value: 0, label: '' },
+    { value: 10, label: 'Abs' },
+    { value: 8, label: 'Arms' },
+    { value: 12, label: 'Back' },
+    { value: 14, label: 'Calves' },
+    { value: 11, label: 'Chest' },
+    { value: 9, label: 'Legs' },
+    { value: 13, label: 'Shoulders' },
+    { value: 1, label: 'All Body' },
+  ];
+
   const [targetAreaInput, setTargetAreaInput] = useState({
     elementType: 'select',
     elementConfig: {
-      options: [
-        { value: 0, label: '' },
-        { value: 10, label: 'Abs' },
-        { value: 8, label: 'Arms' },
-        { value: 12, label: 'Back' },
-        { value: 14, label: 'Calves' },
-        { value: 11, label: 'Chest' },
-        { value: 9, label: 'Legs' },
-        { value: 13, label: 'Shoulders' },
-        { value: 1, label: 'All Body' },
-      ],
+      options: targetAreaSelectOptions,
     },
     value: formData.targetArea,
     label: 'Target Muscle Area',
@@ -75,16 +72,7 @@ export default function WorkoutDetailsForm(props) {
   const [secondaryTargetAreaInput, setSecondaryTargetAreaInput] = useState({
     elementType: 'select',
     elementConfig: {
-      options: [
-        { value: 0, label: '' },
-        { value: 10, label: 'Abs' },
-        { value: 8, label: 'Arms' },
-        { value: 12, label: 'Back' },
-        { value: 14, label: 'Calves' },
-        { value: 11, label: 'Chest' },
-        { value: 9, label: 'Legs' },
-        { value: 13, label: 'Shoulders' },
-      ],
+      options: targetAreaSelectOptions,
     },
     value: formData.secondaryTarget,
     label: ' Secondary Target',
@@ -98,48 +86,6 @@ export default function WorkoutDetailsForm(props) {
     className: 'CreateWorkoutSelect',
     wrapperClass: 'WorkoutDetailsSelectWrapper',
   });
-
-  useEffect(() => {
-    if (shouldLoadWorkoutData) {
-      const { workout } = history.location.state;
-
-      if (workout) {
-        dispatch(setExercises(workout.exercises));
-
-        if (workout.title)
-          setWorkoutNameInput({ ...workoutNameInput, value: workout.title });
-
-        if (workout.targetAreaCode)
-          setTargetAreaInput({
-            ...targetAreaInput,
-            value: targetAreaInput.elementConfig.options.filter(
-              (option) => option.value === workout.targetAreaCode
-            )[0],
-          });
-
-        if (workout.secondaryTargetCode)
-          setSecondaryTargetAreaInput({
-            ...secondaryTargetAreaInput,
-            value: secondaryTargetAreaInput.elementConfig.options.filter(
-              (option) => option.value === workout.secondaryTargetCode
-            )[0],
-          });
-
-        setFormIsValid(true);
-        setShouldLoadWorkoutDataToFalse();
-        dispatch(setFirebaseId(workout.firebaseId));
-      }
-    }
-  }, [
-    history,
-    dispatch,
-    secondaryTargetAreaInput,
-    targetAreaInput,
-    workoutNameInput,
-    setFormIsValid,
-    setShouldLoadWorkoutDataToFalse,
-    shouldLoadWorkoutData,
-  ]);
 
   const formFields = [
     workoutNameInput,

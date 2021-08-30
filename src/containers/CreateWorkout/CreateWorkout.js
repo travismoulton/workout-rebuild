@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
 import WorkoutListItem from '../WorkoutListItem/WorkoutListItem';
@@ -6,7 +6,13 @@ import SubmitWorkoutBtn from '../../components/SubmitWorkoutBtn/SubmitWorkoutBtn
 import Spinner from '../../components/UI/Spinner/Spinner';
 import FavoritesSelectMenu from './FavoritesSelectMenu/FavoritesSelectMenu';
 import WorkoutDetailsForm from './WorkoutDetailsForm/WorkoutDetailsForm';
-import { enterSearchMode, selectAllExercises } from '../../store/workoutSlice';
+import {
+  enterSearchMode,
+  selectAllExercises,
+  setExercises,
+  setFirebaseId,
+  setFormData,
+} from '../../store/workoutSlice';
 import classes from './CreateWorkout.module.css';
 
 export default function CreateWorkout({ history }) {
@@ -16,11 +22,10 @@ export default function CreateWorkout({ history }) {
   const dispatch = useDispatch();
 
   const [loaded, setLoaded] = useState(false);
+  const [formDataLoaded, setFormDataLoaded] = useState(false);
   const [shouldClearFormInputs, setShouldClearFormInputs] = useState(false);
   const [shouldSetInputAsTouched, setShouldSetInputAsTouched] = useState(false);
-  const [shouldLoadWorkoutData, setShouldLoadWorkoutData] = useState(
-    history.location.state
-  );
+
   const [error, setError] = useState({
     isError: false,
     message: (
@@ -36,6 +41,30 @@ export default function CreateWorkout({ history }) {
   );
 
   const { noFavorites } = useSelector((state) => state.favorites);
+
+  useEffect(() => {
+    const shouldLoadWorkoutData = history.location.state;
+    if (shouldLoadWorkoutData) {
+      const { workout } = history.location.state;
+      const { title: workoutName } = workout;
+      const targetArea = {
+        value: workout.targetAreaCode,
+        label: workout.targetArea,
+      };
+      const secondaryTarget = {
+        value: workout.secondaryTargetCode,
+        label: workout.secondaryTargetArea,
+      };
+
+      dispatch(setFormData({ workoutName, targetArea, secondaryTarget }));
+      dispatch(setExercises(workout.exercises));
+      dispatch(setFirebaseId(workout.firebaseId));
+      setFormIsValid(true);
+      setFormDataLoaded(true);
+    } else {
+      setFormDataLoaded(true);
+    }
+  }, [history, dispatch]);
 
   useEffect(() => {
     if (noFavorites) setLoaded(true);
@@ -64,71 +93,69 @@ export default function CreateWorkout({ history }) {
   );
 
   return (
-    <>
-      <div className={classes.Wrapper} style={{ display: !loaded && 'none' }}>
-        {error.isError && error.message}
+    formDataLoaded && (
+      <>
+        <div className={classes.Wrapper} style={{ display: !loaded && 'none' }}>
+          {error.isError && error.message}
 
-        <WorkoutDetailsForm
-          shouldLoadWorkoutData={shouldLoadWorkoutData}
-          history={history}
-          setShouldLoadWorkoutDataToFalse={() =>
-            setShouldLoadWorkoutData(false)
-          }
-          setFormIsValid={(bool) => setFormIsValid(bool)}
-          shouldClearFormInputs={shouldClearFormInputs}
-          setShouldClearFormInputsToFalse={() =>
-            setShouldClearFormInputs(false)
-          }
-          shouldSetInputAsTouched={shouldSetInputAsTouched}
-          shouldSetInputAsTouchedToFalse={() =>
-            setShouldSetInputAsTouched(false)
-          }
-        />
-
-        {!noFavorites && (
-          <FavoritesSelectMenu
-            toggleLoaded={() => setLoaded(true)}
-            toggleError={() => setError({ ...error, isError: true })}
-            isError={error.isError}
-            clearSelect={shouldClearFormInputs}
+          <WorkoutDetailsForm
+            shouldClearFormInputs={shouldClearFormInputs}
+            setShouldClearFormInputsToFalse={() =>
+              setShouldClearFormInputs(false)
+            }
+            shouldSetInputAsTouched={shouldSetInputAsTouched}
+            shouldSetInputAsTouchedToFalse={() =>
+              setShouldSetInputAsTouched(false)
+            }
           />
-        )}
 
-        <button
-          className={`GlobalBtn-1 ${classes.AddBySearchBtn}`}
-          onClick={onAddExerciseBySearchClick}
-        >
-          Add from exercise search menu
-        </button>
-        {exercises.length ? (
-          <>
-            <ul className={classes.WorkoutList}>
-              {exercises.map((exercise, i) => (
-                <WorkoutListItem
-                  name={exercise.name}
-                  key={exercise.id}
-                  id={exercise.id}
-                  sets={exercise.sets}
-                  isFirstExercise={i === 0}
-                  isLastExercise={i === exercises.length - 1}
-                  focus={exercise.focus}
-                />
-              ))}
-            </ul>
-            <SubmitWorkoutBtn
-              formIsValid={formIsValid}
-              setInputAsTouched={() => setShouldSetInputAsTouched(true)}
-              firebaseId={firebaseId}
-              shouldCreateNewWorkout={firebaseId === null}
+          {!noFavorites && (
+            <FavoritesSelectMenu
+              toggleLoaded={() => setLoaded(true)}
+              toggleError={() => setError({ ...error, isError: true })}
+              isError={error.isError}
+              clearSelect={shouldClearFormInputs}
             />
-            {clearWorkoutBtn}
-          </>
-        ) : null}
-      </div>
+          )}
 
-      <div style={{ display: loaded && 'none' }}>
-        <Spinner />
-      </div>
-    </>
+          <button
+            className={`GlobalBtn-1 ${classes.AddBySearchBtn}`}
+            onClick={onAddExerciseBySearchClick}
+          >
+            Add from exercise search menu
+          </button>
+          {exercises.length ? (
+            <>
+              <ul className={classes.WorkoutList}>
+                {exercises.map((exercise, i) => (
+                  <WorkoutListItem
+                    name={exercise.name}
+                    key={exercise.id}
+                    id={exercise.id}
+                    sets={exercise.sets}
+                    isFirstExercise={i === 0}
+                    isLastExercise={i === exercises.length - 1}
+                    focus={exercise.focus}
+                  />
+                ))}
+              </ul>
+
+              <SubmitWorkoutBtn
+                formIsValid={formIsValid}
+                setInputAsTouched={() => setShouldSetInputAsTouched(true)}
+                firebaseId={firebaseId}
+                shouldCreateNewWorkout={firebaseId === null}
+              />
+
+              {clearWorkoutBtn}
+            </>
+          ) : null}
+        </div>
+
+        <div style={{ display: loaded && 'none' }}>
+          <Spinner />
+        </div>
+      </>
+    )
   );
 }

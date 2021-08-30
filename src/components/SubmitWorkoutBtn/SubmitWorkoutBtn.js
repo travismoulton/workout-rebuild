@@ -28,7 +28,7 @@ export default function SubmitWorkoutBtn(props) {
   const dispatch = useDispatch();
 
   const [workoutNameChanged, setWorkoutNameChanged] = useState(false);
-  const workoutNameRef = useRef(null);
+  const workoutNameRef = useRef(formData.workoutName);
 
   useEffect(() => {
     if (workoutNameRef.current !== formData.workoutName) {

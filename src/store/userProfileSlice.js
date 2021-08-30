@@ -151,6 +151,11 @@ export const selectRecords = createSelector(
   (profile) => profile.filter((obj) => obj.id.startsWith('record'))
 );
 
+export const selectRecordById = createSelector(
+  [selectAll, (state, recordId) => recordId],
+  (profile, id) => profile.filter((record) => record.firebaseId === id)[0]
+);
+
 export const {
   addWorkout,
   addRoutine,

@@ -1,8 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useSelector } from 'react-redux';
-import axios from 'axios';
+
 import uniqid from 'uniqid';
 
+import { selectRecordById } from '../../store/userProfileSlice';
 import ExerciseListItem from './ExerciseListItem/ExerciseListItem';
 import classes from './RecordedWorkoutDetail.module.css';
 
@@ -16,28 +17,10 @@ export default function RecordedWorkoutDetail({ location }) {
       </p>
     ),
   });
-  const [workout, setWorkout] = useState(null);
-  const { uid, accessToken } = useSelector((state) => state.auth);
 
-  useEffect(() => {
-    if (!workout) {
-      const { pathname } = location;
-      const firebaseId = pathname.substring(pathname.lastIndexOf('/') + 1);
+  const { firebaseId } = location.state;
 
-      (async () =>
-        await axios
-          .get(
-            `https://workout-81691-default-rtdb.firebaseio.com/recordedWorkouts/${uid}/${firebaseId}.json?auth=${accessToken}`,
-            { timeout: 5000 }
-          )
-          .then((res) => {
-            setWorkout(res.data);
-          })
-          .catch((err) => {
-            setAxiosError({ ...axiosError, isError: true });
-          }))();
-    }
-  }, [workout, uid, accessToken, location, axiosError]);
+  const workout = useSelector((state) => selectRecordById(state, firebaseId));
 
   const exercises = workout
     ? workout.exercises.map((exercise) => (

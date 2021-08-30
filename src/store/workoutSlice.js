@@ -105,8 +105,7 @@ const workoutSlice = createSlice({
       state.updated = false;
     },
     setFirebaseId(state, action) {
-      const { firebaseId } = action.payload;
-      state.firebaseId = firebaseId;
+      state.firebaseId = action.payload;
     },
   },
 });
