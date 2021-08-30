@@ -68,7 +68,7 @@ export default function RoutineLink(props) {
         )}
         <Link
           to={{
-            pathname: `/create-routine/${title}`,
+            pathname: `/routine-detail/${title}`,
             state: { routine: routine },
           }}
         >

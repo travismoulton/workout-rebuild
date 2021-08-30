@@ -24,6 +24,7 @@ import RecordWorkout from './containers/RecordWorkout/RecordWorkout';
 import UserProfile from './containers/UserProfile/UserProfile';
 import UpdatePassword from './components/UpdatePassword/UpdatePassword';
 import SendPasswordResetEmail from './components/SendPasswordResetEmail/SendPasswordResetEmail';
+import RecordedWorkoutDetail from './components/RecordedWorkoutDetail/RecordedWorkoutDetail';
 import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary';
 import './App.css';
 
@@ -104,11 +105,12 @@ function App({ firebase }) {
           {(firebase) => <Logout firebase={firebase} />}
         </FirebaseContext.Consumer>
       </Route>
-      <Route path="/login">
-        <FirebaseContext.Consumer>
-          {(firebase) => <Login firebase={firebase} history={history} />}
-        </FirebaseContext.Consumer>
-      </Route>
+      <Route path="/workout-detail/:workout" component={CreateWorkout} />
+      <Route path="/routine-detail/:routine" component={CreateRoutine} />
+      <Route
+        path="/recorded-workout-detail/:id"
+        component={RecordedWorkoutDetail}
+      />
       <Route path="/create-exercise" component={CreateExercise} />
       <Route path="/create-workout" component={CreateWorkout} />
       <Route path="/create-routine" component={CreateRoutine} />

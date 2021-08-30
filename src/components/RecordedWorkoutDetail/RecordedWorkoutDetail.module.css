@@ -1,0 +1,17 @@
+.Title {
+  font-size: 3rem;
+  font-weight: 300;
+  margin-bottom: 3.5rem;
+  text-transform: uppercase;
+}
+
+.Date {
+  font-size: 2.3rem;
+  font-weight: 400;
+  text-transform: uppercase;
+  margin-bottom: 3.5rem;
+}
+
+.Exercises {
+  padding: 0;
+}
