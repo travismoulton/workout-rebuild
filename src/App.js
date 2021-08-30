@@ -22,6 +22,8 @@ import CreateWorkout from './containers/CreateWorkout/CreateWorkout';
 import CreateRoutine from './containers/CreateRoutine/CreateRoutine';
 import RecordWorkout from './containers/RecordWorkout/RecordWorkout';
 import UserProfile from './containers/UserProfile/UserProfile';
+import UpdatePassword from './components/UpdatePassword/UpdatePassword';
+import SendPasswordResetEmail from './components/SendPasswordResetEmail/SendPasswordResetEmail';
 import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary';
 import './App.css';
 
@@ -79,6 +81,13 @@ function App({ firebase }) {
           </ErrorBoundary>
         )}
       />
+      <Route path="/forgot-password">
+        <FirebaseContext.Consumer>
+          {(firebase) => (
+            <SendPasswordResetEmail firebase={firebase} history={history} />
+          )}
+        </FirebaseContext.Consumer>
+      </Route>
       <Route path="/" component={Search} />
     </Switch>
   ) : (
@@ -98,6 +107,7 @@ function App({ firebase }) {
       <Route path="/create-routine" component={CreateRoutine} />
       <Route path="/record-workout" component={RecordWorkout} />
       <Route path="/my-profile" component={UserProfile} />
+      <Route path="/update-password" component={UpdatePassword} />
       <Route
         path="/exercise/:name"
         render={(routeProps) => (
@@ -106,6 +116,13 @@ function App({ firebase }) {
           </ErrorBoundary>
         )}
       />
+      <Route path="/forgot-password">
+        <FirebaseContext.Consumer>
+          {(firebase) => (
+            <SendPasswordResetEmail firebase={firebase} history={history} />
+          )}
+        </FirebaseContext.Consumer>
+      </Route>
       <Route path="/results/:category/:query" component={Results} />
       <Route path="/results/my-custom-exercises" component={Results} />
       <Route path="/" component={Search} />
