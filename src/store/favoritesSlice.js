@@ -78,7 +78,9 @@ export const fetchActiveRoutine = createAsyncThunk(
       (key) => routines[key].activeRoutine
     )[0];
 
-    return routines[activeRoutineKey] || null;
+    return routines[activeRoutineKey]
+      ? { routine: routines[activeRoutineKey], firebaseId: activeRoutineKey }
+      : null;
   }
 );
 
@@ -112,7 +114,12 @@ const favoritesSlice = createSlice({
       favoritesAdapter.removeOne(state, action);
     },
     [fetchActiveRoutine.fulfilled]: (state, action) => {
-      state.activeRoutine = action.payload;
+      if (action.payload) {
+        const { routine, firebaseId } = action.payload;
+        state.activeRoutine = { ...routine, firebaseId };
+      } else {
+        state.activeRoutine = null;
+      }
     },
   },
 });

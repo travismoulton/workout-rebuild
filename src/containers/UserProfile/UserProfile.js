@@ -8,11 +8,7 @@ import Modal from '../../components/UI/Modal/Modal';
 import Spinner from '../../components/UI/Spinner/Spinner';
 import Message from './Message/Message';
 
-const UserProfile = (props) => {
-  const [initialFetchCompleted, setInitialFetchCompleted] = useState(false);
-  const [workoutsFetched, setWorkoutsFetched] = useState(false);
-  const [routinesFetched, setRoutinesFetched] = useState(false);
-  const [recordedWorkoutsFetched, setRecordedWorkoutsFetched] = useState(false);
+export default function UserProfile({ history }) {
   const [workoutsShowing, setWorkoutsShowing] = useState(false);
   const [routinesShowing, setRoutinesShowing] = useState(false);
   const [recordedWorkoutsShowing, setRecordedWorkoutsShowing] = useState(false);
@@ -35,31 +31,16 @@ const UserProfile = (props) => {
   });
 
   useEffect(() => {
-    if (
-      workoutsFetched &&
-      routinesFetched &&
-      recordedWorkoutsFetched &&
-      !initialFetchCompleted
-    )
-      setInitialFetchCompleted(true);
-  }, [
-    initialFetchCompleted,
-    workoutsFetched,
-    recordedWorkoutsFetched,
-    routinesFetched,
-  ]);
-
-  useEffect(() => {
-    if (props.history.location.state && !messageFinished && !showMessage) {
-      const { message } = props.history.location.state;
+    if (history.location.state && !messageFinished && !showMessage) {
+      const { message } = history.location.state;
       setShowMessage(<Message messageText={message} show />);
     }
-  }, [showMessage, messageFinished, props.history.location.state]);
+  }, [showMessage, messageFinished, history.location.state]);
 
   useEffect(() => {
     let timer;
     if (showMessage) {
-      const { message } = props.history.location.state;
+      const { message } = history.location.state;
       timer = setTimeout(() => {
         setShowMessage(<Message messageText={message} />);
         setMessageFinished(true);
@@ -67,7 +48,7 @@ const UserProfile = (props) => {
     }
 
     return timer ? () => clearTimeout(timer) : null;
-  }, [showMessage, props.history.location.state]);
+  }, [showMessage, history.location.state]);
 
   const triggerWorkoutsShowing = () => {
     setWorkoutsShowing(workoutsShowing ? false : true);
@@ -114,7 +95,6 @@ const UserProfile = (props) => {
         toggleModal={() => setShowModal((prevShowModal) => !prevShowModal)}
         triggerWorkoutsShowing={triggerWorkoutsShowing}
         showWorkouts={workoutsShowing}
-        setFetchCompleted={() => setWorkoutsFetched(true)}
         toggleError={() => setError({ ...error, isError: true })}
         isError={error.isError}
       />
@@ -124,7 +104,6 @@ const UserProfile = (props) => {
         toggleModal={() => setShowModal((prevShowModal) => !prevShowModal)}
         triggerRoutinesShowing={triggerRoutinesShowing}
         showRoutines={routinesShowing}
-        setFetchCompleted={() => setRoutinesFetched(true)}
         toggleError={() => setError({ ...error, isError: true })}
         isError={error.isError}
       />
@@ -133,7 +112,6 @@ const UserProfile = (props) => {
         toggleModal={() => setShowModal((prevShowModal) => !prevShowModal)}
         triggerRecordedWorkoutsShowing={triggerRecordedWorkoutsShowing}
         showRecordedWorkouts={recordedWorkoutsShowing}
-        setFetchCompleted={() => setRecordedWorkoutsFetched(true)}
         toggleError={() => setError({ ...error, isError: true })}
         isError={error.isError}
       />
@@ -154,6 +132,4 @@ const UserProfile = (props) => {
       </div> */}
     </>
   );
-};
-
-export default UserProfile;
+}

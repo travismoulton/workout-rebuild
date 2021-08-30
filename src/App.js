@@ -29,7 +29,8 @@ import './App.css';
 
 function App({ firebase }) {
   const [authUser, setAuthUser] = useState(null);
-  const [loaded, setLoaded] = useState(false);
+  const [userLoaded, setUserLoaded] = useState(false);
+  const [appReady, setAppReady] = useState(false);
   const isAuthenticated = useSelector((state) => state.auth.user !== null);
   const { inAuth, user, accessToken, uid } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
@@ -37,9 +38,9 @@ function App({ firebase }) {
   useEffect(() => {
     firebase.auth.onAuthStateChanged((authUser) => {
       authUser ? setAuthUser(authUser) : setAuthUser(null);
-      if (!loaded) setLoaded(true);
+      if (!userLoaded) setUserLoaded(true);
     });
-  }, [firebase.auth, loaded]);
+  }, [firebase.auth, userLoaded]);
 
   useEffect(() => {
     if (authUser && !isAuthenticated && !inAuth && !user)
@@ -49,14 +50,20 @@ function App({ firebase }) {
   }, [authUser, isAuthenticated, dispatch, inAuth, user]);
 
   useEffect(() => {
-    if (user) {
-      dispatch(fetchFavorites({ uid, accessToken }));
-      dispatch(fetchActiveRoutine({ uid, accessToken }));
-      dispatch(fetchWorkouts({ uid, accessToken }));
-      dispatch(fetchRoutines({ uid, accessToken }));
-      dispatch(fetchRecords({ uid, accessToken }));
+    if (userLoaded && !user) setAppReady(true);
+  }, [userLoaded, user]);
+
+  useEffect(() => {
+    if (user && userLoaded) {
+      Promise.all([
+        dispatch(fetchFavorites({ uid, accessToken })),
+        dispatch(fetchActiveRoutine({ uid, accessToken })),
+        dispatch(fetchWorkouts({ uid, accessToken })),
+        dispatch(fetchRoutines({ uid, accessToken })),
+        dispatch(fetchRecords({ uid, accessToken })),
+      ]).then(() => setAppReady(true));
     }
-  }, [user, dispatch, uid, accessToken]);
+  }, [user, dispatch, uid, accessToken, userLoaded]);
 
   const history = useHistory();
 
@@ -131,7 +138,7 @@ function App({ firebase }) {
 
   return (
     <div className="App">
-      {loaded && <Layout isAuthenticated={isAuthenticated}>{routes}</Layout>}
+      {appReady && <Layout isAuthenticated={isAuthenticated}>{routes}</Layout>}
     </div>
   );
 }
