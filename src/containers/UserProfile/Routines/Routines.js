@@ -25,13 +25,13 @@ export default function Routines(props) {
 
   const changeActiveRoutine = async (routine, firebaseId) => {
     // If there is a current active routine in firebase, set the active routine property to false
-    if (activeRoutine.firebaseId) {
-      const routineData = { ...activeRoutine, activeRoutine: false };
+    if (activeRoutine) {
+      const activeRoutineData = { ...activeRoutine, activeRoutine: false };
       await changeActiveRoutineStatus(
         uid,
         accessToken,
         firebaseId,
-        routineData
+        activeRoutineData
       ).catch(() => toggleError());
     }
 
