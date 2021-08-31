@@ -5,8 +5,8 @@
 
 
 8/31
-Need update workout / routine functionality inside profileSlice
-Need to fix the test in CreateWorkout for testing populating the form
+
+
 Add the side drawer
 
 

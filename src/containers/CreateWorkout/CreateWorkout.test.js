@@ -12,8 +12,6 @@ import {
 import { submitWorkoutBtnUtils as utils } from '../../components/SubmitWorkoutBtn/submitWorkoutBtnUtils';
 import CreateWorkout from './CreateWorkout';
 
-//7: Test that if nameIsTaken error is true, that a change in the workoutName input field removes the error
-
 const mockState = {
   favorites: {
     noFavorites: true,
@@ -64,13 +62,42 @@ function setup(workout, state) {
   };
 }
 
+// Has the be outside of the describe statement because it needs dispatch not to be mocked
+describe('<CreateWorkout /> without mocking', () => {
+  test('if there is workout data inside history the details form populates correctly', async () => {
+    const workout = {
+      exercises: [
+        {
+          name: 'exercise',
+          id: 'exerciseId',
+          focus: 'reps',
+          sets: [{ reps: 10, weight: 100 }],
+        },
+      ],
+      title: 'workout',
+      targetAreaCode: 8,
+      secondaryTargetCode: 9,
+      targetArea: 'Arms',
+      secondaryTargetArea: 'Legs',
+      firebaseId: 'firebaseId',
+    };
+
+    const { getByLabelText, getByText } = setup(workout);
+
+    await waitFor(() => {
+      expect(getByLabelText('Workout Name')).toHaveValue('workout');
+      expect(getByText('Arms')).toBeInTheDocument();
+      expect(getByText('Legs')).toBeInTheDocument();
+    });
+  });
+});
+
 describe('<CreateWorkout />', () => {
   let dummyDispatch,
     mockUseDispatch,
     mockEnterSearch,
     mockResetStore,
-    mockClearExercises,
-    mockSetFirebaseId;
+    mockClearExercises;
 
   beforeEach(() => {
     dummyDispatch = jest.fn();
@@ -81,7 +108,7 @@ describe('<CreateWorkout />', () => {
     mockClearExercises = createSpy(workoutSlice, 'clearExercises', null);
     mockResetStore = createSpy(workoutSlice, 'resetWorkoutStore', null);
     mockEnterSearch = createSpy(workoutSlice, 'enterSearchMode', null);
-    mockSetFirebaseId = createSpy(workoutSlice, 'setFirebaseId', null);
+    createSpy(workoutSlice, 'setFirebaseId', null);
     createSpy(workoutSlice, 'setFormData', null);
 
     createSpy(utils, 'checkForPreviousNameUse', Promise.resolve(true));
@@ -94,7 +121,6 @@ describe('<CreateWorkout />', () => {
     mockEnterSearch = null;
     mockClearExercises = null;
     mockResetStore = null;
-    mockSetFirebaseId = null;
   });
 
   test('if there are favorites, it loads a spinner', () => {
@@ -108,36 +134,6 @@ describe('<CreateWorkout />', () => {
     expect(queryByLabelText('Add exercise from favorites')).toBeNull();
 
     expect(queryByLabelText('Workout Name')).toBeInTheDocument();
-  });
-
-  test('if there is workout data inside history the details form populates correctly', async () => {
-    jest.clearAllMocks();
-    const workout = {
-      exercises: [
-        {
-          name: 'exercise',
-          id: 'exerciseId',
-          focus: 'reps',
-          sets: [{ reps: 10, weight: 100 }],
-        },
-      ],
-      title: 'workout',
-      targetAreaCode: 8,
-      secondaryTargetCode: 9,
-      firebaseId: 'firebaseId',
-    };
-
-    const { getByLabelText, getByText } = setup(workout);
-
-    await waitFor(() => {
-      expect(getByLabelText('Workout Name')).toHaveValue('workout');
-      expect(getByText('Arms')).toBeInTheDocument();
-      expect(getByText('Legs')).toBeInTheDocument();
-    });
-
-    mockSetFirebaseId = createSpy(workoutSlice, 'setFirebaseId', null);
-
-    expect(mockSetFirebaseId).toBeCalledWith('firebaseId');
   });
 
   test('dispatches enter search mode and redirects the page on clicking the add from search menu button', async () => {
