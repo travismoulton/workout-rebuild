@@ -2,7 +2,10 @@ import { useState, useEffect, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useHistory } from 'react-router';
 
-import { addRoutine } from '../../store/userProfileSlice';
+import {
+  addRoutine,
+  updateRoutine as updateRoutineInStore,
+} from '../../store/userProfileSlice';
 import { submitRoutineBtnUtils as utils } from './submitRoutineBtnUtils';
 import { fetchActiveRoutine } from '../../store/favoritesSlice';
 
@@ -94,6 +97,16 @@ export default function SubmitRoutineBtn(props) {
       },
     });
 
+  const createRoutineHandler = async (routineData) => {
+    const id = await createRoutine(routineData, uid, accessToken);
+    dispatch(addRoutine({ id, data: routineData }));
+  };
+
+  const updateRoutineHandler = async (routineData) => {
+    await updateRoutine(routineData, uid, accessToken, firebaseId);
+    dispatch(updateRoutineInStore({ id: firebaseId, data: routineData }));
+  };
+
   const onSubmit = async () => {
     if (!containsWorkout) {
       setNoWorkoutsError();
@@ -123,13 +136,10 @@ export default function SubmitRoutineBtn(props) {
 
     const pushDataToFirebase = () =>
       shouldCreateNewRoutine
-        ? createRoutine(routineData, uid, accessToken)
-        : updateRoutine(routineData, uid, accessToken, firebaseId);
+        ? createRoutineHandler(routineData)
+        : updateRoutineHandler(routineData);
 
-    // Add the routineId to the profile store if a new routine has been created.
-    // update routine returns null and will fail the if check
-    const routineId = await pushDataToFirebase().catch(() => setAxiosError());
-    if (routineId) dispatch(addRoutine({ id: routineId, data: routineData }));
+    await pushDataToFirebase().catch(() => setAxiosError());
 
     if (shouldBeActiveRoutine)
       dispatch(fetchActiveRoutine({ uid, accessToken }));

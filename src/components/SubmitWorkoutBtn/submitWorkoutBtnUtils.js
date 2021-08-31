@@ -29,7 +29,7 @@ export const submitWorkoutBtnUtils = {
   },
 
   updateWorkout: async function (uid, accessToken, firebaseId, workoutData) {
-    await axios
+    axios
       .put(
         `workouts/${uid}/${firebaseId}.json?auth=${accessToken}`,
         workoutData
@@ -37,7 +37,5 @@ export const submitWorkoutBtnUtils = {
       .catch((err) => {
         throw new Error();
       });
-
-    return null;
   },
 };

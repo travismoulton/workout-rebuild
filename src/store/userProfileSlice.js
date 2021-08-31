@@ -118,13 +118,13 @@ const profileSlice = createSlice({
     },
     updateWorkout(state, action) {
       const { id, data } = action.payload;
-      const workout = { id: `workout-${id}`, ...data };
-      profileAdapter.updateOne(state, workout);
+      const update = { id: `workout-${id}`, changes: { ...data } };
+      profileAdapter.updateOne(state, update);
     },
     updateRoutine(state, action) {
       const { id, data } = action.payload;
-      const routine = { id: `routine-${id}`, ...data };
-      profileAdapter.updateOne(state, routine);
+      const update = { id: `routine-${id}`, changes: { ...data } };
+      profileAdapter.updateOne(state, update);
     },
     clearRoutines(state, action) {
       const routines = state.ids.filter((id) => id.startsWith('routine'));

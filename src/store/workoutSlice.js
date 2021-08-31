@@ -87,7 +87,6 @@ const workoutSlice = createSlice({
       workoutAdapter.addMany(state, action.payload);
     },
     setFormData(state, action) {
-      console.log(action.payload);
       const { workoutName, targetArea, secondaryTarget } = action.payload;
 
       state.formData.workoutName = workoutName;

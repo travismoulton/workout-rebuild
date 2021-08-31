@@ -2,7 +2,10 @@ import { useState, useEffect, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 
-import { addWorkout } from '../../store/userProfileSlice';
+import {
+  addWorkout,
+  updateWorkout as updateWorkoutInStore,
+} from '../../store/userProfileSlice';
 import {
   resetWorkoutStore,
   clearExercises,
@@ -29,6 +32,8 @@ export default function SubmitWorkoutBtn(props) {
 
   const [workoutNameChanged, setWorkoutNameChanged] = useState(false);
   const workoutNameRef = useRef(formData.workoutName);
+
+  const { checkForPreviousNameUse, createWorkout, updateWorkout } = utils;
 
   useEffect(() => {
     if (workoutNameRef.current !== formData.workoutName) {
@@ -86,10 +91,19 @@ export default function SubmitWorkoutBtn(props) {
       ),
     });
 
+  const createWorkoutHandler = async (workoutData) => {
+    const id = await createWorkout(uid, accessToken, workoutData);
+    dispatch(addWorkout({ id, data: workoutData }));
+  };
+
+  const updateWorkoutHandler = async (workoutData) => {
+    await updateWorkout(uid, accessToken, firebaseId, workoutData);
+    dispatch(updateWorkoutInStore({ id: firebaseId, data: workoutData }));
+  };
+
   const submitValidForm = async () => {
     let nameTaken;
     const { workoutName: title } = formData;
-    const { checkForPreviousNameUse, createWorkout, updateWorkout } = utils;
 
     if (shouldCreateNewWorkout || workoutNameChanged)
       nameTaken = await checkForPreviousNameUse(uid, accessToken, title);
@@ -111,13 +125,10 @@ export default function SubmitWorkoutBtn(props) {
 
     const pushDataToFirebase = () =>
       shouldCreateNewWorkout
-        ? createWorkout(uid, accessToken, workoutData)
-        : updateWorkout(uid, accessToken, firebaseId, workoutData);
+        ? createWorkoutHandler(workoutData)
+        : updateWorkoutHandler(workoutData);
 
-    const workoutId = await pushDataToFirebase().catch(() => setAxiosError());
-
-    // Only dispatch if a new workout is created. Update workout returns null
-    if (workoutId) dispatch(addWorkout({ id: workoutId, data: workoutData }));
+    await pushDataToFirebase().catch(() => setAxiosError());
 
     dispatch(clearExercises());
     dispatch(resetWorkoutStore());
