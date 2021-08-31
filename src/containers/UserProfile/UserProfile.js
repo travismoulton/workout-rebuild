@@ -5,7 +5,6 @@ import Routines from './Routines/Routines';
 import RecordedWorkouts from './RecordedWorkouts/RecordedWorkouts';
 import ChangePasswordLink from './ChangePasswordLink/ChangePasswordLink';
 import Modal from '../../components/UI/Modal/Modal';
-import Spinner from '../../components/UI/Spinner/Spinner';
 import Message from './Message/Message';
 
 export default function UserProfile({ history }) {

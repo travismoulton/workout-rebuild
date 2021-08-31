@@ -18,7 +18,7 @@ export default function Results(props) {
     ),
   });
 
-  const { user, uid, accessToken } = useSelector((state) => state.auth);
+  const { uid, accessToken } = useSelector((state) => state.auth);
 
   const { category, subCategory, id, isCustom, wger } = props.location.state;
   const { fetchCustomExercises, fetchWgerExercises } = utils;
