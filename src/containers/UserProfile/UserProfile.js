@@ -87,7 +87,7 @@ export default function UserProfile({ history }) {
   return (
     <>
       {error.isError && error.message}
-      {/* <div style={{ display: !initialFetchCompleted && 'none' }}> */}
+
       {showMessage}
 
       <Workouts
@@ -118,18 +118,6 @@ export default function UserProfile({ history }) {
       <ChangePasswordLink />
 
       {modal}
-      {/* </div> */}
-
-      {/* <div
-        style={{
-          display:
-            (initialFetchCompleted && !error.isError) || error.isError
-              ? 'none'
-              : 'block',
-        }}
-      >
-        <Spinner />
-      </div> */}
     </>
   );
 }

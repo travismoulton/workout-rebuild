@@ -18,6 +18,8 @@ export const recordADifferentWorkoutUtils = {
         throw new Error();
       });
 
+    console.log(res);
+
     return res;
   },
 };

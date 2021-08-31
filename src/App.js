@@ -10,6 +10,7 @@ import {
   fetchRecords,
 } from './store/userProfileSlice';
 import { FirebaseContext } from './components/Firebase/index';
+import Spinner from './components/UI/Spinner/Spinner';
 import Layout from './components/Layout/Layout';
 import Search from './containers/Search/Search';
 import Results from './containers/Results/Results';
@@ -140,7 +141,11 @@ function App({ firebase }) {
 
   return (
     <div className="App">
-      {appReady && <Layout isAuthenticated={isAuthenticated}>{routes}</Layout>}
+      {appReady ? (
+        <Layout isAuthenticated={isAuthenticated}>{routes}</Layout>
+      ) : (
+        <Spinner />
+      )}
     </div>
   );
 }

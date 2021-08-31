@@ -65,7 +65,7 @@ export default function Routines(props) {
       dispatch(setActiveRoutine(null));
   };
 
-  const routineLinks = routines ? (
+  const routineLinks = routines.length ? (
     routines.map((routine) => (
       <RoutineLink
         key={routine.title}

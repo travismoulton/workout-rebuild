@@ -111,6 +111,7 @@ describe('<CreateWorkout />', () => {
   });
 
   test('if there is workout data inside history the details form populates correctly', async () => {
+    jest.clearAllMocks();
     const workout = {
       exercises: [
         {
@@ -133,6 +134,8 @@ describe('<CreateWorkout />', () => {
       expect(getByText('Arms')).toBeInTheDocument();
       expect(getByText('Legs')).toBeInTheDocument();
     });
+
+    mockSetFirebaseId = createSpy(workoutSlice, 'setFirebaseId', null);
 
     expect(mockSetFirebaseId).toBeCalledWith('firebaseId');
   });

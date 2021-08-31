@@ -116,6 +116,16 @@ const profileSlice = createSlice({
       const entityId = `record-${id}`;
       profileAdapter.removeOne(state, entityId);
     },
+    updateWorkout(state, action) {
+      const { id, data } = action.payload;
+      const workout = { id: `workout-${id}`, ...data };
+      profileAdapter.updateOne(state, workout);
+    },
+    updateRoutine(state, action) {
+      const { id, data } = action.payload;
+      const routine = { id: `routine-${id}`, ...data };
+      profileAdapter.updateOne(state, routine);
+    },
     clearRoutines(state, action) {
       const routines = state.ids.filter((id) => id.startsWith('routine'));
       profileAdapter.removeMany(state, routines);
@@ -163,6 +173,8 @@ export const {
   removeWorkout,
   removeRoutine,
   removeRecord,
+  updateWorkout,
+  updateRoutine,
   clearRoutines,
 } = profileSlice.actions;
 

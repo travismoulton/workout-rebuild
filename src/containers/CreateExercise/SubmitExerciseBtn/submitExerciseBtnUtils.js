@@ -20,8 +20,8 @@ export const submitExerciseBtnUtils = {
     return nameTaken;
   },
 
-  submitExercise: function (uid, accessToken, exerciseData) {
-    axios
+  submitExercise: async function (uid, accessToken, exerciseData) {
+    await axios
       .post(`customExercises/${uid}.json?auth=${accessToken}`, exerciseData)
       .catch((err) => {
         throw new Error('axiosError');

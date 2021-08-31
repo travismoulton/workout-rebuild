@@ -1,13 +1,13 @@
 //1: Display a proper error message on the results page.
 
-Unfinished Tests:
-// CreateWorkout
-  // Test for proper functionality of the nameChange detection in the submit button. Ran into issues because 
-      set formData isn't actually being dispatched. the change in formData is what is triggering the functionality
-      in SubmitWorkoutBtn
 
-Up Next:
-// Create Routine
+
+
+
+8/31
+Need update workout / routine functionality inside profileSlice
+Need to fix the test in CreateWorkout for testing populating the form
+Add the side drawer
 
 
 

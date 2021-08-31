@@ -31,7 +31,6 @@ export default function SubmitExerciseBtn(props) {
   const history = useHistory();
 
   const axiosError = {
-    ...error,
     isError: true,
     code: 'axios',
     msg: (
@@ -42,7 +41,6 @@ export default function SubmitExerciseBtn(props) {
   };
 
   const nameTakenError = {
-    ...error,
     isError: true,
     msg: (
       <p style={{ color: 'red' }}>
