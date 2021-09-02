@@ -4,7 +4,7 @@ const workoutAdapter = createEntityAdapter();
 
 const initialState = workoutAdapter.getInitialState({
   buildingWorkout: false,
-  // workoutNameChanged: false,
+
   formData: {
     workoutName: '',
     targetArea: '',
@@ -60,7 +60,7 @@ const workoutSlice = createSlice({
     },
     removeSetFromExercise(state, action) {
       const { id, setIndex } = action.payload;
-      const exercise = workoutAdapter.entities[id];
+      const exercise = state.entities[id];
 
       if (exercise) exercise.sets.splice(setIndex, 1);
       state.updated = true;

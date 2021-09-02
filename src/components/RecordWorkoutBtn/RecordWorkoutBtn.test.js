@@ -6,7 +6,6 @@ import {
   fireEvent,
   waitFor,
   createSpy,
-  getByTestId,
 } from '../../shared/testUtils';
 import RecordWorkoutBtn from './RecordWorkoutBtn';
 import { recordWorkoutBtnUtils as utils } from './recordWorkoutBtnUtils';
@@ -33,6 +32,15 @@ const props = {
   updateWorkoutInFirebase: jest.fn(),
   isUpdated: true,
   workout: mockWorkout,
+  title: 'mock workout',
+  firebaseId: 'firebaseId',
+};
+
+const mockState = {
+  workout: {
+    ids: ['exerciseId'],
+    entities: { exerciseId: mockExercises[0] },
+  },
 };
 
 describe('RecordWorkoutBtn', () => {
@@ -57,7 +65,8 @@ describe('RecordWorkoutBtn', () => {
     const { getByText, getByTestId } = customRender(
       <Router history={history}>
         <RecordWorkoutBtn {...props} />
-      </Router>
+      </Router>,
+      { preloadedState: mockState }
     );
 
     return { getByText, getByTestId, history };
