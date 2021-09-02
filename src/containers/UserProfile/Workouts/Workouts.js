@@ -70,7 +70,7 @@ export default function Workouts(props) {
     refreshRoutines();
   };
 
-  const workoutLinks = workouts ? (
+  const workoutLinks = workouts.length ? (
     workouts.map((workout) => (
       <WorkoutLink
         key={workout.title}

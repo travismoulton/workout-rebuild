@@ -48,7 +48,7 @@ export default function RecordWorkout() {
     const unlisten = history.listen((location, action) => {
       dispatch(resetWorkoutStore());
       dispatch(clearExercises());
-      unlisten();
+      // unlisten();
     });
 
     return unlisten;
@@ -83,6 +83,7 @@ export default function RecordWorkout() {
               ...data,
               firebaseId: workoutFirebaseId,
             });
+
             dispatch(setExercises(data.exercises));
             if (loading) setLoading(false);
           })
@@ -200,6 +201,7 @@ export default function RecordWorkout() {
           .then(({ data }) => {
             setSuggestedWorkout({ ...data, firebaseId: workoutId });
             dispatch(setExercises(data.exercises));
+
             if (error.code === 'noSelectedWorkout') setError(null);
           })
           .catch(() => {
@@ -235,10 +237,11 @@ export default function RecordWorkout() {
       <div className={classes.WorkoutContainer}>{displayExercises}</div>
       {suggestedWorkout && exercises.length ? (
         <RecordWorkoutBtn
-          workout={suggestedWorkout}
+          firebaseId={suggestedWorkout.firebaseId}
           date={workoutDate}
           isUpdated={updated}
           updateWorkoutInFirebase={updateWorkoutInFirebase}
+          title={suggestedWorkout.title}
         />
       ) : null}
 

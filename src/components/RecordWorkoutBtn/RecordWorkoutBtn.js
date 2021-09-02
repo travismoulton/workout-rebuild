@@ -2,13 +2,14 @@ import { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useHistory } from 'react-router';
 
-import { addRecord } from '../../store/userProfileSlice';
+import { addRecord, updateWorkout } from '../../store/userProfileSlice';
+import { selectAllExercises } from '../../store/workoutSlice';
 import { recordWorkoutBtnUtils as utils } from './recordWorkoutBtnUtils';
 import classes from './RecordWorkoutBtn.module.css';
 import Modal from '../UI/Modal/Modal';
 
 export default function RecordWorkoutBtn(props) {
-  const { date, updateWorkoutInFirebase, isUpdated, workout } = props;
+  const { date, updateWorkoutInFirebase, isUpdated, firebaseId, title } = props;
 
   const [showModal, setShowModal] = useState(false);
   const [axiosError, setAxiosError] = useState({
@@ -23,10 +24,12 @@ export default function RecordWorkoutBtn(props) {
   const history = useHistory();
   const dispatch = useDispatch();
 
+  const exercises = useSelector(selectAllExercises);
+
   const recordWorkoutHandler = async () => {
     const workoutData = {
-      exercises: workout.exercises,
-      title: workout.title,
+      exercises: exercises,
+      title,
       date: {
         year: date.getFullYear(),
         month: date.getMonth(),
@@ -50,6 +53,8 @@ export default function RecordWorkoutBtn(props) {
   const closeModalAndSaveWorkout = async () => {
     setShowModal(false);
     await updateWorkoutInFirebase();
+
+    dispatch(updateWorkout({ id: firebaseId, data: { exercises } }));
     recordWorkoutHandler();
   };
 

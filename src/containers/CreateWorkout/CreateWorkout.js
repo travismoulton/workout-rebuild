@@ -107,6 +107,7 @@ export default function CreateWorkout({ history }) {
             shouldSetInputAsTouchedToFalse={() =>
               setShouldSetInputAsTouched(false)
             }
+            setFormIsValid={() => setFormIsValid(true)}
           />
 
           {!noFavorites && (

@@ -13,4 +13,5 @@ Add the side drawer
 
 
 
+ // When updating the workout in record workout, need to update the workout in the store as well.
  

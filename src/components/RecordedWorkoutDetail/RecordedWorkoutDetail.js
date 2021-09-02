@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 
 import uniqid from 'uniqid';
@@ -17,6 +17,10 @@ export default function RecordedWorkoutDetail({ location }) {
       </p>
     ),
   });
+
+  useEffect(() => {
+    document.title = 'View workout';
+  }, []);
 
   const { firebaseId } = location.state;
 

@@ -4,7 +4,7 @@ const workoutAdapter = createEntityAdapter();
 
 const initialState = workoutAdapter.getInitialState({
   buildingWorkout: false,
-  workoutNameChanged: false,
+  // workoutNameChanged: false,
   formData: {
     workoutName: '',
     targetArea: '',
