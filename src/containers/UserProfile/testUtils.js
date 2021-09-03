@@ -34,6 +34,13 @@ const exercise3 = {
   ],
 };
 
+export const activeRoutine = {
+  activeRoutine: true,
+  title: 'routine-1',
+  firebaseId: 'r1',
+  workouts: ['1', 'Rest', 'Rest', 'Rest', 'Rest', 'Rest', 'Rest'],
+};
+
 export const generateMockState = (activeRoutine, isActiveRoutine) => ({
   userProfile: {
     ids: [
