@@ -38,7 +38,7 @@ export const activeRoutine = {
   activeRoutine: true,
   title: 'routine-1',
   firebaseId: 'r1',
-  workouts: ['1', 'Rest', 'Rest', 'Rest', 'Rest', 'Rest', 'Rest'],
+  workouts: ['w2', 'Rest', 'Rest', 'Rest', 'Rest', 'Rest', 'Rest'],
 };
 
 export const generateMockState = (activeRoutine, isActiveRoutine) => ({
@@ -73,14 +73,14 @@ export const generateMockState = (activeRoutine, isActiveRoutine) => ({
         firebaseId: 'r1',
         activeRoutine: isActiveRoutine,
         title: 'routine-1',
-        workouts: ['1', 'Rest', 'Rest', 'Rest', 'Rest', 'Rest', 'Rest'],
+        workouts: ['w2', 'Rest', 'Rest', 'Rest', 'Rest', 'Rest', 'Rest'],
       },
       'routine-r2': {
         id: 'routine-r2',
         firebaseId: 'r2',
         activeRoutine: false,
         title: 'routine-2',
-        workouts: ['2', '2', '2', '2', 'Rest', 'Rest', 'Rest'],
+        workouts: ['w2', 'w2', 'w2', 'w2', 'Rest', 'Rest', 'Rest'],
       },
       'record-rec1': {
         id: 'record-rec1',

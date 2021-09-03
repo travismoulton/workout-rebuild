@@ -21,21 +21,10 @@ import UserProfile from './UserProfile';
 //3: Test that clicking edit Routine / Workout pushes the correct path and state
 //
 
-// userProfile --> Workouts
-
-//4: Test that when deleting a workout, if it belings to a routine, the warning modal pops update
-// --> Test that when clicking yes, removeWorkoutFromRoutine is called once for every routine the workout was in, and clearRoutines is dispatched
-//5: If it doesn't belong to a routine, the regular modal pops up. dleteWorkout is called, and removeWorkout is dispatched
-
 // userProfile --> Routines
 
 //6: the this is your active routine message is displayed if active
 //7: setCurrentRoutine btn makes changeActiveRoutine api call and dispatches setActiveRoutine in favoritesSlice
-//8: deleteRoutine btn calls deleteRoutine, dispatches removeRoutine, and if the acticeRoutine, dispatches setActiveRoutine to null
-
-// userProfile --> recordedWorkouts
-
-//9: clicking the deleteRecord btn calls deleteRecord and dispatches removeRecord
 
 function setup(activeRoutine, isActiveRoutine, message) {
   const history = createMemoryHistory();
@@ -44,50 +33,77 @@ function setup(activeRoutine, isActiveRoutine, message) {
 
   const preloadedState = generateMockState(activeRoutine, isActiveRoutine);
 
-  const { getByText } = customRender(
+  const { getByText, getAllByText } = customRender(
     <Router history={history}>
       <UserProfile history={history} />
     </Router>,
     { preloadedState }
   );
 
-  return { history, getByText };
+  return { history, getByText, getAllByText };
 }
 
 describe('<UserProfile />', () => {
+  const { routines, workouts, records } = utils;
+
   let mockDeleteWorkout,
-    mockRemoveWorkout,
+    mockRemoveWorkoutApiCall,
     mockClearRoutines,
-    mockFetchRoutines;
+    mockFetchRoutines,
+    mockRemoveWorkoutFromStore,
+    mockSetActiveRoutine,
+    mockDeleteRoutine,
+    mockRemoveRoutineFromStore,
+    mockDeleteRecord,
+    mockRemoveRecord;
 
   beforeEach(() => {
     createSpy(reactRedux, 'useDispatch', jest.fn());
     mockDeleteWorkout = createSpy(
-      utils.workouts,
+      workouts,
       'deleteWorkout',
       Promise.resolve({})
     );
-    mockRemoveWorkout = createSpy(
-      utils.workouts,
+    mockRemoveWorkoutApiCall = createSpy(
+      workouts,
       'removeWorkoutFromRoutine',
       Promise.resolve({})
     );
+    mockRemoveWorkoutFromStore = createSpy(
+      userProfileSlice,
+      'removeWorkout',
+      null
+    );
     mockClearRoutines = createSpy(userProfileSlice, 'clearRoutines', null);
-
-    // Come back to this. Will need to determine return value
     mockFetchRoutines = createSpy(
       userProfileSlice,
       'fetchRoutines',
       Promise.resolve({})
     );
+    mockSetActiveRoutine = createSpy(favoritesSlice, 'setActiveRoutine', null);
+    mockDeleteRoutine = createSpy(
+      routines,
+      'deleteRoutine',
+      Promise.resolve({})
+    );
+    mockRemoveRoutineFromStore = createSpy(
+      userProfileSlice,
+      'removeRoutine',
+      null
+    );
+    mockDeleteRecord = createSpy(records, 'deleteRecord', Promise.resolve({}));
+    mockRemoveRecord = createSpy(userProfileSlice, 'removeRecord', {});
   });
 
   afterEach(() => {
     jest.clearAllMocks();
     mockDeleteWorkout = null;
-    mockRemoveWorkout = null;
+    mockRemoveWorkoutApiCall = null;
     mockClearRoutines = null;
     mockFetchRoutines = null;
+    mockRemoveWorkoutFromStore = null;
+    mockSetActiveRoutine = null;
+    mockDeleteRoutine = null;
   });
 
   test('message displays if passed', async () => {
@@ -96,7 +112,77 @@ describe('<UserProfile />', () => {
   });
 
   test('when deleting a workout that does not belong to a routine, delete workout is called and remove from routine is not', () => {
-    const { getByText } = setup(null, false, null);
-    fireEvent.click(getByText('workouts'));
+    const { getByText, getAllByText } = setup(null, false, null);
+    fireEvent.click(getByText('My Workouts'));
+
+    // Open the delete workout modal by clicking the delete workout btn
+    const deleteWorkoutBtns = getAllByText('Delete workout');
+    fireEvent.click(deleteWorkoutBtns[0]);
+
+    // On the modal, click yes to delete workout
+    fireEvent.click(getByText('Yes'));
+
+    expect(mockDeleteWorkout).toBeCalled();
+    expect(mockRemoveWorkoutApiCall).not.toBeCalled();
+    expect(mockRemoveWorkoutFromStore).toBeCalled();
+  });
+
+  test('when deleting a workout that does belong to a routine, remove workout should be called, and clear routines and fetch routines should be dispathced', async () => {
+    const { getByText, getAllByText } = setup(null, false, null);
+    fireEvent.click(getByText('My Workouts'));
+
+    // Open the delete workout modal by clicking the delete workout btn
+    const deleteWorkoutBtns = getAllByText('Delete workout');
+    fireEvent.click(deleteWorkoutBtns[1]);
+
+    // On the modal, click yes to delete workout
+    fireEvent.click(getByText('Yes'));
+
+    expect(mockDeleteWorkout).toBeCalled();
+    await waitFor(() => expect(mockRemoveWorkoutApiCall).toBeCalledTimes(2));
+    expect(mockClearRoutines).toBeCalled();
+    expect(mockFetchRoutines).toBeCalled();
+  });
+
+  test('if deleteing the activeRoutine, setActiveRoutine is dispatched', () => {
+    const { getByText, getAllByText } = setup(activeRoutine, true, null);
+    fireEvent.click(getByText('My Routines'));
+
+    // Open the delete workout modal by clicking the delete workout btn
+    const deleteRoutineBtns = getAllByText('Delete routine');
+    fireEvent.click(deleteRoutineBtns[0]);
+
+    fireEvent.click(getByText('Yes'));
+
+    expect(mockDeleteRoutine).toBeCalled();
+    expect(mockRemoveRoutineFromStore).toBeCalled();
+    expect(mockSetActiveRoutine).toBeCalled();
+  });
+
+  test('if deleteing a non active routine, setActiveRoutine is not dispatched', () => {
+    const { getByText, getAllByText } = setup(activeRoutine, true, null);
+    fireEvent.click(getByText('My Routines'));
+
+    // Open the delete workout modal by clicking the delete workout btn
+    const deleteRoutineBtns = getAllByText('Delete routine');
+    fireEvent.click(deleteRoutineBtns[1]);
+
+    fireEvent.click(getByText('Yes'));
+
+    expect(mockDeleteRoutine).toBeCalled();
+    expect(mockRemoveRoutineFromStore).toBeCalled();
+    expect(mockSetActiveRoutine).not.toBeCalled();
+  });
+
+  test('deleteRecord and removeRecord are dispatched when a record is deleted', () => {
+    const { getByText, getAllByText } = setup(activeRoutine, true, null);
+    fireEvent.click(getByText('My Recorded Workouts'));
+
+    // Open the delete workout modal by clicking the delete workout btn
+    const deleteRecordBtns = getAllByText('Delete this record');
+    fireEvent.click(deleteRecordBtns[1]);
+
+    expect(mockDeleteRecord).toBeCalled();
+    expect(mockRemoveRecord).toBeCalled();
   });
 });

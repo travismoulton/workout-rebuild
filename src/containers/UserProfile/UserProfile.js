@@ -32,7 +32,6 @@ export default function UserProfile({ history }) {
   useEffect(() => {
     if (history.location.state && !messageFinished && !showMessage) {
       const { message } = history.location.state;
-      console.log(message);
       setShowMessage(<Message messageText={message} show />);
     }
   }, [showMessage, messageFinished, history.location.state]);
