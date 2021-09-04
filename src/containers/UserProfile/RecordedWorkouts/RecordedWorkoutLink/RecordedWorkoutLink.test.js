@@ -28,7 +28,7 @@ describe('<RecordedWorkoutLink />', () => {
     return { history, getByText, props };
   }
 
-  test('redirects with state when the link is cliced', () => {
+  test('redirects with state when the link is clicked', () => {
     const { getByText, history } = setup();
 
     const link = getByText('View details');
@@ -44,7 +44,7 @@ describe('<RecordedWorkoutLink />', () => {
   });
 
   test('renders with the proper title in the header, and correct date string', () => {
-    const { getByText, props } = setup();
+    const { getByText } = setup();
 
     expect(getByText('mock title')).toBeInTheDocument();
     expect(getByText('Tue Aug 31 2021')).toBeInTheDocument();
