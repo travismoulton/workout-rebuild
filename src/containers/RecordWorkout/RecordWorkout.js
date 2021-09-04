@@ -48,7 +48,6 @@ export default function RecordWorkout() {
     const unlisten = history.listen((location, action) => {
       dispatch(resetWorkoutStore());
       dispatch(clearExercises());
-      // unlisten();
     });
 
     return unlisten;
