@@ -1,5 +1,6 @@
 import classes from './NavBar.module.css';
 import NavItems from '../NavItems/NavItems';
+import DrawerToggle from '../DrawerToggle/DrawerToggle';
 
 export default function NavBar({ isAuthenticated, toggleSideBar }) {
   return (
@@ -10,6 +11,7 @@ export default function NavBar({ isAuthenticated, toggleSideBar }) {
       >
         <NavItems isAuthenticated={isAuthenticated} />
       </nav>
+      <DrawerToggle clicked={toggleSideBar} />
     </header>
   );
 }

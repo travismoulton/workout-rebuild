@@ -1,0 +1,30 @@
+.SideBar {
+  position: fixed;
+  height: 100%;
+  width: 30rem;
+  left: 0;
+  top: 5.6rem;
+  z-index: 100000;
+  background-color: var(--color-primary);
+  transition: transform 0.3s ease-out;
+}
+
+.Nav {
+  display: flex;
+  height: 50rem;
+  padding: 2rem;
+}
+
+.Open {
+  transform: translateX(0);
+}
+
+.Closed {
+  transform: translateX(-100%);
+}
+
+@media only screen and (min-width: 800px) {
+  .SideBar {
+    display: none;
+  }
+}
