@@ -18,7 +18,9 @@ export default function ExerciseListItem({ sets, title }) {
     <li className={classes.ListItem}>
       <p>{title}</p>
       <div className={classes.DetailRow}>
-        <ul className={classes.SetDetails}>{setDetails}</ul>
+        <ul data-testid="SetDetails" className={classes.SetDetails}>
+          {setDetails}
+        </ul>
       </div>
     </li>
   );
