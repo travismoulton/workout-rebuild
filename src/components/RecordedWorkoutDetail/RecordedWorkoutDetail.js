@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 
 import uniqid from 'uniqid';
@@ -8,16 +8,6 @@ import ExerciseListItem from './ExerciseListItem/ExerciseListItem';
 import classes from './RecordedWorkoutDetail.module.css';
 
 export default function RecordedWorkoutDetail({ location }) {
-  const [axiosError, setAxiosError] = useState({
-    isError: false,
-    message: (
-      <p style={{ color: 'red' }}>
-        We're having trouble loading your workout. Please refresh the page or
-        try again later
-      </p>
-    ),
-  });
-
   useEffect(() => {
     document.title = 'View workout';
   }, []);
@@ -25,6 +15,15 @@ export default function RecordedWorkoutDetail({ location }) {
   const { firebaseId } = location.state;
 
   const workout = useSelector((state) => selectRecordById(state, firebaseId));
+
+  const errorMsg = (
+    <p style={{ color: 'red' }}>
+      We're having trouble loading your workout. Please refresh the page or try
+      again later
+    </p>
+  );
+
+  if (!workout) return errorMsg;
 
   const exercises = workout
     ? workout.exercises.map((exercise) => (
@@ -36,7 +35,7 @@ export default function RecordedWorkoutDetail({ location }) {
       ))
     : null;
 
-  const display = workout ? (
+  return (
     <>
       <h3 className={classes.Title}>{workout.title}</h3>
       <h4 className={classes.Date}>
@@ -44,9 +43,11 @@ export default function RecordedWorkoutDetail({ location }) {
           .toString()
           .substring(0, 15)}
       </h4>
-      {exercises ? <ul className={classes.Exercises}>{exercises}</ul> : null}
+      {exercises && (
+        <ul data-testid="Exercises" className={classes.Exercises}>
+          {exercises}
+        </ul>
+      )}
     </>
-  ) : null;
-
-  return axiosError.isError ? axiosError.message : display;
+  );
 }
