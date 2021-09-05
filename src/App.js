@@ -117,7 +117,11 @@ function App({ firebase }) {
       <Route path="/create-routine" component={CreateRoutine} />
       <Route path="/record-workout" component={RecordWorkout} />
       <Route path="/my-profile" component={UserProfile} />
-      <Route path="/update-password" component={UpdatePassword} />
+      <Route path="/update-password">
+        <FirebaseContext.Consumer>
+          {(firebase) => <UpdatePassword firebase={firebase} />}
+        </FirebaseContext.Consumer>
+      </Route>
       <Route
         path="/exercise/:name"
         render={(routeProps) => (

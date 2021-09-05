@@ -1,13 +1,13 @@
 import { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 
 import Input from '../UI/Input/Input';
 import { updateObject, checkValidityHandler } from '../../shared/utility';
 import classes from './UpdatePassword.module.css';
 
 export default function UpdatePassword({ firebase }) {
-  const { email } = useSelector((state) => state.auth);
+  const { email } = useSelector((state) => state.auth.user);
   const [currentPasswordInput, setCurrentPasswordInput] = useState({
     elementType: 'input',
     elementConfig: {
@@ -58,6 +58,8 @@ export default function UpdatePassword({ firebase }) {
 
   const [error, setError] = useState(null);
   const [formIsValid, setFormIsValid] = useState(false);
+
+  const history = useHistory();
 
   useEffect(() => {
     document.title = 'Update Password';
@@ -111,7 +113,16 @@ export default function UpdatePassword({ firebase }) {
     />
   ));
 
+  const redirectToMyProfile = () => {
+    history.push({
+      pathname: '/my-profile',
+      state: { message: 'Password successfully updated' },
+    });
+  };
+
   const onSumbit = () => {
+    console.log(email, currentPasswordInput.value);
+
     const credential = firebase.generateCredntial(
       email,
       currentPasswordInput.value
@@ -125,7 +136,9 @@ export default function UpdatePassword({ firebase }) {
       firebase
         .doReauthenticate(credential)
         .then(() => firebase.doPasswordUpdate(passwordInput.value))
+        .then(() => redirectToMyProfile())
         .catch((err) => {
+          console.log(err);
           setError({
             code: err.code,
             message:
