@@ -4,3 +4,7 @@
   align-items: center;
   display: flex;
 }
+
+.App .loading {
+  padding-top: 15rem;
+}
