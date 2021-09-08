@@ -10,6 +10,6 @@ This project gives the user access to a database of exercises provided by the wg
 
 ### The tech I used.
 
-This is my first big React project. I followed the Maximilian Schwarzmuller Udemy course to get started with React (before it was recently updated). This project is built using React Hooks, and Redux for state management with Redux Thunk for async actions. I also used React-Select, React-Icons, and React-Transition-Group. I used CSS modules for styling, with custom properties inside of index.css. I used Firebase for the database and Auth system. There are robust rules inside the database to properly protect the data.
+This is my first big React project. I followed the Maximilian Schwarzmuller Udemy course to get started with React (before it was recently updated). This project is built using React Hooks, and Redux for state management using the redux toolkit. I used Firebase for the database and Auth system. There are robust rules inside the database to properly protect the data. I also used React-Select, React-Icons, and React-Transition-Group. I used CSS modules for styling, with custom properties inside of index.css. There is extensive testing using Jest and react-testing-library
 
 ### Thanks for taking the time to check out my project!
