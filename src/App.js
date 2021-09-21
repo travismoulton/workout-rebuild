@@ -8,6 +8,7 @@ import {
   fetchWorkouts,
   fetchRoutines,
   fetchRecords,
+  clearUserProfile,
 } from './store/userProfileSlice';
 import { FirebaseContext } from './components/Firebase/index';
 import Spinner from './components/UI/Spinner/Spinner';
@@ -48,7 +49,10 @@ function App({ firebase }) {
     if (authUser && !isAuthenticated && !inAuth && !user)
       dispatch(authSuccess(authUser));
 
-    if (!authUser && user) dispatch(authLogout());
+    if (!authUser && user) {
+      dispatch(authLogout());
+      dispatch(clearUserProfile());
+    }
   }, [authUser, isAuthenticated, dispatch, inAuth, user]);
 
   useEffect(() => {

@@ -130,6 +130,9 @@ const profileSlice = createSlice({
       const routines = state.ids.filter((id) => id.startsWith('routine'));
       profileAdapter.removeMany(state, routines);
     },
+    clearUserProfile(state, action) {
+      profileAdapter.removeAll(state);
+    },
   },
   extraReducers: {
     [fetchWorkouts.fulfilled]: (state, action) => {
@@ -176,6 +179,7 @@ export const {
   updateWorkout,
   updateRoutine,
   clearRoutines,
+  clearUserProfile,
 } = profileSlice.actions;
 
 export default profileSlice.reducer;
