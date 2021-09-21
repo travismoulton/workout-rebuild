@@ -7,6 +7,7 @@ import {
   setNoFavoritesFalse,
 } from '../../store/favoritesSlice';
 import { clearExercises, resetWorkoutStore } from '../../store/workoutSlice';
+import { clearUserProfile } from '../../store/userProfileSlice';
 
 export default function Logout({ firebase }) {
   const dispatch = useDispatch();
@@ -15,6 +16,7 @@ export default function Logout({ firebase }) {
     firebase.doSignOut().then(() => {
       dispatch(clearExercises());
       dispatch(resetWorkoutStore());
+      dispatch(clearUserProfile());
       dispatch(clearFavorites());
       dispatch(setNoFavoritesFalse());
     });

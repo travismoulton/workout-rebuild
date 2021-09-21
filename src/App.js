@@ -49,10 +49,7 @@ function App({ firebase }) {
     if (authUser && !isAuthenticated && !inAuth && !user)
       dispatch(authSuccess(authUser));
 
-    if (!authUser && user) {
-      dispatch(authLogout());
-      dispatch(clearUserProfile());
-    }
+    if (!authUser && user) dispatch(authLogout());
   }, [authUser, isAuthenticated, dispatch, inAuth, user]);
 
   useEffect(() => {
