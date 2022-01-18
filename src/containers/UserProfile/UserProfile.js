@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
 
 import Workouts from './Workouts/Workouts';
 import Routines from './Routines/Routines';
@@ -8,6 +9,8 @@ import Modal from '../../components/UI/Modal/Modal';
 import Message from './Message/Message';
 
 export default function UserProfile({ history }) {
+  const { user } = useSelector((state) => state.auth);
+
   const [workoutsShowing, setWorkoutsShowing] = useState(false);
   const [routinesShowing, setRoutinesShowing] = useState(false);
   const [recordedWorkoutsShowing, setRecordedWorkoutsShowing] = useState(false);
@@ -114,7 +117,8 @@ export default function UserProfile({ history }) {
         toggleError={() => setError({ ...error, isError: true })}
         isError={error.isError}
       />
-      <ChangePasswordLink />
+      {/* Do not display ChangePasswordLink for the common guest account */}
+      {user.email !== 'commonguest@guest.com' && <ChangePasswordLink />}
 
       {modal}
     </>
