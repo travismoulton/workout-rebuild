@@ -1,5 +1,7 @@
 import NavItem from './NavItem/NavItem';
+import GuestLogin from './GuestLogin/GuestLogin';
 import classes from './NavItems.module.css';
+import { FirebaseContext } from '../../Firebase';
 
 export default function NavItems({ isAuthenticated }) {
   return (
@@ -15,7 +17,12 @@ export default function NavItems({ isAuthenticated }) {
           <NavItem link="/logout">Logout</NavItem>
         </>
       ) : (
-        <NavItem link="/login">Login</NavItem>
+        <>
+          <FirebaseContext.Consumer>
+            {(firebase) => <GuestLogin firebase={firebase} />}
+          </FirebaseContext.Consumer>
+          <NavItem link="/login">Login</NavItem>
+        </>
       )}
     </ul>
   );

@@ -147,7 +147,9 @@ function App({ firebase }) {
   return (
     <div className="App">
       {appReady ? (
-        <Layout isAuthenticated={isAuthenticated}>{routes}</Layout>
+        <Layout firebase={firebase} isAuthenticated={isAuthenticated}>
+          {routes}
+        </Layout>
       ) : (
         <div className="loading">
           <Spinner />

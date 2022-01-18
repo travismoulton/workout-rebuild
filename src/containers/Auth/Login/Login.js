@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, Redirect } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 
 import Input from '../../../components/UI/Input/Input';
 import {
@@ -12,6 +13,8 @@ import {
 import classes from './Login.module.css';
 
 export default function Login({ firebase }) {
+  const history = useHistory();
+
   const [emailInput, setEmailInput] = useState({
     elementType: 'input',
     elementConfig: {
@@ -72,6 +75,7 @@ export default function Login({ firebase }) {
       .doSignInWithEmailAndPassword(emailInput.value, passwordInput.value)
       .then((userCredential) => {
         dispatch(authSuccess(userCredential.user));
+        history.push('/my-profile');
       })
       .catch((err) => {
         dispatch(authFail(err));

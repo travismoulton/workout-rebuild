@@ -1,0 +1,18 @@
+.Link {
+  list-style: none;
+}
+
+.Link p {
+  color: rgba(var(--rgba-light-grey-1), 0.9);
+  text-decoration: none;
+  width: 100%;
+  font-size: 1.7rem;
+  margin: 0;
+  padding-bottom: 0.1rem;
+}
+
+.Link p:hover {
+  color: var(--color-white);
+  border-bottom: 1px solid;
+  cursor: pointer;
+}
