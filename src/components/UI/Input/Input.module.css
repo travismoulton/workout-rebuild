@@ -230,7 +230,7 @@
 .CreateExerciseDescription {
   width: 30rem;
   height: 10rem;
-  position: relative;
+
   background-color: hsl(0, 0%, 100%);
   border-color: hsl(0, 0%, 80%);
   border-style: solid;
