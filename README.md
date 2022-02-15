@@ -1,6 +1,6 @@
 # Workout Builder React Application
 
-This app is built using the WGER Api. Huge thanks to the authors of that project for making this API poblicy available.
+This app is built using the WGER Api. Huge thanks to the authors of that project for making this API publicly available.
 
 [Check out the site here](https://the-workout-planner.com)
 

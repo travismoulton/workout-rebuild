@@ -42,11 +42,7 @@ export default function SubmitExerciseBtn(props) {
 
   const nameTakenError = {
     isError: true,
-    msg: (
-      <p style={{ color: 'red' }}>
-        That name is already taken, please try a different name
-      </p>
-    ),
+    msg: Tooltip,
     code: 'nameTaken',
     takenName: title,
   };
